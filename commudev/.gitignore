@@ -22,3 +22,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+**/node_modules
+/commudev/node_modules
+commudev/node_modules/.bin/acorn.cmd
+*.json
+*.map
