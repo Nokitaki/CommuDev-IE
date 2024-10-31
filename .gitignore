@@ -1,3 +1,5 @@
 **/node_modules
 /commudev/node_modules
 commudev/node_modules/.bin/acorn.cmd
+*.json
+*.map
