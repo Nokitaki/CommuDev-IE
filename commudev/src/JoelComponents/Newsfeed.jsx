@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import NewsFeedItem from './NewsFeedItem';
+import Newsfeeditem from './Newsfeeditem';
 import "../styles/Newsfeed.css";
 
 const NewsFeed = () => {
@@ -138,7 +138,7 @@ const NewsFeed = () => {
         {posts.length > 0 ? (
           <div className="posts-list">
             {posts.map((post) => (
-              <NewsFeedItem 
+              <Newsfeeditem 
                 key={post.newsfeed_id} 
                 post={post} 
                 handleUpdate={handleUpdatePost} 

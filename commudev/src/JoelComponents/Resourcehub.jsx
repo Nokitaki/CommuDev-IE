@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import ResourceHubItem from './ResourceHubItem';
+import Resourcehubitem from './Resourcehubitem';
 import '../styles/Resourcehub.css'; // Import the CSS file
 
 const ResourceHub = () => {
@@ -85,7 +85,7 @@ const ResourceHub = () => {
             </form>
 
             {resources.map(resource => (
-                <ResourceHubItem
+                <Resourcehubitem
                     key={resource.resource_id}
                     resource={resource}
                     onDelete={handleDeleteResource}
