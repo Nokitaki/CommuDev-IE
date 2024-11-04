@@ -1,0 +1,64 @@
+
+.resource-hub {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f5f5f5;
+}
+
+.resource-hub h1 {
+    text-align: center;
+    color: #333;
+}
+
+.resource-hub form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.resource-hub input,
+.resource-hub textarea {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.resource-hub button {
+    padding: 10px 15px;
+    font-size: 1rem;
+    font-weight: bold;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.resource-hub button:hover {
+    background-color: #0056b3;
+}
+
+.resource-hub-item button {
+    margin-right: 5px; /* Space between buttons */
+    padding: 8px 12px; /* Consistent padding */
+    border-radius: 4px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+}
+
+.heart-button {
+    background-color: transparent; /* No background */
+    border: none; /* No border */
+    color: #f00; /* Red color for heart */
+    font-size: 1.5rem; /* Adjust font size as needed */
+    padding: 0; /* No padding */
+}
+
+.resource-hub-item button:hover {
+    background-color: #e0e0e0; /* Change background on hover */
+}

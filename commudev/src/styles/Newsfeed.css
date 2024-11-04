@@ -1,0 +1,72 @@
+.newsfeed {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .newsfeed h2 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  .add-post-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px 0;
+    margin-bottom: 20px;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+  
+  .add-post-form input, 
+  .add-post-form select {
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+  }
+  
+  .add-post-form .input-description {
+    font-size: 16px;
+    color: #555;
+  }
+  
+  .add-post-form .input-type,
+  .add-post-form .input-date {
+    width: 100%;
+  }
+  
+  .add-post-btn {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .add-post-btn:hover {
+    background-color: #0056b3;
+  }
+  
+  .posts-list {
+    margin-top: 20px;
+  }
+  
+  .no-posts-message {
+    color: #888;
+    text-align: center;
+    font-style: italic;
+    margin-top: 20px;
+  }
+  
