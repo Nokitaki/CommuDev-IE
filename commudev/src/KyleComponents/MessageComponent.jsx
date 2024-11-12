@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 import { getMessages, createMessage, updateMessage, deleteMessage } from './apiService';
+import './Message.css';
 
 const MessageComponent = () => {
     const [messages, setMessages] = useState([]);
@@ -20,6 +23,10 @@ const MessageComponent = () => {
         }
     };
 
+    const handleDateChange = (date) => {
+        setNewMessage({ ...newMessage, dateMessage: date });
+    };
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setNewMessage({ ...newMessage, [name]: value });
@@ -29,13 +36,13 @@ const MessageComponent = () => {
         e.preventDefault();
         try {
             if (editingMessageId) {
-                await updateMessage(editingMessageId, newMessage); 
+                await updateMessage(editingMessageId, newMessage);
                 const updatedMessage = { ...newMessage, messageId: editingMessageId };
-                setRecentMessage(updatedMessage); 
+                setRecentMessage(updatedMessage);
                 setEditingMessageId(null);
             } else {
-                const createdMessage = await createMessage(newMessage); 
-                setRecentMessage(createdMessage); 
+                const createdMessage = await createMessage(newMessage);
+                setRecentMessage(createdMessage);
             }
             setNewMessage({ dateMessage: '', messageContent: '' });
             loadMessages();
@@ -45,16 +52,16 @@ const MessageComponent = () => {
     };
 
     const handleEdit = (message) => {
-        setEditingMessageId(message.messageId); 
-        setNewMessage({ dateMessage: message.dateMessage, messageContent: message.messageContent }); // Populate input fields
+        setEditingMessageId(message.messageId);
+        setNewMessage({ dateMessage: new Date(message.dateMessage), messageContent: message.messageContent });
     };
 
     const handleDelete = async (messageId) => {
         try {
-            await deleteMessage(messageId); 
-            loadMessages(); 
+            await deleteMessage(messageId);
+            loadMessages();
             if (recentMessage && recentMessage.messageId === messageId) {
-                setRecentMessage(null); 
+                setRecentMessage(null);
             }
         } catch (error) {
             console.error("Error deleting message:", error);
@@ -65,14 +72,15 @@ const MessageComponent = () => {
         <div style={{ textAlign: 'center' }}>
             <h2>Messages</h2>
             <form onSubmit={handleSubmit} style={{ marginBottom: '20px' }}>
-                <input
-                    type="text"
-                    name="dateMessage"
-                    placeholder="Date"
-                    value={newMessage.dateMessage}
-                    onChange={handleInputChange}
-                    required
-                />
+            <DatePicker
+                selected={newMessage.dateMessage}
+                onChange={handleDateChange}
+                dateFormat="yyyy-MM-dd"
+                placeholderText="Select Date"
+                className="small-date-picker" 
+                required
+/>
+
                 <input
                     type="text"
                     name="messageContent"
@@ -82,25 +90,25 @@ const MessageComponent = () => {
                     required
                 />
                 <button type="submit">
-                    {editingMessageId ? 'Update Message' : 'Create Message'} {/* Button changes based on edit mode */}
+                    {editingMessageId ? 'Update Message' : 'Create Message'}
                 </button>
             </form>
 
             {recentMessage && (
-                <div style={{ border: '2px solid black', padding: '10px', marginBottom: '20px', color: 'black' }}>
-                    <p style={{ color: 'black' }}><strong>Date:</strong> {recentMessage.dateMessage}</p>
-                    <p style={{ color: 'black' }}><strong>Content:</strong> {recentMessage.messageContent}</p>
-                    <button onClick={() => handleEdit(recentMessage)}>Edit</button> {/* Edit button for recent message */}
+                <div className="recent-message">
+                    <p><strong>Date:</strong> {recentMessage.dateMessage.toLocaleDateString()}</p>
+                    <p><strong>Content:</strong> {recentMessage.messageContent}</p>
+                    <button onClick={() => handleEdit(recentMessage)}>Edit</button>
                     <button onClick={() => handleDelete(recentMessage.messageId)}>Delete</button>
                 </div>
             )}
 
             <ul style={{ listStyleType: 'none', padding: 0 }}>
                 {messages.map((message) => (
-                    <li key={message.messageId} style={{ marginBottom: '10px', color: 'black' }}>
-                        <strong>Date:</strong> {message.dateMessage} <br />
+                    <li key={message.messageId} className="message-item">
+                        <strong>Date:</strong> {new Date(message.dateMessage).toLocaleDateString()} <br />
                         <strong>Content:</strong> {message.messageContent} <br />
-                        <button onClick={() => handleEdit(message)}>Edit</button> {/* Edit button for each message */}
+                        <button onClick={() => handleEdit(message)}>Edit</button>
                         <button onClick={() => handleDelete(message.messageId)}>Delete</button>
                     </li>
                 ))}
