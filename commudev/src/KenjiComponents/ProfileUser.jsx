@@ -22,6 +22,7 @@ import {
   ListItemText
 } from '@mui/material';
 import {
+  Favorite,
   PhotoCamera,
   Close as CloseIcon,
   Edit as EditIcon
@@ -34,24 +35,21 @@ const StyledAvatar = styled(Avatar)(({ theme }) => ({
   marginBottom: theme.spacing(2)
 }));
 
-
+// Edit Profile Dialog Component
 const EditProfileDialog = ({ open, onClose, user, onSave }) => {
   const [editedUser, setEditedUser] = useState(user);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (open) {
-      setEditedUser(user);
-      setError(null);
-    }
-  }, [open, user]);
+    setEditedUser(user);
+  }, [user]);
 
   const handleChange = (field) => (event) => {
-    setEditedUser(prev => ({
-      ...prev,
+    setEditedUser({
+      ...editedUser,
       [field]: event.target.value
-    }));
+    });
   };
 
   const handleSubmit = async () => {
@@ -60,9 +58,9 @@ const EditProfileDialog = ({ open, onClose, user, onSave }) => {
     try {
       let response;
       if (editedUser.id) {
-        response = await axios.put(`http://localhost:8080/users/${editedUser.id}`, editedUser);
+        response = await axios.put(`http://localhost:8080/api/user/${editedUser.id}`, editedUser);
       } else {
-        response = await axios.post('http://localhost:8080/users/add', editedUser);
+        response = await axios.post('http://localhost:8080/api/user/add', editedUser);
       }
       onSave(response.data);
       onClose();
@@ -124,7 +122,6 @@ const EditProfileDialog = ({ open, onClose, user, onSave }) => {
               multiline
               rows={4}
               margin="normal"
-              placeholder="Tell us about yourself..."
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -162,21 +159,8 @@ const EditProfileDialog = ({ open, onClose, user, onSave }) => {
               value={editedUser?.goals || ''}
               onChange={handleChange('goals')}
               multiline
-              rows={3}
+              rows={2}
               margin="normal"
-              placeholder="What are your goals?"
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              label="Hobbies"
-              value={editedUser?.hobbies || ''}
-              onChange={handleChange('hobbies')}
-              multiline
-              rows={3}
-              margin="normal"
-              placeholder="What are your hobbies?"
             />
           </Grid>
         </Grid>
@@ -198,7 +182,7 @@ const EditProfileDialog = ({ open, onClose, user, onSave }) => {
   );
 };
 
-
+// Main Profile Component
 const ProfileUser = () => {
   const [user, setUser] = useState(() => {
     const savedUser = localStorage.getItem('userProfile');
@@ -211,7 +195,7 @@ const ProfileUser = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/users/all');
+        const response = await axios.get('http://localhost:8080/api/user/all');
         const fetchedUser = response.data[0];
         setUser(fetchedUser);
         localStorage.setItem('userProfile', JSON.stringify(fetchedUser));
@@ -239,7 +223,7 @@ const ProfileUser = () => {
     if (!user?.id) return;
 
     try {
-      await axios.delete(`http://localhost:8080/users/${user.id}`);
+      await axios.delete(`http://localhost:8080/api/user/${user.id}`);
       setUser(null);
       localStorage.removeItem('userProfile');
     } catch (error) {
@@ -289,7 +273,7 @@ const ProfileUser = () => {
                 <Typography variant="h5" gutterBottom>
                   {user.firstname || 'No name set'} {user.lastname || ''}
                 </Typography>
-                <Typography color="text.secondary" sx={{ whiteSpace: 'pre-wrap' }}>
+                <Typography color="text.secondary">
                   {user.biography || 'No biography available'}
                 </Typography>
               </Box>
@@ -334,36 +318,31 @@ const ProfileUser = () => {
 
                 <Grid item xs={12} sm={6}>
                   <Paper sx={{ p: 2 }} variant="outlined">
+                    <Typography variant="h6" gutterBottom>Hobbies</Typography>
+                    {Array.isArray(user.hobbies) && user.hobbies.length > 0 ? (
+                      user.hobbies.map((hobby, index) => (
+                        <Typography key={index} color="text.secondary">{hobby}</Typography>
+                      ))
+                    ) : (
+                      <Typography color="text.secondary">No hobbies listed</Typography>
+                    )}
+                  </Paper>
+                </Grid>
+
+                <Grid item xs={12} sm={6}>
+                  <Paper sx={{ p: 2 }} variant="outlined">
+                    <Typography variant="h6" gutterBottom>Goals</Typography>
+                    <Typography color="text.secondary">
+                      {user.goals || 'No goals set'}
+                    </Typography>
+                  </Paper>
+                </Grid>
+
+                <Grid item xs={12} sm={6}>
+                  <Paper sx={{ p: 2 }} variant="outlined">
                     <Typography variant="h6" gutterBottom>Followers</Typography>
                     <Typography color="text.secondary">
                       {user.followers || 0} followers
-                    </Typography>
-                  </Paper>
-                </Grid>
-
-                <Grid item xs={12}>
-                  <Paper sx={{ p: 2 }} variant="outlined">
-                    <Typography variant="h6" gutterBottom>About Me</Typography>
-                    <Typography color="text.secondary" sx={{ whiteSpace: 'pre-wrap' }}>
-                      {user.biography || 'Add your biography to tell others about yourself.'}
-                    </Typography>
-                  </Paper>
-                </Grid>
-
-                <Grid item xs={12}>
-                  <Paper sx={{ p: 2 }} variant="outlined">
-                    <Typography variant="h6" gutterBottom>Goals</Typography>
-                    <Typography color="text.secondary" sx={{ whiteSpace: 'pre-wrap' }}>
-                      {user.goals || 'Share your goals and aspirations.'}
-                    </Typography>
-                  </Paper>
-                </Grid>
-
-                <Grid item xs={12}>
-                  <Paper sx={{ p: 2 }} variant="outlined">
-                    <Typography variant="h6" gutterBottom>Hobbies</Typography>
-                    <Typography color="text.secondary" sx={{ whiteSpace: 'pre-wrap' }}>
-                      {user.hobbies || 'Tell others about your hobbies and interests.'}
                     </Typography>
                   </Paper>
                 </Grid>
@@ -402,6 +381,6 @@ const ProfileUser = () => {
       />
     </Box>
   );
-};  
+};
 
 export default ProfileUser;
