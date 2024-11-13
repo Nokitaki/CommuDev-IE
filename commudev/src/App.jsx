@@ -6,6 +6,7 @@ import Rewards from './GarveyComponents/Rewards';
 import Feedbacks from './GarveyComponents/Feedbacks';
 import ProfileUser from './KenjiComponents/ProfileUser';
 import TaskManager from './KenjiComponents/TaskManager';
+import AuthPage from './RenzComponents/AuthPage';
 
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
       <div className="App">
         {/* Navigation Links */}
         <nav>
+          <Link to="/authentication">Login/Signup </Link> 
           <Link to="/newsfeed">News Feed</Link>
           <Link to="/resources">Resource Hub</Link>
           <Link to="/rewards">Rewards</Link>
@@ -31,6 +33,7 @@ function App() {
           <Route path="/feedbacks" element={<Feedbacks />} />
           <Route path="/profileuser" element={<ProfileUser />} />
           <Route path="/taskmanager" element={<TaskManager />} />
+          <Route path="/authentication" element={<AuthPage />} />
         </Routes>
       </div>
     </Router>
