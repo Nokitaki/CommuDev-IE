@@ -62,7 +62,7 @@ body {
 
 .post-meta {
     color: #666;
-    font-size: 0.875rem;
+    font-size: 0.75rem;
     display: flex;
     align-items: center;
     gap: 4px;
@@ -90,6 +90,40 @@ body {
     background-color: #fafafa;
     color: #616161;
 }
+
+.post-type {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.875rem;
+  color: #666;
+}
+
+.post-type-label {
+  font-weight: 500;
+}
+
+.post-type-value {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-weight: 500;
+}
+
+.post-type-event {
+  background-color: #e6eefe; /* Soft blue, lighter than the original */
+  color: #3a58b7; /* A slightly darker shade of blue */
+}
+
+.post-type-announcement {
+  background-color: #fff2de; /* A warm, soft orange */
+  color: #bf6d00; /* A darker, complementary orange-brown */
+}
+
+.post-type-reminder {
+  background-color: #f4d8e0; /* A light, pastel pink */
+  color: #9b2b59; /* A rich, slightly muted magenta */
+}
+
 
 .post-content {
     padding: 16px;

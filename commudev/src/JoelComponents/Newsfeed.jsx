@@ -24,7 +24,7 @@ const NewsFeed = () => {
       })
       .then((data) => {
         console.log('Fetched posts:', data); // Log fetched posts
-        setPosts(data);
+        setPosts(data.map((post) => ({ ...post, type: post.post_type })));
       })
       .catch((error) => console.error('Error fetching posts:', error));
   }, []);
