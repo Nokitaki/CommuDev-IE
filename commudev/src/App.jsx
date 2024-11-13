@@ -7,6 +7,7 @@ import Feedbacks from './GarveyComponents/Feedbacks';
 import ProfileUser from './KenjiComponents/ProfileUser';
 import TaskManager from './KenjiComponents/TaskManager';
 import AuthPage from './RenzComponents/AuthPage';
+import MessageComponent from './KyleComponents/MessageComponent';
 
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
           <Link to="/feedbacks">Feedbacks</Link>
           <Link to="/profileuser">Profile User</Link>
           <Link to="/taskmanager">Tasks</Link>
+          <Link to="/messages">Community Messages</Link>
     
         </nav>
 
@@ -34,6 +36,7 @@ function App() {
           <Route path="/profileuser" element={<ProfileUser />} />
           <Route path="/taskmanager" element={<TaskManager />} />
           <Route path="/authentication" element={<AuthPage />} />
+          <Route path="/messages" element={<MessageComponent />} />
         </Routes>
       </div>
     </Router>
