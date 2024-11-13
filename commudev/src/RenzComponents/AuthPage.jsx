@@ -76,36 +76,30 @@ const AuthPage = () => {
 
     try {
       if (isLogin) {
-        // Login request
         const response = await axios.post('http://localhost:8080/api/user/login', {
           username: formData.username,
           password: formData.password
         });
 
         if (response.status === 200 && response.data) {
-          // Store user data in localStorage or state management solution
           localStorage.setItem('userId', response.data.id);
           localStorage.setItem('username', response.data.username);
           
-          // Redirect to user page with the user's ID
           navigate(`/user/${response.data.id}`);
         }
       } else {
-        // Register new user
         const response = await axios.post('http://localhost:8080/api/user/add', {
           ...formData,
           age: formData.age ? parseInt(formData.age) : 0
         });
 
         if (response.status === 201) {
-          // Successfully created user
           console.log('User registered successfully:', response.data);
-          // Switch to login mode
           setIsLogin(true);
           setFormData(prev => ({
             ...prev,
-            password: '', // Clear password after registration
-            username: formData.username // Keep username for convenience
+            password: '', 
+            username: formData.username 
           }));
           setError('Registration successful! Please login.');
         }
