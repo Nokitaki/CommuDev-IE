@@ -24,7 +24,7 @@ import {
   Email as EmailIcon,
   Lock as LockIcon
 } from '@mui/icons-material';
-
+ 
 const AuthPage = () => {
   const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
@@ -42,12 +42,12 @@ const AuthPage = () => {
     biography: '',
     goals: ''
   });
-
+ 
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
-
+ 
   const handleChange = (e) => {
     const { id, value } = e.target;
     setFormData(prev => ({
@@ -55,51 +55,51 @@ const AuthPage = () => {
       [id]: value
     }));
   };
-
+ 
   const validateForm = () => {
     // Reset previous errors
     setError('');
-
+ 
     // Common validations for both login and register
     if (!formData.username || !formData.password) {
       setError('Username and password are required.');
       return false;
     }
-
+ 
     if (formData.password.length < 6) {
       setError('Password must be at least 6 characters long.');
       return false;
     }
-
+ 
     // Additional validations for registration
     if (!isLogin) {
       if (!formData.firstname || !formData.lastname) {
         setError('First name and last name are required.');
         return false;
       }
-
+ 
       if (formData.age && (isNaN(formData.age) || formData.age < 0)) {
         setError('Please enter a valid age.');
         return false;
       }
-
+ 
       if (formData.email && !/\S+@\S+\.\S+/.test(formData.email)) {
         setError('Please enter a valid email address.');
         return false;
       }
     }
-
+ 
     return true;
   };
-
+ 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
-
+ 
     setLoading(true);
     setError('');
     setSuccessMessage('');
-
+ 
     try {
       if (isLogin) {
         // Login request
@@ -107,9 +107,10 @@ const AuthPage = () => {
           username: formData.username,
           password: formData.password
         });
-
+ 
         if (response.data) {
-          localStorage.setItem('userId', response.data.id);
+          // Make sure to store the id from the response
+          localStorage.setItem('userId', response.data.id.toString()); // Convert to string
           localStorage.setItem('username', response.data.username);
           setSuccessMessage('Login successful!');
           // Short delay to show success message
@@ -123,7 +124,7 @@ const AuthPage = () => {
           ...formData,
           age: formData.age ? parseInt(formData.age) : null
         });
-
+ 
         if (response.status === 201) {
           setSuccessMessage('Registration successful! Please login.');
           setTimeout(() => {
@@ -147,7 +148,7 @@ const AuthPage = () => {
       setLoading(false);
     }
   };
-
+ 
   const toggleAuthMode = () => {
     setIsLogin(!isLogin);
     setError('');
@@ -167,7 +168,7 @@ const AuthPage = () => {
       goals: ''
     });
   };
-
+ 
   return (
     <Container component="main" maxWidth="sm">
       <Box
@@ -183,25 +184,25 @@ const AuthPage = () => {
             <Typography component="h1" variant="h5" align="center" gutterBottom>
               {isLogin ? 'Welcome Back' : 'Create Account'}
             </Typography>
-            
+ 
             <Typography variant="body2" color="text.secondary" align="center" sx={{ mb: 3 }}>
               {isLogin
                 ? 'Please enter your credentials to continue'
                 : 'Fill in your information to get started'}
             </Typography>
-
+ 
             {error && (
               <Alert severity="error" sx={{ mb: 2 }}>
                 {error}
               </Alert>
             )}
-
+ 
             {successMessage && (
               <Alert severity="success" sx={{ mb: 2 }}>
                 {successMessage}
               </Alert>
             )}
-
+ 
             <form onSubmit={handleSubmit}>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
@@ -221,7 +222,7 @@ const AuthPage = () => {
                     }}
                   />
                 </Grid>
-
+ 
                 <Grid item xs={12}>
                   <TextField
                     required
@@ -251,7 +252,7 @@ const AuthPage = () => {
                     }}
                   />
                 </Grid>
-
+ 
                 {!isLogin && (
                   <>
                     <Grid item xs={12} sm={6}>
@@ -264,7 +265,7 @@ const AuthPage = () => {
                         onChange={handleChange}
                       />
                     </Grid>
-
+ 
                     <Grid item xs={12} sm={6}>
                       <TextField
                         required
@@ -275,7 +276,7 @@ const AuthPage = () => {
                         onChange={handleChange}
                       />
                     </Grid>
-
+ 
                     <Grid item xs={12}>
                       <TextField
                         fullWidth
@@ -293,7 +294,7 @@ const AuthPage = () => {
                         }}
                       />
                     </Grid>
-
+ 
                     <Grid item xs={12} sm={6}>
                       <TextField
                         fullWidth
@@ -304,7 +305,7 @@ const AuthPage = () => {
                         onChange={handleChange}
                       />
                     </Grid>
-
+ 
                     <Grid item xs={12} sm={6}>
                       <TextField
                         fullWidth
@@ -314,7 +315,7 @@ const AuthPage = () => {
                         onChange={handleChange}
                       />
                     </Grid>
-
+ 
                     <Grid item xs={12}>
                       <TextField
                         fullWidth
@@ -324,7 +325,7 @@ const AuthPage = () => {
                         onChange={handleChange}
                       />
                     </Grid>
-
+ 
                     <Grid item xs={12}>
                       <TextField
                         fullWidth
@@ -336,7 +337,7 @@ const AuthPage = () => {
                         onChange={handleChange}
                       />
                     </Grid>
-
+ 
                     <Grid item xs={12}>
                       <TextField
                         fullWidth
@@ -350,7 +351,7 @@ const AuthPage = () => {
                     </Grid>
                   </>
                 )}
-
+ 
                 <Grid item xs={12}>
                   <Button
                     type="submit"
@@ -369,7 +370,7 @@ const AuthPage = () => {
                 </Grid>
               </Grid>
             </form>
-
+ 
             <Box sx={{ mt: 3 }}>
               <Divider>
                 <Typography variant="body2" color="text.secondary">
@@ -377,7 +378,7 @@ const AuthPage = () => {
                 </Typography>
               </Divider>
             </Box>
-
+ 
             <Box sx={{ mt: 2, textAlign: 'center' }}>
               <Typography variant="body2">
                 {isLogin ? "Don't have an account?" : 'Already have an account?'}{' '}
@@ -397,5 +398,5 @@ const AuthPage = () => {
     </Container>
   );
 };
-
+ 
 export default AuthPage;

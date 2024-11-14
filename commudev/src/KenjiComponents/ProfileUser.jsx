@@ -30,29 +30,29 @@ import {
   Logout as LogoutIcon
 } from '@mui/icons-material';
 import axios from 'axios';
-
+ 
 const StyledAvatar = styled(Avatar)(({ theme }) => ({
   width: theme.spacing(16),
   height: theme.spacing(16),
   marginBottom: theme.spacing(2)
 }));
-
+ 
 const EditProfileDialog = ({ open, onClose, user, onSave }) => {
   const [editedUser, setEditedUser] = useState(user);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-
+ 
   useEffect(() => {
     setEditedUser(user);
   }, [user]);
-
+ 
   const handleChange = (field) => (event) => {
     setEditedUser({
       ...editedUser,
       [field]: event.target.value
     });
   };
-
+ 
   const handleSubmit = async () => {
     setLoading(true);
     setError(null);
@@ -71,7 +71,7 @@ const EditProfileDialog = ({ open, onClose, user, onSave }) => {
       setLoading(false);
     }
   };
-
+ 
   return (
     <Dialog
       open={open}
@@ -181,14 +181,14 @@ const EditProfileDialog = ({ open, onClose, user, onSave }) => {
     </Dialog>
   );
 };
-
+ 
 const ProfileUser = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+ 
   useEffect(() => {
     const checkAuth = () => {
       const userId = localStorage.getItem('userId');
@@ -198,17 +198,23 @@ const ProfileUser = () => {
       }
       return userId;
     };
-
+ 
     const fetchUserData = async () => {
       const userId = checkAuth();
       if (!userId) return;
-
+ 
       try {
         const response = await axios.get(`http://localhost:8080/api/user/${userId}`);
-        setUser(response.data);
+        if (response.data) {
+          setUser(response.data);
+        } else {
+          throw new Error('No data received');
+        }
       } catch (error) {
         console.error('Error fetching user data:', error);
-        if (error.response?.status === 401) {
+        if (error.response?.status === 401 || error.response?.status === 403) {
+          localStorage.removeItem('userId');
+          localStorage.removeItem('username');
           navigate('/login');
         } else {
           setError('Failed to load user data. Please try again later.');
@@ -217,26 +223,26 @@ const ProfileUser = () => {
         setLoading(false);
       }
     };
-
+ 
     fetchUserData();
   }, [navigate]);
-
+ 
   const handleSave = async (updatedUser) => {
     try {
       const userId = localStorage.getItem('userId');
       if (!userId) throw new Error('No user ID found');
-      
+ 
       setUser(updatedUser);
     } catch (error) {
       console.error('Error updating user:', error);
       setError('Failed to update profile. Please try again.');
     }
   };
-
+ 
   const handleDelete = async () => {
     const userId = localStorage.getItem('userId');
     if (!userId) return;
-
+ 
     if (window.confirm('Are you sure you want to delete your profile? This action cannot be undone.')) {
       try {
         await axios.delete(`http://localhost:8080/api/user/${userId}`);
@@ -249,13 +255,13 @@ const ProfileUser = () => {
       }
     }
   };
-
+ 
   const handleLogout = () => {
     localStorage.removeItem('userId');
     localStorage.removeItem('username');
     navigate('/login');
   };
-
+ 
   if (loading) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
@@ -263,7 +269,7 @@ const ProfileUser = () => {
       </Box>
     );
   }
-
+ 
   if (error) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
@@ -271,7 +277,7 @@ const ProfileUser = () => {
       </Box>
     );
   }
-
+ 
   if (!user) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
@@ -279,7 +285,7 @@ const ProfileUser = () => {
       </Box>
     );
   }
-
+ 
   return (
     <Box sx={{ maxWidth: '1200px', mx: 'auto', p: 4 }}>
       <Card elevation={3}>
@@ -298,7 +304,7 @@ const ProfileUser = () => {
                   {user.biography || 'No biography available'}
                 </Typography>
               </Box>
-
+ 
               <List>
                 <ListItem>
                   <ListItemText
@@ -320,7 +326,7 @@ const ProfileUser = () => {
                 </ListItem>
               </List>
             </Grid>
-
+ 
             {/* Right Column */}
             <Grid item xs={12} md={8}>
               <Grid container spacing={3}>
@@ -336,7 +342,7 @@ const ProfileUser = () => {
                     )}
                   </Paper>
                 </Grid>
-
+ 
                 <Grid item xs={12} sm={6}>
                   <Paper sx={{ p: 2 }} variant="outlined">
                     <Typography variant="h6" gutterBottom>Hobbies</Typography>
@@ -349,7 +355,7 @@ const ProfileUser = () => {
                     )}
                   </Paper>
                 </Grid>
-
+ 
                 <Grid item xs={12} sm={6}>
                   <Paper sx={{ p: 2 }} variant="outlined">
                     <Typography variant="h6" gutterBottom>Goals</Typography>
@@ -358,7 +364,7 @@ const ProfileUser = () => {
                     </Typography>
                   </Paper>
                 </Grid>
-
+ 
                 <Grid item xs={12} sm={6}>
                   <Paper sx={{ p: 2 }} variant="outlined">
                     <Typography variant="h6" gutterBottom>Followers</Typography>
@@ -371,7 +377,7 @@ const ProfileUser = () => {
             </Grid>
           </Grid>
         </CardContent>
-
+ 
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', p: 2, gap: 2 }}>
           <Button
             variant="contained"
@@ -397,7 +403,7 @@ const ProfileUser = () => {
           </Button>
         </Box>
       </Card>
-
+ 
       <EditProfileDialog
         open={openEditDialog}
         onClose={() => setOpenEditDialog(false)}
@@ -407,5 +413,5 @@ const ProfileUser = () => {
     </Box>
   );
 };
-
+ 
 export default ProfileUser;
