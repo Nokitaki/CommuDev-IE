@@ -82,7 +82,7 @@ const MessageComponent = () => {
                 textAlign: 'center',
                 fontWeight: 'bold',
                 marginBottom: '20px'
-            }}>Post Your Message</h2>
+            }}>Send a Message</h2>
             
             <form onSubmit={handleSubmit} style={{
                 display: 'flex',
