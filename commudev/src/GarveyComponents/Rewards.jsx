@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import {
     Box,
     Container,
@@ -24,43 +23,64 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
 const Rewards = () => {
     const [rewards, setRewards] = useState([]);
     const [claimedRewards, setClaimedRewards] = useState([]);
-    const [totalPoints, setTotalPoints] = useState(500); // Example starting points
+    const [totalPoints, setTotalPoints] = useState(500);
     const [isLoading, setIsLoading] = useState(false);
     const [page, setPage] = useState(1);
-    const [itemsPerPage] = useState(6); // Number of rewards displayed per page
+    const [itemsPerPage] = useState(6);
 
     useEffect(() => {
-        const fetchRewards = async () => {
-            try {
-                const response = await axios.get("http://localhost:8080/api/rewards/all");
-                setRewards(response.data); // Make sure this returns the expected rewards structure
-            } catch (error) {
-                console.error("Error fetching rewards:", error);
-            }
-        };
-
-        const fetchClaimedRewards = async () => {
-            try {
-                const response = await axios.get("http://localhost:8080/api/rewards/claimed");
-                setClaimedRewards(response.data); // Ensure this returns the claimed rewards correctly
-            } catch (error) {
-                console.error("Error fetching claimed rewards:", error);
-            }
-        };
-
         fetchRewards();
         fetchClaimedRewards();
     }, []);
+
+    const fetchRewards = async () => {
+        try {
+            const response = await fetch("http://localhost:8080/api/rewards/all");
+            const data = await response.json();
+            setRewards(data);
+        } catch (error) {
+            console.error("Error fetching rewards:", error);
+        }
+    };
+
+    const fetchClaimedRewards = async () => {
+        try {
+            const response = await fetch("http://localhost:8080/api/rewards/claimed");
+            const data = await response.json();
+            setClaimedRewards(data);
+        } catch (error) {
+            console.error("Error fetching claimed rewards:", error);
+        }
+    };
 
     const claimReward = async (rewardId, rewardValue) => {
         if (totalPoints >= rewardValue) {
             setIsLoading(true);
             try {
-                await axios.post(`http://localhost:8080/api/rewards/claim/${rewardId}`);
-                setTotalPoints(totalPoints - rewardValue);
-                alert("Reward claimed successfully!");
-                fetchClaimedRewards(); // Refresh the claimed rewards after claiming a reward
+                const response = await fetch(
+                    `http://localhost:8080/api/rewards/claim/${rewardId}`,
+                    {
+                        method: 'POST'
+                    }
+                );
+                
+                if (response.ok) {
+                    // Update the local state immediately
+                    setRewards(currentRewards =>
+                        currentRewards.map(reward =>
+                            reward.id === rewardId
+                                ? { ...reward, quantity: reward.quantity - 1 }
+                                : reward
+                        )
+                    );
+                    setTotalPoints(currentPoints => currentPoints - rewardValue);
+                    setClaimedRewards(current => [...current, { rewardId, claimedAt: new Date() }]);
+                    alert("Reward claimed successfully!");
+                } else {
+                    alert("Failed to claim reward");
+                }
             } catch (error) {
+                console.error("Error claiming reward:", error);
                 alert("Failed to claim reward");
             } finally {
                 setIsLoading(false);
@@ -70,12 +90,10 @@ const Rewards = () => {
         }
     };
 
-    // Handle pagination
     const handleChangePage = (event, value) => {
         setPage(value);
     };
 
-    // Get rewards for the current page
     const indexOfLastReward = page * itemsPerPage;
     const indexOfFirstReward = indexOfLastReward - itemsPerPage;
     const currentRewards = rewards.slice(indexOfFirstReward, indexOfLastReward);
@@ -89,7 +107,6 @@ const Rewards = () => {
                 </Typography>
             </Box>
 
-            {/* Reward Section for Points */}
             <StyledPaper elevation={3}>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
                     <Typography variant="h6">
@@ -101,7 +118,6 @@ const Rewards = () => {
                 </Box>
             </StyledPaper>
 
-            {/* Reward List */}
             <Grid container spacing={3}>
                 {currentRewards.length > 0 ? (
                     currentRewards.map((reward) => (
@@ -128,7 +144,7 @@ const Rewards = () => {
                                         fullWidth
                                         variant="contained"
                                         sx={{ mt: 2 }}
-                                        disabled={totalPoints < reward.value || isLoading}
+                                        disabled={totalPoints < reward.value || isLoading || reward.quantity <= 0}
                                         onClick={() => claimReward(reward.id, reward.value)}
                                     >
                                         {isLoading ? <CircularProgress size={24} /> : 'Claim Reward'}
@@ -144,7 +160,6 @@ const Rewards = () => {
                 )}
             </Grid>
 
-            {/* Pagination */}
             {rewards.length > itemsPerPage && (
                 <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
                     <Pagination
