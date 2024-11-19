@@ -392,7 +392,7 @@ const ProfileUser = () => {
             color="error"
             onClick={handleDelete}
           >
-            Delete Profile
+            Delete Account
           </Button>
           <Button
             variant="outlined"
