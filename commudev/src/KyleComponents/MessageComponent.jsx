@@ -3,6 +3,29 @@ import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import { getMessages, createMessage, updateMessage, deleteMessage } from './apiService';
 
+const CommuDevLogo = () => (
+    <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: '0.5rem',
+        marginBottom: '1rem'
+    }}>
+        <div style={{
+            backgroundColor: '#16a34a',
+            color: 'white',
+            padding: '0.5rem 1rem',
+            borderRadius: '8px',
+            fontSize: '1.75rem',
+            fontWeight: 'bold',
+            letterSpacing: '0.05em',
+            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
+        }}>
+            Commu<span style={{ color: '#bbf7d0' }}>Dev</span>
+        </div>
+    </div>
+);
+
 const MessageComponent = () => {
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState({ dateMessage: '', messageContent: '' });
@@ -64,41 +87,56 @@ const MessageComponent = () => {
 
     return (
         <div style={{
-            maxWidth: '600px',
-            margin: '20px auto',
-            padding: '20px',
-            borderRadius: '8px',
-            backgroundColor: '#fff',
-            boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
-            border: '1px solid #ddd'
+            minHeight: '100vh',
+            background: 'linear-gradient(135deg, #f0fff4 0%, #dcfce7 100%)',
+            padding: '2rem 1rem',
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0L45 15H15L30 0z' fill='%2386efac' fill-opacity='0.2'/%3E%3C/svg%3E")`,
+            backgroundRepeat: 'repeat'
         }}>
-            <h2 style={{
-                color: '#1E90FF',
-                textAlign: 'center',
-                fontWeight: 'bold',
-                marginBottom: '20px'
-            }}>Post Your Message</h2>
-            
-            <form onSubmit={handleSubmit} style={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '15px',
-                marginBottom: '20px'
+            <div style={{
+                maxWidth: '800px',
+                margin: '0 auto',
+                backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                borderRadius: '12px',
+                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
+                padding: '2rem',
+                backdropFilter: 'blur(8px)'
             }}>
-                <DatePicker
-                    selected={newMessage.dateMessage}
-                    onChange={handleDateChange}
-                    placeholderText="Select Date"
-                    dateFormat="dd/MM/yyyy"
-                    style={{
-                        padding: '10px',
-                        fontSize: '16px',
-                        borderRadius: '4px',
-                        border: '1px solid #1E90FF',
-                        backgroundColor: '#fff',
-                        color: '#000'
-                    }}
-                />
+                <div style={{
+                    textAlign: 'center',
+                    marginBottom: '2rem'
+                }}>
+                    <CommuDevLogo />
+                    <p style={{
+                        color: '#16a34a',
+                        fontSize: '1.1rem'
+                    }}>Share your ideas and contribute to our community's growth</p>
+                </div>
+
+                <div style={{
+                    backgroundColor: 'rgba(240, 253, 244, 0.8)',
+                    borderRadius: '12px',
+                    padding: '1.5rem',
+                    marginBottom: '2rem',
+                    border: '1px solid #bbf7d0',
+                    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)'
+                }}>
+                    <form onSubmit={handleSubmit}>
+                        <DatePicker
+                            selected={newMessage.dateMessage}
+                            onChange={handleDateChange}
+                            placeholderText="Select Date"
+                            dateFormat="dd/MM/yyyy"
+                            className="datepicker-input"
+                            style={{
+                                width: '100%',
+                                padding: '0.75rem',
+                                marginBottom: '1rem',
+                                borderRadius: '8px',
+                                border: '2px solid #bbf7d0',
+                                transition: 'all 0.2s ease'
+                            }}
+                        />
 
                         <input
                             type="text"
@@ -129,12 +167,7 @@ const MessageComponent = () => {
                                 fontWeight: '600',
                                 cursor: 'pointer',
                                 transition: 'all 0.2s ease',
-                                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-                                ':hover': {
-                                    backgroundColor: '#15803d',
-                                    transform: 'translateY(-1px)',
-                                    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
-                                }
+                                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
                             }}
                         >
                             {editingMessageId ? 'Update Message' : 'Post Message'}
@@ -142,10 +175,7 @@ const MessageComponent = () => {
                     </form>
                 </div>
 
-                <div style={{
-                    display: 'grid',
-                    gap: '1rem'
-                }}>
+                <div style={{ display: 'grid', gap: '1rem' }}>
                     {messages.length > 0 ? (
                         messages.map((message) => (
                             <div
@@ -156,10 +186,7 @@ const MessageComponent = () => {
                                     padding: '1.5rem',
                                     boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)',
                                     borderLeft: '4px solid #16a34a',
-                                    transition: 'transform 0.2s ease',
-                                    ':hover': {
-                                        transform: 'translateX(4px)'
-                                    }
+                                    transition: 'transform 0.2s ease'
                                 }}
                             >
                                 <div style={{
@@ -198,10 +225,7 @@ const MessageComponent = () => {
                                             borderRadius: '6px',
                                             cursor: 'pointer',
                                             fontWeight: '500',
-                                            transition: 'all 0.2s ease',
-                                            ':hover': {
-                                                backgroundColor: '#bbf7d0'
-                                            }
+                                            transition: 'all 0.2s ease'
                                         }}
                                     >
                                         Edit
@@ -216,10 +240,7 @@ const MessageComponent = () => {
                                             borderRadius: '6px',
                                             cursor: 'pointer',
                                             fontWeight: '500',
-                                            transition: 'all 0.2s ease',
-                                            ':hover': {
-                                                backgroundColor: '#fecaca'
-                                            }
+                                            transition: 'all 0.2s ease'
                                         }}
                                     >
                                         Delete
