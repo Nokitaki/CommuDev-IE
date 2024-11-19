@@ -64,74 +64,41 @@ const MessageComponent = () => {
 
     return (
         <div style={{
-            minHeight: '100vh',
-            background: 'linear-gradient(135deg, #f0fff4 0%, #dcfce7 100%)',
-            padding: '2rem 1rem',
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0L45 15H15L30 0z' fill='%2386efac' fill-opacity='0.2'/%3E%3C/svg%3E")`,
-            backgroundRepeat: 'repeat'
+            maxWidth: '600px',
+            margin: '20px auto',
+            padding: '20px',
+            borderRadius: '8px',
+            backgroundColor: '#fff',
+            boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
+            border: '1px solid #ddd'
         }}>
-            <div style={{
-                maxWidth: '800px',
-                margin: '0 auto',
-                backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                borderRadius: '12px',
-                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
-                padding: '2rem',
-                backdropFilter: 'blur(8px)'
+            <h2 style={{
+                color: '#1E90FF',
+                textAlign: 'center',
+                fontWeight: 'bold',
+                marginBottom: '20px'
+            }}>Post Your Message</h2>
+            
+            <form onSubmit={handleSubmit} style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '15px',
+                marginBottom: '20px'
             }}>
-                <div style={{
-                    textAlign: 'center',
-                    marginBottom: '2rem'
-                }}>
-                    <svg 
-                        viewBox="0 0 24 24" 
-                        style={{
-                            width: '48px',
-                            height: '48px',
-                            margin: '0 auto 1rem',
-                            color: '#16a34a'
-                        }}
-                    >
-                        <path 
-                            fill="currentColor" 
-                            d="M17.75 16.75L12 12.75L6.25 16.75L12 4.75L17.75 16.75ZM12 13.75L15.75 16.25L12 8.75L8.25 16.25L12 13.75Z"
-                        />
-                    </svg>
-                    <h1 style={{
-                        color: '#166534',
-                        fontSize: '2rem',
-                        fontWeight: 'bold',
-                        marginBottom: '0.5rem'
-                    }}>Community Development</h1>
-                    <p style={{
-                        color: '#16a34a',
-                        fontSize: '1.1rem'
-                    }}>Share your ideas and contribute to our community's growth</p>
-                </div>
-
-                <div style={{
-                    backgroundColor: 'rgba(240, 253, 244, 0.8)',
-                    borderRadius: '12px',
-                    padding: '1.5rem',
-                    marginBottom: '2rem',
-                    border: '1px solid #bbf7d0',
-                    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)'
-                }}>
-                    <form onSubmit={handleSubmit}>
-                        <DatePicker
-                            selected={newMessage.dateMessage}
-                            onChange={handleDateChange}
-                            placeholderText="Select Date"
-                            dateFormat="dd/MM/yyyy"
-                            style={{
-                                width: '100%',
-                                padding: '0.75rem',
-                                marginBottom: '1rem',
-                                borderRadius: '8px',
-                                border: '2px solid #bbf7d0',
-                                transition: 'all 0.2s ease'
-                            }}
-                        />
+                <DatePicker
+                    selected={newMessage.dateMessage}
+                    onChange={handleDateChange}
+                    placeholderText="Select Date"
+                    dateFormat="dd/MM/yyyy"
+                    style={{
+                        padding: '10px',
+                        fontSize: '16px',
+                        borderRadius: '4px',
+                        border: '1px solid #1E90FF',
+                        backgroundColor: '#fff',
+                        color: '#000'
+                    }}
+                />
 
                         <input
                             type="text"
