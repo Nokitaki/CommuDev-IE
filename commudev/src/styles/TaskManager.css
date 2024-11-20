@@ -1,19 +1,4 @@
-/* Global Styles */
 
-body {
-    margin: 0;
-    padding: 0;
-    min-height: 100vh;
-    background-color: #f0f0f0; /* Optional: set a background color */
-    font-family: Arial, sans-serif; /* Optional: set a default font */
-    color: #333; /* Set default text color to dark gray */
-  }
-  
-  #root {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
 .task-manager-container {
     max-width: 1200px;
     margin: 0 auto;

@@ -1,13 +1,16 @@
-/* NewsfeedTest.css */
+/* CommunityPlatform.css */
+
 body {
     margin: 0;
     padding: 0;
     min-height: 100vh;
-    background-color: #c5e1c5; /* Light green background */
+    background-color: #e4efe4; /* Light green background */
     display: flex;
     justify-content:center;
     align-items: center;
+    color: #333;
   }
+ 
   
   .community-platform {
     display: grid;
@@ -197,7 +200,7 @@ body {
   }
   
   .navigation-bar {
-    background-color: #e8f0e8;
+    background-color: #d9ead9;
     padding: 5px;
     border-radius: 10px;
     margin-bottom: 10px;

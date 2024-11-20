@@ -159,14 +159,7 @@ const Feedbacks = () => {
                 >
                     Feedback
                 </Button>
-                <Button
-                    variant={selectedCategory === 'rewards' ? 'contained' : 'outlined'}
-                    onClick={() => setSelectedCategory('rewards')}
-                    startIcon={<CardGiftcardIcon />}
-                    sx={{ mx: 1 }}
-                >
-                    Rewards
-                </Button>
+                
             </Box>
  
             {selectedCategory === 'feedback' ? (
