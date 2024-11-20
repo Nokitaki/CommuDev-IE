@@ -214,7 +214,7 @@ const AuthPage = () => {
           setSuccessMessage('Login successful!');
           
           setTimeout(() => {
-            navigate('/profileuser');
+            navigate('/');
           }, 1000);
         }
       } else {

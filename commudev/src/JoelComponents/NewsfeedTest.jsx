@@ -287,7 +287,7 @@ const CommunityPlatform = () => {
                 />
               </div>
               <div className="profile-info">
-                <h4>Harry Potter</h4>
+                <h4>Joel Chandler</h4>
               </div>
             </div>
           </Link>
