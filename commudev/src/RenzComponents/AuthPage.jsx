@@ -69,8 +69,9 @@ const AuthPage = () => {
   // Styles
   const styles = {
     mainContainer: {
+      marginTop: '6%',
       minHeight: '100vh',
-      background: 'linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%)',
+      background: '#e4efe4',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
