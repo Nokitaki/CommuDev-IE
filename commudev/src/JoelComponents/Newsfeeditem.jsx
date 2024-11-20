@@ -67,15 +67,10 @@ const NewsFeedItem = ({ post, handleUpdate, handleDelete }) => {
     if (diffInDays === 1) return '1 day ago';
     if (diffInDays <= 2) return `${diffInDays} days ago`;
     
-    // Format the date if it's more than 2 days ago
     return postDate.toLocaleDateString();
   };
-  
 
-  // Change this line to reference the correct property
   const timeAgo = post.post_date ? getDaysAgo(post.post_date) : 'No date available';
-
-  
 
   return (
     <article className="feed-item">
@@ -90,22 +85,21 @@ const NewsFeedItem = ({ post, handleUpdate, handleDelete }) => {
           </div>
           <div className="status-badges">
             <span
-              className={`status-badge ${post.isActive || post.post_status === 'Active' ? 'status-badge-active' : 'status-badge-inactive'}`}
+              className={`status-badge ${post.post_status === 'Active' ? 'status-badge-active' : 'status-badge-inactive'}`}
             >
-              {post.isActive || post.post_status === 'Active' ? 'Active' : 'Inactive'}
+              {post.post_status}
             </span>
             
             <span className="post-meta">
-            {post.post_type && (
-              <span
-                className={`post-type-value post-type-${post.post_type.toLowerCase()}`}
-              >
-                {post.post_type}
-              </span>
-            )}
-          </span>
+              {post.post_type && (
+                <span
+                  className={`post-type-value post-type-${post.post_type.toLowerCase()}`}
+                >
+                  {post.post_type}
+                </span>
+              )}
+            </span>
           </div>
-
         </div>
       </header>
 
