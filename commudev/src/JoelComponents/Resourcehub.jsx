@@ -63,7 +63,7 @@ const ResourceHub = () => {
     return (
         <div className="resource-hub">
             <h1>Resource Hub</h1>
-            <form>
+            <form className='form-content'>
                 <input
                     type="text"
                     placeholder="Resource Title"

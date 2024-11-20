@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
+import "../styles/TaskManager.css";
 import {
   Box,
   Card,
@@ -20,27 +21,26 @@ import {
   Alert,
   Paper,
   CircularProgress,
-  Divider
-} from '@mui/material';
+  Divider,
+} from "@mui/material";
 import {
   Add as AddIcon,
   Edit as EditIcon,
   Delete as DeleteIcon,
   Assignment as AssignmentIcon,
   AccessTime as AccessTimeIcon,
-  Flag as FlagIcon
-} from '@mui/icons-material';
-import axios from 'axios';
-
+  Flag as FlagIcon,
+} from "@mui/icons-material";
+import axios from "axios";
 
 const TaskFormDialog = ({ open, onClose, task, onSave }) => {
   const [formData, setFormData] = useState({
-    taskDescription: '',
-    status: 'PENDING',
-    priority: 'MEDIUM',
-    dueDate: '',
-    taskType: 'GENERAL',
-    reward: ''
+    taskDescription: "",
+    status: "PENDING",
+    priority: "MEDIUM",
+    dueDate: "",
+    taskType: "GENERAL",
+    reward: "",
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -54,7 +54,7 @@ const TaskFormDialog = ({ open, onClose, task, onSave }) => {
   const handleChange = (field) => (event) => {
     setFormData({
       ...formData,
-      [field]: event.target.value
+      [field]: event.target.value,
     });
   };
 
@@ -64,15 +64,21 @@ const TaskFormDialog = ({ open, onClose, task, onSave }) => {
     try {
       let response;
       if (task?.taskId) {
-        response = await axios.put(`http://localhost:8080/tasks/${task.taskId}`, formData);
+        response = await axios.put(
+          `http://localhost:8080/tasks/${task.taskId}`,
+          formData
+        );
       } else {
-        response = await axios.post('http://localhost:8080/tasks/add', formData);
+        response = await axios.post(
+          "http://localhost:8080/tasks/add",
+          formData
+        );
       }
       onSave(response.data);
       onClose();
     } catch (error) {
-      console.error('Error saving task:', error);
-      setError('Failed to save task. Please try again.');
+      console.error("Error saving task:", error);
+      setError("Failed to save task. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -80,9 +86,7 @@ const TaskFormDialog = ({ open, onClose, task, onSave }) => {
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle>
-        {task ? 'Edit Task' : 'Create New Task'}
-      </DialogTitle>
+      <DialogTitle>{task ? "Edit Task" : "Create New Task"}</DialogTitle>
       <DialogContent>
         {error && (
           <Alert severity="error" sx={{ mb: 2 }}>
@@ -95,7 +99,7 @@ const TaskFormDialog = ({ open, onClose, task, onSave }) => {
               fullWidth
               label="Task Description"
               value={formData.taskDescription}
-              onChange={handleChange('taskDescription')}
+              onChange={handleChange("taskDescription")}
               multiline
               rows={3}
             />
@@ -105,7 +109,7 @@ const TaskFormDialog = ({ open, onClose, task, onSave }) => {
               <InputLabel>Status</InputLabel>
               <Select
                 value={formData.status}
-                onChange={handleChange('status')}
+                onChange={handleChange("status")}
                 label="Status"
               >
                 <MenuItem value="PENDING">Pending</MenuItem>
@@ -119,7 +123,7 @@ const TaskFormDialog = ({ open, onClose, task, onSave }) => {
               <InputLabel>Priority</InputLabel>
               <Select
                 value={formData.priority}
-                onChange={handleChange('priority')}
+                onChange={handleChange("priority")}
                 label="Priority"
               >
                 <MenuItem value="LOW">Low</MenuItem>
@@ -134,7 +138,7 @@ const TaskFormDialog = ({ open, onClose, task, onSave }) => {
               label="Due Date"
               type="date"
               value={formData.dueDate}
-              onChange={handleChange('dueDate')}
+              onChange={handleChange("dueDate")}
               InputLabelProps={{ shrink: true }}
             />
           </Grid>
@@ -143,7 +147,7 @@ const TaskFormDialog = ({ open, onClose, task, onSave }) => {
               <InputLabel>Task Type</InputLabel>
               <Select
                 value={formData.taskType}
-                onChange={handleChange('taskType')}
+                onChange={handleChange("taskType")}
                 label="Task Type"
               >
                 <MenuItem value="GENERAL">General</MenuItem>
@@ -159,7 +163,7 @@ const TaskFormDialog = ({ open, onClose, task, onSave }) => {
               fullWidth
               label="Reward"
               value={formData.reward}
-              onChange={handleChange('reward')}
+              onChange={handleChange("reward")}
             />
           </Grid>
         </Grid>
@@ -172,7 +176,7 @@ const TaskFormDialog = ({ open, onClose, task, onSave }) => {
           disabled={loading}
           startIcon={loading ? <CircularProgress size={20} /> : null}
         >
-          {task ? 'Update Task' : 'Create Task'}
+          {task ? "Update Task" : "Create Task"}
         </Button>
       </DialogActions>
     </Dialog>
@@ -183,29 +187,37 @@ const TaskFormDialog = ({ open, onClose, task, onSave }) => {
 const TaskCard = ({ task, onEdit, onDelete }) => {
   const getPriorityColor = (priority) => {
     switch (priority) {
-      case 'HIGH': return 'error';
-      case 'MEDIUM': return 'warning';
-      case 'LOW': return 'success';
-      default: return 'default';
+      case "HIGH":
+        return "error";
+      case "MEDIUM":
+        return "warning";
+      case "LOW":
+        return "success";
+      default:
+        return "default";
     }
   };
 
   const getStatusColor = (status) => {
     switch (status) {
-      case 'COMPLETED': return 'success';
-      case 'IN_PROGRESS': return 'warning';
-      case 'PENDING': return 'info';
-      default: return 'default';
+      case "COMPLETED":
+        return "success";
+      case "IN_PROGRESS":
+        return "warning";
+      case "PENDING":
+        return "info";
+      default:
+        return "default";
     }
   };
 
   return (
     <Card elevation={3}>
       <CardContent>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
+        <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
           <Typography variant="h6" component="div">
-            <AssignmentIcon sx={{ verticalAlign: 'middle', mr: 1 }} />
-            {task.taskType.replace('_', ' ')}
+            <AssignmentIcon sx={{ verticalAlign: "middle", mr: 1 }} />
+            {task.taskType.replace("_", " ")}
           </Typography>
           <Box>
             <IconButton size="small" onClick={() => onEdit(task)}>
@@ -221,7 +233,7 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
           {task.taskDescription}
         </Typography>
 
-        <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
+        <Box sx={{ display: "flex", gap: 1, mb: 2 }}>
           <Chip
             icon={<FlagIcon />}
             label={task.priority}
@@ -229,7 +241,7 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
             size="small"
           />
           <Chip
-            label={task.status.replace('_', ' ')}
+            label={task.status.replace("_", " ")}
             color={getStatusColor(task.status)}
             size="small"
           />
@@ -251,7 +263,6 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
   );
 };
 
-
 const TaskManager = () => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -265,11 +276,11 @@ const TaskManager = () => {
 
   const fetchTasks = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/tasks/all');
+      const response = await axios.get("http://localhost:8080/tasks/all");
       setTasks(response.data);
     } catch (error) {
-      console.error('Error fetching tasks:', error);
-      setError('Failed to load tasks. Please try again later.');
+      console.error("Error fetching tasks:", error);
+      setError("Failed to load tasks. Please try again later.");
     } finally {
       setLoading(false);
     }
@@ -286,22 +297,24 @@ const TaskManager = () => {
   };
 
   const handleDelete = async (taskId) => {
-    if (window.confirm('Are you sure you want to delete this task?')) {
+    if (window.confirm("Are you sure you want to delete this task?")) {
       try {
         await axios.delete(`http://localhost:8080/tasks/${taskId}`);
-        setTasks(tasks.filter(task => task.taskId !== taskId));
+        setTasks(tasks.filter((task) => task.taskId !== taskId));
       } catch (error) {
-        console.error('Error deleting task:', error);
-        setError('Failed to delete task. Please try again.');
+        console.error("Error deleting task:", error);
+        setError("Failed to delete task. Please try again.");
       }
     }
   };
 
   const handleSave = (savedTask) => {
     if (selectedTask) {
-      setTasks(tasks.map(task =>
-        task.taskId === savedTask.taskId ? savedTask : task
-      ));
+      setTasks(
+        tasks.map((task) =>
+          task.taskId === savedTask.taskId ? savedTask : task
+        )
+      );
     } else {
       setTasks([...tasks, savedTask]);
     }
@@ -309,7 +322,12 @@ const TaskManager = () => {
 
   if (loading) {
     return (
-      <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        minHeight="400px"
+      >
         <CircularProgress />
       </Box>
     );
@@ -324,8 +342,15 @@ const TaskManager = () => {
   }
 
   return (
-    <Box sx={{ maxWidth: '1200px', mx: 'auto', p: 4 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
+    <Box sx={{ maxWidth: "1200px", mx: "auto", p: 4 }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          mb: 4,
+        }}
+      >
         <Typography variant="h4" component="h1">
           Community Development Tasks
         </Typography>
@@ -338,13 +363,14 @@ const TaskManager = () => {
         </Button>
       </Box>
 
-      <Grid container spacing={3}>
+      <Grid container spacing={3} sx={{ width: "1000px" }}>
         {tasks.map((task) => (
           <Grid item xs={12} sm={6} md={4} key={task.taskId}>
             <TaskCard
               task={task}
               onEdit={handleEdit}
               onDelete={handleDelete}
+              sx={{ width: { md: "300px" } }} // Set a fixed width for larger screens
             />
           </Grid>
         ))}
