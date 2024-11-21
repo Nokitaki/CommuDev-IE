@@ -75,6 +75,28 @@ const ResourceHub = () => {
       status: "Active",
       fileSize: "2.5 MB",
     },
+    {
+      id: 2,
+      title: "Community Guidelines",
+      description:
+        "Essential guidelines and rules for community participation and engagement. Includes best practices and code of conduct.",
+      type: "documents",
+      date: "2024-11-20",
+      downloads: 45,
+      status: "Active",
+      fileSize: "2.5 MB",
+    },
+    {
+      id: 3,
+      title: "Community Guidelines",
+      description:
+        "Essential guidelines and rules for community participation and engagement. Includes best practices and code of conduct.",
+      type: "documents",
+      date: "2024-11-20",
+      downloads: 45,
+      status: "Active",
+      fileSize: "2.5 MB",
+    },
     // ... your other initial resources
   ]);
 

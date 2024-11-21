@@ -5,7 +5,7 @@
 .community-platform-resource {
     display: grid;
     grid-template-columns: 250px 1fr 300px;
-    width: 97%;
+    width: 86%;
     max-width: 1400px;
     height: 94.5vh;
     margin: 20px auto;
