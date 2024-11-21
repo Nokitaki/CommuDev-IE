@@ -80,10 +80,10 @@ const CommunityPlatform = () => {
 
   // Navigations
   const navigationItems = [
-    { icon: HomeIcon, label: "Home", path: '/'},
+    { icon: HomeIcon, label: "Home", path: "/" },
     { icon: MessageIcon, label: "Messages" },
-    { icon: ResourceIcon, label: "Resources", path: '/resource'},
-    { icon: TaskIcon, label: "Task", path: '/task'},
+    { icon: ResourceIcon, label: "Resources", path: "/resource" },
+    { icon: TaskIcon, label: "Task", path: "/task" },
     { icon: RewardsIcon, label: "Rewards" },
     { icon: FeedbackIcon, label: "Feedback" },
   ];
@@ -270,9 +270,11 @@ const CommunityPlatform = () => {
       <div className="community-platform">
         <div className="sidebar">
           <div className="header">
-            <div className="logo">
-              <img src={LogoIcon} alt="Logo" className="logo-icon" />
-            </div>
+            <Link to="/">
+              <div className="logo">
+                <img src={LogoIcon} alt="Logo" className="logo-icon" />
+              </div>
+            </Link>
             <div className="search-bar">
               <input type="text" placeholder="Search" />
             </div>
