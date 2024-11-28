@@ -1,981 +1,979 @@
-/* Parent CSS*/
-
 body {
-    margin: 0;
-    padding: 0;
-    min-height: 100vh;
-    background-color: #e4efe4; /* Light green background */
-    display: flex;
-    justify-content:center;
-    align-items: center;
-    color: #333;
-  }
- 
-  
-  .community-platform {
-    display: grid;
-    grid-template-columns: 250px 1fr 300px;
-    width: 96%;
-    max-width: 1400px;
-    height: 94.5vh;
-    margin: 20px auto;
-    background-color: white;
-    border-radius: 20px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-  }
-  
-  /* Rest of your existing CSS styles remain the same */
-  .sidebar {
-    background-color: white;
-    padding: 10px;
-    border-right: 1px solid #e4e6eb;
-  }
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background-color: #e4efe4; /* Light green background */
+  display: flex;
+  justify-content:center;
+  align-items: center;
+  color: #333;
+}
 
-  .left-sidebar{
-    color: #000;
-    width: 100%; /* Full width of the container */
-    height: 100%; /* Half the height of the parent container */
-    background-color: white;
-    padding: 10px; /* Inner padding for spacing */
-    border-right: 1px solid #e4e6eb; /* Right border */
-    box-sizing: border-box; /* Includes padding and border in width/height */
-    overflow: hidden; /* Ensures no overflow issues */
-    display: flex;
-    flex-direction: column; /* Allows for stacking elements vertically */
-  }
-  
-  .calendar {
-    color: #000;
-    width: 100%; /* Full width of the container */
-    height: 50%; /* Half the height of the parent container */
-    background-color: white;
-    padding: 5px; /* Inner padding for spacing */
-    overflow: hidden; /* Ensures no overflow issues */
-    display: flex;
-    flex-direction: column; /* Allows for stacking elements vertically */
-    margin-bottom: 0%;
-  }
-  
- 
 
-  .header {
-    display: flex;               /* Arrange logo and search-bar side by side */
-    align-items: center;         /* Center the items vertically */
-    justify-content: space-between; /* Optional: space them out, you can adjust this as needed */
-    width: 100%;                 /* Ensure it takes up the full width of the parent */
-  }
-  
-  .logo-icon {
- 
-    width: 80px;  /* Set the width */
-    height: 80px;  /* Set the height */
-  }
-  
-  .search-bar input {
-    width: 85%; /* Set the width to something reasonable */
-    padding: 8px 12px;
-    border: 1px solid #e4e6eb;
-    border-radius: 20px;
-    background-color: #f0f2f5;
-  }
+.community-platform {
+  display: grid;
+  grid-template-columns: 250px 1fr 300px;
+  width: 96%;
+  max-width: 1400px;
+  height: 94.5vh;
+  margin: 20px auto;
+  background-color: white;
+  border-radius: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
 
-  .profile-sidebar {
-    display: flex;
-    align-items: center;
-    padding: 5px 10px;
-    
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    margin-bottom: 10px;
-    max-width: 300px;
-  }
-  
-  .profile-avatar {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    overflow: hidden;
-    border: 3px solid #ccc;
-    margin-right: 15px; /* Space between avatar and name */
-    
-  }
-  
-  .profile-avatar .profile-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  
-  .profile-info {
-    flex-grow: 1;
-    text-align: left; /* Align name to the left */
-  }
-  
-  .profile-info h4 {
-    margin: 0;
-    font-size: 15px;
-    font-weight:600;
-    color: #333;
-  }
-  
-  
-  .community-section,
-  .friends-section {
-    margin-top: 0px;
-    padding: 5px;
-  }
-  
-  .community-section h3,
-  .friends-section h3 {
-    font-size: 14px;
-    color: #65676b;
-    margin-bottom: 15px;
-  }
-  
-  .community-item,
-  .friend-item {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    padding: 8px;
-    margin: 4px 0;
-    border-radius: 8px;
-    cursor: pointer;
-    color: #000;
-  }
-  
-  .community-item:hover,
-  .friend-item:hover {
-    background-color: #f0f2f5;
-  }
+/* Rest of your existing CSS styles remain the same */
+.sidebar {
+  background-color: white;
+  padding: 10px;
+  border-right: 1px solid #e4e6eb;
+}
 
-  /*friend list*/
-  .scrollable-friends-list {
-    max-height: 300px;  /* Limit the height for the scrollable area */
-    overflow-y: auto; /* Enable vertical scrolling */
-    scrollbar-width: none;  /* Enable vertical scrolling */
-    padding-right: 10px; /* Optional: adds space for the scrollbar */
-  }
-  
-  .friend-item {
-    margin-bottom: 10px;  /* Space between each friend item */
-  }
-  
+.left-sidebar{
+  color: #000;
+  width: 100%; /* Full width of the container */
+  height: 100%; /* Half the height of the parent container */
+  background-color: white;
+  padding: 10px; /* Inner padding for spacing */
+  border-right: 1px solid #e4e6eb; /* Right border */
+  box-sizing: border-box; /* Includes padding and border in width/height */
+  overflow: hidden; /* Ensures no overflow issues */
+  display: flex;
+  flex-direction: column; /* Allows for stacking elements vertically */
+}
 
+.calendar {
+  color: #000;
+  width: 100%; /* Full width of the container */
+  height: 50%; /* Half the height of the parent container */
+  background-color: white;
+  padding: 5px; /* Inner padding for spacing */
+  overflow: hidden; /* Ensures no overflow issues */
+  display: flex;
+  flex-direction: column; /* Allows for stacking elements vertically */
+  margin-bottom: 0%;
+}
+
+
+
+.header {
+  display: flex;               /* Arrange logo and search-bar side by side */
+  align-items: center;         /* Center the items vertically */
+  justify-content: space-between; /* Optional: space them out, you can adjust this as needed */
+  width: 100%;                 /* Ensure it takes up the full width of the parent */
+}
+
+.logo-icon {
+
+  width: 80px;  /* Set the width */
+  height: 80px;  /* Set the height */
+}
+
+.search-bar input {
+  width: 85%; /* Set the width to something reasonable */
+  padding: 8px 12px;
+  border: 1px solid #e4e6eb;
+  border-radius: 20px;
+  background-color: #f0f2f5;
+}
+
+.profile-sidebar {
+  display: flex;
+  align-items: center;
+  padding: 5px 10px;
   
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 10px;
+  max-width: 300px;
+}
+
+.profile-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid #ccc;
+  margin-right: 15px; /* Space between avatar and name */
   
-  .avatar {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background-color: #e4e6eb;
-    margin-right: 10px;
-    position: relative;
-  }
-  
-  .status-indicator {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background-color: #ccc;
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    border: 2px solid white;
-  }
-  
-  .status-indicator.online {
-    background-color: #31a24c;
-  }
-  
-  /* Main Content Styles */
-  .main-content {
-    padding: 20px;
-    background-color: #f0f2f5;
-    height: 100vh; /* Full viewport height */
-    display: flex;
-    flex-direction: column;
-    overflow: hidden; /* Prevent main content from scrolling */
-  }
-  
-  .navigation-bar {
-    background-color: #d9ead9;
-    padding: 5px;
-    border-radius: 10px;
-    margin-bottom: 10px;
-    flex-shrink: 0;
-    width: 60%;           /* Takes 80% of parent width */
-    margin-left: auto;
-    margin-right: auto;
-  }
-  
+}
+
+.profile-avatar .profile-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-info {
+  flex-grow: 1;
+  text-align: left; /* Align name to the left */
+}
+
+.profile-info h4 {
+  margin: 0;
+  font-size: 15px;
+  font-weight:600;
+  color: #333;
+}
+
+
+.community-section,
+.friends-section {
+  margin-top: 0px;
+  padding: 5px;
+}
+
+.community-section h3,
+.friends-section h3 {
+  font-size: 14px;
+  color: #65676b;
+  margin-bottom: 15px;
+}
+
+.community-item,
+.friend-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 8px;
+  margin: 4px 0;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #000;
+}
+
+.community-item:hover,
+.friend-item:hover {
+  background-color: #f0f2f5;
+}
+
+/*friend list*/
+.scrollable-friends-list {
+  max-height: 300px;  /* Limit the height for the scrollable area */
+  overflow-y: auto; /* Enable vertical scrolling */
+  scrollbar-width: none;  /* Enable vertical scrolling */
+  padding-right: 10px; /* Optional: adds space for the scrollbar */
+}
+
+.friend-item {
+  margin-bottom: 10px;  /* Space between each friend item */
+}
+
+
+
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #e4e6eb;
+  margin-right: 10px;
+  position: relative;
+}
+
+.status-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #ccc;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  border: 2px solid white;
+}
+
+.status-indicator.online {
+  background-color: #31a24c;
+}
+
+/* Main Content Styles */
+.main-content {
+  padding: 20px;
+  background-color: #f0f2f5;
+  height: 100vh; /* Full viewport height */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Prevent main content from scrolling */
+}
+
+.navigation-bar {
+  background-color: #d9ead9;
+  padding: 5px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  flex-shrink: 0;
+  width: 60%;           /* Takes 80% of parent width */
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.nav-icons {
+  display: flex;
+  justify-content: center; /* Center the items */
+  align-items: center;
+  padding: 0 16px;
+  gap: 10px; /* Reduced gap between items from previous larger values */
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  padding: 6px 10px; /* Reduced padding from 8px 16px */
+  border-radius: 8px;
+  transition: background-color 0.2s;
+}
+
+.nav-item:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.nav-icon {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+
+.nav-label {
+  font-size: 12px;
+  color: #65676b;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
   .nav-icons {
-    display: flex;
-    justify-content: center; /* Center the items */
-    align-items: center;
-    padding: 0 16px;
-    gap: 10px; /* Reduced gap between items from previous larger values */
-  }
-
-  .nav-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    cursor: pointer;
-    padding: 6px 10px; /* Reduced padding from 8px 16px */
-    border-radius: 8px;
-    transition: background-color 0.2s;
-  }
-
-  .nav-item:hover {
-    background-color: rgba(0, 0, 0, 0.05);
+    gap: 4px; /* Even tighter on mobile */
   }
   
-  .nav-icon {
-    width: 32px;
-    height: 32px;
-    object-fit: contain;
+  .nav-item {
+    padding: 6px 8px;
   }
 
   .nav-label {
-    font-size: 12px;
-    color: #65676b;
-    font-weight: 500;
+    display: none;
   }
-  
-  @media (max-width: 768px) {
-    .nav-icons {
-      gap: 4px; /* Even tighter on mobile */
-    }
-    
-    .nav-item {
-      padding: 6px 8px;
-    }
-  
-    .nav-label {
-      display: none;
-    }
-  }
-  
-  .user-avatars-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    position: relative;
-    margin-left: .5%;
+}
+
+.user-avatars-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  position: relative;
+  margin-left: .5%;
 }
 
 /* Navigation buttons */
 .nav-button {
-  background: #C9E4B8;
-  border: none;
-  font-size: 8px;
-  border-radius: 50%;
-  cursor: pointer;
-  color: white;
-  outline: none;
-  z-index: 2;
-  position: absolute; /* Position the buttons absolutely within the container */
-  top: 50%; /* Center the button vertically */
-  transform: translateY(-50%); /* Adjust the button to be centered */
+background: #C9E4B8;
+border: none;
+font-size: 8px;
+border-radius: 50%;
+cursor: pointer;
+color: white;
+outline: none;
+z-index: 2;
+position: absolute; /* Position the buttons absolutely within the container */
+top: 50%; /* Center the button vertically */
+transform: translateY(-50%); /* Adjust the button to be centered */
 }
 
 .nav-button:first-of-type {
-  left: 10px; /* Position the previous button on the left */
+left: 10px; /* Position the previous button on the left */
 }
 
 .nav-button:last-of-type {
-  right: 10px; /* Position the next button on the right */
+right: 10px; /* Position the next button on the right */
 }
 
 .nav-button:disabled {
-  opacity: 0.3;
-  cursor: not-allowed;
+opacity: 0.3;
+cursor: not-allowed;
 }
 
 /* Avatars wrapper */
 .user-avatars {
-    display: flex;
-    gap: 15px;
-    overflow: hidden;
-   
-    position: relative;
-    padding: 10px 0;
+  display: flex;
+  gap: 15px;
+  overflow: hidden;
+ 
+  position: relative;
+  padding: 10px 0;
 }
 
 /* Individual avatar styling */
 .user-avatar {
-    text-align: center;
-    font-size: 12px;
-    color: white;
+  text-align: center;
+  font-size: 12px;
+  color: white;
 }
 
 .avatar-wrapper {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    padding: 4.5px;
-    background: linear-gradient(to right, #EB00FF, #7DE8EA);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  padding: 4.5px;
+  background: linear-gradient(to right, #EB00FF, #7DE8EA);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .avatar-image {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    background-color: white; /* Fallback background color */
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: white; /* Fallback background color */
 }
 
 /* Avatar name styling */
 .avatar-name {
-    margin-top: 5px;
-    display: block;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-    width: 70px;
-}
-
-  
-  .user-avatar {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    color: #000;
-  }
-  
-  .user-avatar .avatar-image {
-    width: 55px; /* Adjust the avatar size as needed */
-    height: 55px;
-    border-radius: 50%;
-   
-  }
-  
-  .user-avatar .avatar-image.online {
-    border-color: #2ecc71; /* Online indicator color */
-  }
-  
-  .user-avatar .avatar-image.offline {
-    border-color: #ccc; /* Offline indicator color */
-  }
-  
-  .user-avatar span {
-    font-size: 12px;
-    margin-top: 5px;
-  }
-  
-  /* Post Styles */
-  .post-card {
-    background-color: white;
-    border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 20px;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-  }
-  
-  .post-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-  }
-  
-  .post-author {
-    display: flex;
-    align-items: center;
-  }
-  
-  .author-info {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .author-name {
-    font-weight: 600;
-  }
-  
-  .community-tag {
-    font-size: 12px;
-    color: #65676b;
-  }
-  
-  .follow-button {
-    padding: 6px 12px;
-    border-radius: 20px;
-    border: none;
-    background-color: #e4e6eb;
-    cursor: pointer;
-  }
-  
-  .follow-button:hover {
-    background-color: #d8dadf;
-  }
-  
-  .post-content {
-    margin-bottom: 15px;
-    line-height: 1.5;
-    color: #000;
-  }
-  
-  .post-image {
-    width: 100%;
-    border-radius: 8px;
-    overflow: hidden;
-    margin-bottom: 15px;
-  }
-  
-  .post-image img {
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-  }
-  
-  .post-stats {
-    display: flex;
-    gap: 20px;
-    color: #65676b;
-  }
-  
-  /* Calendar Section Styles */
-  .calendar-section {
-    background-color: white;
-    padding: 20px;
-    border-left: 1px solid #e4e6eb;
-  }
-  
-  .calendar-section h2 {
-    font-size: 18px;
-    margin-bottom: 20px;
-  }
-  
-  /* Responsive Design */
-  @media (max-width: 1200px) {
-    .community-platform {
-      grid-template-columns: 250px 1fr;
-      width: 98%;
-    }
-    
-    .calendar-section {
-      display: none;
-    }
-  }
-  
-  @media (max-width: 768px) {
-    .community-platform {
-      grid-template-columns: 1fr;
-      width: 100%;
-      margin: 0;
-      border-radius: 0;
-    }
-    
-    .sidebar {
-      display: none;
-    }
-  }
-
-  /* For Article*/
-
-  /* Add these styles to your existing CSS file */
-
-  .storiesAndfeed {
-    height: 100vh;
-    overflow-y: auto;
-    scrollbar-width: none;
-    overflow-x: hidden;
-  }
-
-  .feed-item {
-    background: white;
-    border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 20px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  }
-
-  .storiesAndfeed {
-    height: calc(100vh - 125px); /* Adjust the subtracted value as needed */
-    overflow-y: auto;
-    scrollbar-width: none;
-    overflow-x: hidden;
-  }
-
-  .storiesAndfeed::-webkit-scrollbar {
-    width: 8px;
-  }
-
-  .storiesAndfeed::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 4px;
-  }
-  
-  .storiesAndfeed::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 4px;
-  }
-  
-  .storiesAndfeed::-webkit-scrollbar-thumb:hover {
-    background: #555;
-  }
-  
-  .post-header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 15px;
-  }
-  
-  .profile-image {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    background-color: #e4e6eb; /* Fallback background color */
-    background-size: cover; /* Make sure the image covers the entire circle */
-    background-position: center; /* Center the image within the circle */
-    margin-right: 12px;
-}
-  .user-info {
-    flex: 1;
-  }
-  
-  .user-meta {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  
-  .username {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    font-weight: 600;
-    font-size: 15px;
-    color: #1f1f1f;
-    margin: 0;
-    line-height: 1.4;
-    transition: color 0.2s ease;
-  }
-  
-  .username:hover {
-    color: #0066cc;
-    cursor: pointer;
-  }
-  
-  
-  .post-meta {
-    color: #65676b;
-    font-size: 14px;
-  }
-  
-  .status-badges {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-top: 4px;
-  }
-  
-  .status-badge {
-    padding: 2px 8px;
-    border-radius: 12px;
-    font-size: 12px;
-    font-weight: 500;
-  }
-  
-  .status-badge-active {
-    background-color: #e8f5e9;
-    color: #2e7d32;
-  }
-  
-  .status-badge-inactive {
-    background-color: #ffebee;
-    color: #c62828;
-  }
-  
-  .post-type-value {
-    padding: 2px 8px;
-    border-radius: 12px;
-    font-size: 12px;
-    font-weight: 500;
-
-
-  }
-  .post-type-event {
-    background-color: #e6eefe; /* Soft blue, lighter than the original */
-    color: #3a58b7; /* A slightly darker shade of blue */
-  }
-  
-  .post-type-announcement {
-    background-color: #fff2de; /* A warm, soft orange */
-    color: #bf6d00; /* A darker, complementary orange-brown */
-  }
-  
-  .post-type-reminder {
-    background-color: #f4d8e0; /* A light, pastel pink */
-    color: #9b2b59; /* A rich, slightly muted magenta */
-  }
-  
-  .post-content {
-    margin-bottom: 20px;
-    line-height: 1.5;
-  }
-  
-  .post-image {
-    width: 100%;
-    border-radius: 8px;
-    overflow: hidden;
-    margin-top: 12px;
-  }
-  
-  .post-image img {
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-  }
-  
-  .post-actions {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-top: 12px;
-    border-top: 1px solid #e4e6eb;
-  }
-  
-  .like-button {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    background: none;
-    border: none;
-    padding: 8px 12px;
-    cursor: pointer;
-    color: #666; /* Default gray text color */
-    font-size: 0.875rem;
-    border-radius: 8px;
-    transition: all 0.2s ease;
-}
-
-.like-button:hover {
-    background-color: #f0f0f0; /* Light background on hover */
-}
-
-.like-button:focus {
-    outline: none; /* Remove focus outline */
-}
-
-.like-button .heart-icon {
-    width: 20px;
-    height: 20px;
-    fill: #e91e63; /* Red heart by default */
-    transition: fill 0.2s ease, transform 0.2s ease; /* Add smooth transition */
-}
-
-.like-button:hover .heart-icon {
-    fill: #ff0000; /* Lighter red color on hover */
-    transform: scale(1.1); /* Slightly enlarge the heart when hovered */
-}
-
-.like-button.active .heart-icon {
-    fill: #e91e63; /* Keep the heart red when active */
-}
-
-  
-  
-  .action-buttons {
-    display: flex;
-    gap: 8px;
-  }
-  
-  .btn {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 12px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-  }
-  
-  .btn-edit {
-    background-color: #e8f5e9;
-    color: #2e7d32;
-  }
-  
-  .btn-delete {
-    background-color: #ffebee;
-    color: #c62828;
-  }
-  
-  .edit-icon {
-    width: 16px;
-    height: 16px;
-    fill: currentColor;
-  }
-  
-  /* Add these to your existing responsive styles */
-  @media (max-width: 768px) {
-    .feed-item {
-      border-radius: 0;
-      margin: 0 -20px 20px;
-    }
-    
-    .action-buttons {
-      flex-direction: column;
-    }
-  }
-
-/* new */
-
-.create-post-section {
-    background: white;
-    border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 20px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.feed-title {
-  margin-top: 0%;
-    font-size: 1.5rem;
-    color: #333;
-    text-align: center;
-}
-
-.create-post-form {
-    display: flex;
-    flex-direction: column;
-    width: 96%;
-    gap: 1rem;
-}
-
-.post-input {
-    width: 96%;
-    padding: 12px;
-    border: 1px solid #e4e6eb;
-    border-radius: 8px;
-    font-size: 1rem;
-    resize: none;
-    background-color: #f0f2f5;
-}
-
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.4);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-  backdrop-filter: blur(4px);
-}
-
-.modal-content {
-  background-color: white;
-  color: #2c3e50;
-  padding: 3rem;
-  border-radius: 16px;
-  width: 100%;
-  max-width: 520px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08), 0 6px 12px rgba(0, 0, 0, 0.06);
-  border: 1px solid #ecf0f1;
-  position: relative;
+  margin-top: 5px;
+  display: block;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   overflow: hidden;
-}
-
-.modal-content::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 6px;
-  background: linear-gradient(to right, #3498db, #2ecc71);
-}
-
-.modal-title {
-  text-align: center;
-  margin-bottom: 2rem;
-  color: #2c3e50;
-  font-size: 1.9rem;
-  font-weight: 700;
-  margin-top: 0;
-  
-}
-
-.modal-textarea {
-  width: 95%;
-  background-color: #f7f9fa;
-  border: 1px solid #dfe4ea;
-  color: #2c3e50;
-  padding: 0.875rem;
-  border-radius: 8px;
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-  margin-bottom: 1%;
-}
-
-.modal-select {
-  width: 30%;
-  background-color: #f7f9fa;
-  border: 1px solid #dfe4ea;
-  color: #2c3e50;
-  padding: 0.875rem;
-  border-radius: 8px;
-  margin-right: 1%;
-  margin-bottom: 1%;
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-}
-
-.modal-date-input {
-  width: 30%;
-  background-color: #f7f9fa;
-  border: 1px solid #dfe4ea;
-  color: #2c3e50;
-  padding: 0.875rem;
-  border-radius: 8px;
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-  position: relative; /* Ensure the calendar button is positioned correctly */
-}
-
-.modal-date-input::-webkit-calendar-picker-indicator {
-  background-color: #3498db; /* Set the background color for the calendar button */
-  border: none;
-  color: white; /* Set text color (if applicable) */
-  padding: 0.25rem; /* Adjust padding for the button */
-  border-radius: 50%; /* Optional: to make it round if needed */
-  cursor: pointer; /* Ensure the cursor indicates it's clickable */
-}
-
-.modal-date-input::-webkit-calendar-picker-indicator:hover {
-  background-color: #2980b9; /* Optional: Add hover effect */
-}
-
-.modal-textarea:focus {
-  outline: none;
-  border-color: #3498db;
-  box-shadow: 0 4px 6px rgba(52, 152, 219, 0.1);
-}
-
-.modal-select:focus {
-  outline: none;
-  border-color: #3498db;
-  box-shadow: 0 4px 6px rgba(52, 152, 219, 0.1);
-}
-
-.modal-date-input:focus {
-  outline: none;
-  border-color: #3498db;
-  box-shadow: 0 4px 6px rgba(52, 152, 219, 0.1);
+  width: 70px;
 }
 
 
-.modal-actions {
+.user-avatar {
+  position: relative;
   display: flex;
-  gap: 1rem;
-  margin-top: 2rem;
-}
-
-
-.btn-primary {
-  background-color: #3498db;
-  color: white;
-  border: 2px solid #3498db;
-}
-
-.btn-primary:hover {
-  background-color: #2980b9;
-  transform: translateY(-2px);
-}
-
-.btn-secondary {
-  background-color: white;
-  color: #3498db;
-  border: 2px solid #3498db;
-}
-
-.btn-secondary:hover {
-  background-color: #f1f3f4;
-  transform: translateY(-2px);
-}
-
-.notifications-container {
+  flex-direction: column;
+  align-items: center;
   color: #000;
-  width: 100%; 
-  height: 41%; 
-  overflow: hidden; /* Prevent outer container from scrolling */
 }
-.notifications {
+
+.user-avatar .avatar-image {
+  width: 55px; /* Adjust the avatar size as needed */
+  height: 55px;
+  border-radius: 50%;
+ 
+}
+
+.user-avatar .avatar-image.online {
+  border-color: #2ecc71; /* Online indicator color */
+}
+
+.user-avatar .avatar-image.offline {
+  border-color: #ccc; /* Offline indicator color */
+}
+
+.user-avatar span {
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+/* Post Styles */
+.post-card {
   background-color: white;
-  padding: 10px;
-  overflow-y: scroll; /* Keep scrollable */
-  height: 74%;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.post-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.post-author {
+  display: flex;
+  align-items: center;
+}
+
+.author-info {
   display: flex;
   flex-direction: column;
 }
 
+.author-name {
+  font-weight: 600;
+}
+
+.community-tag {
+  font-size: 12px;
+  color: #65676b;
+}
+
+.follow-button {
+  padding: 6px 12px;
+  border-radius: 20px;
+  border: none;
+  background-color: #e4e6eb;
+  cursor: pointer;
+}
+
+.follow-button:hover {
+  background-color: #d8dadf;
+}
+
+.post-content {
+  margin-bottom: 15px;
+  line-height: 1.5;
+  color: #000;
+}
+
+.post-image {
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 15px;
+}
+
+.post-image img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.post-stats {
+  display: flex;
+  gap: 20px;
+  color: #65676b;
+}
+
+/* Calendar Section Styles */
+.calendar-section {
+  background-color: white;
+  padding: 20px;
+  border-left: 1px solid #e4e6eb;
+}
+
+.calendar-section h2 {
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .community-platform {
+    grid-template-columns: 250px 1fr;
+    width: 98%;
+  }
+  
+  .calendar-section {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .community-platform {
+    grid-template-columns: 1fr;
+    width: 100%;
+    margin: 0;
+    border-radius: 0;
+  }
+  
+  .sidebar {
+    display: none;
+  }
+}
+
+/* For Article*/
+
+/* Add these styles to your existing CSS file */
+
+.storiesAndfeed {
+  height: 100vh;
+  overflow-y: auto;
+  scrollbar-width: none;
+  overflow-x: hidden;
+}
+
+.feed-item {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.storiesAndfeed {
+  height: calc(100vh - 125px); /* Adjust the subtracted value as needed */
+  overflow-y: auto;
+  scrollbar-width: none;
+  overflow-x: hidden;
+}
+
+.storiesAndfeed::-webkit-scrollbar {
+  width: 8px;
+}
+
+.storiesAndfeed::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.storiesAndfeed::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.storiesAndfeed::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.post-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.profile-image {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: #e4e6eb; /* Fallback background color */
+  background-size: cover; /* Make sure the image covers the entire circle */
+  background-position: center; /* Center the image within the circle */
+  margin-right: 12px;
+}
+.user-info {
+  flex: 1;
+}
+
+.user-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.username {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-weight: 600;
+  font-size: 15px;
+  color: #1f1f1f;
+  margin: 0;
+  line-height: 1.4;
+  transition: color 0.2s ease;
+}
+
+.username:hover {
+  color: #0066cc;
+  cursor: pointer;
+}
+
+
+.post-meta {
+  color: #65676b;
+  font-size: 14px;
+}
+
+.status-badges {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.status-badge {
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.status-badge-active {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.status-badge-inactive {
+  background-color: #ffebee;
+  color: #c62828;
+}
+
+.post-type-value {
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+
+
+}
+.post-type-event {
+  background-color: #e6eefe; /* Soft blue, lighter than the original */
+  color: #3a58b7; /* A slightly darker shade of blue */
+}
+
+.post-type-announcement {
+  background-color: #fff2de; /* A warm, soft orange */
+  color: #bf6d00; /* A darker, complementary orange-brown */
+}
+
+.post-type-reminder {
+  background-color: #f4d8e0; /* A light, pastel pink */
+  color: #9b2b59; /* A rich, slightly muted magenta */
+}
+
+.post-content {
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.post-image {
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-top: 12px;
+}
+
+.post-image img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.post-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 12px;
+  border-top: 1px solid #e4e6eb;
+}
+
+.like-button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  color: #666; /* Default gray text color */
+  font-size: 0.875rem;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.like-button:hover {
+  background-color: #f0f0f0; /* Light background on hover */
+}
+
+.like-button:focus {
+  outline: none; /* Remove focus outline */
+}
+
+.like-button .heart-icon {
+  width: 20px;
+  height: 20px;
+  fill: #e91e63; /* Red heart by default */
+  transition: fill 0.2s ease, transform 0.2s ease; /* Add smooth transition */
+}
+
+.like-button:hover .heart-icon {
+  fill: #ff0000; /* Lighter red color on hover */
+  transform: scale(1.1); /* Slightly enlarge the heart when hovered */
+}
+
+.like-button.active .heart-icon {
+  fill: #e91e63; /* Keep the heart red when active */
+}
+
+
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.btn-edit {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.btn-delete {
+  background-color: #ffebee;
+  color: #c62828;
+}
+
+.edit-icon {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
+
+/* Add these to your existing responsive styles */
+@media (max-width: 768px) {
+  .feed-item {
+    border-radius: 0;
+    margin: 0 -20px 20px;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+  }
+}
+
+/* new */
+
+.create-post-section {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.feed-title {
+margin-top: 0%;
+  font-size: 1.5rem;
+  color: #333;
+  text-align: center;
+}
+
+.create-post-form {
+  display: flex;
+  flex-direction: column;
+  width: 96%;
+  gap: 1rem;
+}
+
+.post-input {
+  width: 96%;
+  padding: 12px;
+  border: 1px solid #e4e6eb;
+  border-radius: 8px;
+  font-size: 1rem;
+  resize: none;
+  background-color: #f0f2f5;
+}
+
+.modal-overlay {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background-color: rgba(0, 0, 0, 0.4);
+display: flex;
+justify-content: center;
+align-items: center;
+z-index: 1000;
+backdrop-filter: blur(4px);
+}
+
+.modal-content {
+background-color: white;
+color: #2c3e50;
+padding: 3rem;
+border-radius: 16px;
+width: 100%;
+max-width: 520px;
+box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08), 0 6px 12px rgba(0, 0, 0, 0.06);
+border: 1px solid #ecf0f1;
+position: relative;
+overflow: hidden;
+}
+
+.modal-content::before {
+content: '';
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 6px;
+background: linear-gradient(to right, #3498db, #2ecc71);
+}
+
+.modal-title {
+text-align: center;
+margin-bottom: 2rem;
+color: #2c3e50;
+font-size: 1.9rem;
+font-weight: 700;
+margin-top: 0;
+
+}
+
+.modal-textarea {
+width: 95%;
+background-color: #f7f9fa;
+border: 1px solid #dfe4ea;
+color: #2c3e50;
+padding: 0.875rem;
+border-radius: 8px;
+transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+margin-bottom: 1%;
+}
+
+.modal-select {
+width: 30%;
+background-color: #f7f9fa;
+border: 1px solid #dfe4ea;
+color: #2c3e50;
+padding: 0.875rem;
+border-radius: 8px;
+margin-right: 1%;
+margin-bottom: 1%;
+transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.modal-date-input {
+width: 30%;
+background-color: #f7f9fa;
+border: 1px solid #dfe4ea;
+color: #2c3e50;
+padding: 0.875rem;
+border-radius: 8px;
+transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+position: relative; /* Ensure the calendar button is positioned correctly */
+}
+
+.modal-date-input::-webkit-calendar-picker-indicator {
+background-color: #3498db; /* Set the background color for the calendar button */
+border: none;
+color: white; /* Set text color (if applicable) */
+padding: 0.25rem; /* Adjust padding for the button */
+border-radius: 50%; /* Optional: to make it round if needed */
+cursor: pointer; /* Ensure the cursor indicates it's clickable */
+}
+
+.modal-date-input::-webkit-calendar-picker-indicator:hover {
+background-color: #2980b9; /* Optional: Add hover effect */
+}
+
+.modal-textarea:focus {
+outline: none;
+border-color: #3498db;
+box-shadow: 0 4px 6px rgba(52, 152, 219, 0.1);
+}
+
+.modal-select:focus {
+outline: none;
+border-color: #3498db;
+box-shadow: 0 4px 6px rgba(52, 152, 219, 0.1);
+}
+
+.modal-date-input:focus {
+outline: none;
+border-color: #3498db;
+box-shadow: 0 4px 6px rgba(52, 152, 219, 0.1);
+}
+
+
+.modal-actions {
+display: flex;
+gap: 1rem;
+margin-top: 2rem;
+}
+
+
+.btn-primary {
+background-color: #3498db;
+color: white;
+border: 2px solid #3498db;
+}
+
+.btn-primary:hover {
+background-color: #2980b9;
+transform: translateY(-2px);
+}
+
+.btn-secondary {
+background-color: white;
+color: #3498db;
+border: 2px solid #3498db;
+}
+
+.btn-secondary:hover {
+background-color: #f1f3f4;
+transform: translateY(-2px);
+}
+
+.notifications-container {
+color: #000;
+width: 100%; 
+height: 41%; 
+overflow: hidden; /* Prevent outer container from scrolling */
+}
+.notifications {
+background-color: white;
+padding: 10px;
+overflow-y: scroll; /* Keep scrollable */
+height: 74%;
+display: flex;
+flex-direction: column;
+}
+
 /* Webkit browsers (Chrome, Safari, Edge) */
 .notifications::-webkit-scrollbar {
-  width: 8px;
-  opacity: 0;  /* Initially hidden */
-  transition: opacity 0.3s ease-in-out;  /* Smooth fade-in/out */
+width: 8px;
+opacity: 0;  /* Initially hidden */
+transition: opacity 0.3s ease-in-out;  /* Smooth fade-in/out */
 }
 
 .notifications:hover::-webkit-scrollbar {
-  opacity: 1;  /* Visible on hover */
+opacity: 1;  /* Visible on hover */
 }
 
 .notifications::-webkit-scrollbar-thumb {
-  background-color: #a8abaf;  /* Thumb color */
-  border-radius: 4px;
+background-color: #a8abaf;  /* Thumb color */
+border-radius: 4px;
 }
 
 .notifications::-webkit-scrollbar-thumb:hover {
-  background-color: #4E5156;  /* Darker thumb color on hover */
+background-color: #4E5156;  /* Darker thumb color on hover */
 }
 
 .notifications::-webkit-scrollbar-track {
-  background-color: transparent;  /* Transparent track */
-  border-radius: 4px;
+background-color: transparent;  /* Transparent track */
+border-radius: 4px;
 }
 
 
 .notification-item {
-  display: flex;
-  flex-direction: column; /* Stack header and message vertically */
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
-  margin-bottom: 10px; /* Reduced margin */
+display: flex;
+flex-direction: column; /* Stack header and message vertically */
+padding: 10px;
+border-bottom: 1px solid #ddd;
+margin-bottom: 10px; /* Reduced margin */
 }
 
 .notification-header {
-  display: flex;
-  align-items: center;
-  margin-bottom: 5px; /* Add some space between header and message */
+display: flex;
+align-items: center;
+margin-bottom: 5px; /* Add some space between header and message */
 }
 
 .notification-image {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  margin-right: 10px;
+width: 40px;
+height: 40px;
+border-radius: 50%;
+margin-right: 10px;
 }
 
 .notification-username {
-  font-weight: bold;
-  margin-right: 8px;
+font-weight: bold;
+margin-right: 8px;
 }
 
 .notification-time {
-  color: gray;
-  font-size: 0.9em;
+color: gray;
+font-size: 0.9em;
 }
 
 .notification-message {
-  font-size: 1em;
-  margin-top: 5px;
-  color: #333;
+font-size: 1em;
+margin-top: 5px;
+color: #333;
 }

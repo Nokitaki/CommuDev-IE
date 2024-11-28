@@ -1,39 +1,25 @@
 import React, { useState, useEffect } from "react";
-import "../styles/TaskManager.css";
-import {
-  Box,
-  Card,
-  CardContent,
-  Typography,
-  Grid,
-  Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  TextField,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
-  Chip,
-  IconButton,
-  Alert,
-  Paper,
-  CircularProgress,
-  Divider,
-} from "@mui/material";
-import {
-  Add as AddIcon,
-  Edit as EditIcon,
-  Delete as DeleteIcon,
-  Assignment as AssignmentIcon,
-  AccessTime as AccessTimeIcon,
-  Flag as FlagIcon,
-} from "@mui/icons-material";
+import "../styles/TaskManagerTest.css";
+import { Link } from "react-router-dom";
+import LogoIcon from "../assets/prof/logo.png";
+import HomeIcon from "../assets/HomeIcon.svg";
+import MessageIcon from "../assets/MessageIcon.svg";
+import RewardsIcon from "../assets/RewardsIcon.svg";
+import ResourceIcon from "../assets/ResourceIcon.svg";
+import TaskIcon from "../assets/TaskIcon.svg";
+import Prof1 from "../assets/prof/prof1.jpg";
+import FeedbackIcon from "../assets/FeedbackIcon.svg";
+import MyCalendar from '../JoelComponents/MyCalendar';
 import axios from "axios";
 
-const TaskFormDialog = ({ open, onClose, task, onSave }) => {
+const TaskManager = () => {
+  const [tasks, setTasks] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [selectedTask, setSelectedTask] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState("all");
+
   const [formData, setFormData] = useState({
     taskDescription: "",
     status: "PENDING",
@@ -42,239 +28,37 @@ const TaskFormDialog = ({ open, onClose, task, onSave }) => {
     taskType: "GENERAL",
     reward: "",
   });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
 
-  useEffect(() => {
-    if (task) {
-      setFormData(task);
-    }
-  }, [task]);
+  const navigationItems = [
+    { icon: HomeIcon, label: "Home", path: "/" },
+    { icon: MessageIcon, label: "Messages" },
+    { icon: ResourceIcon, label: "Resources", path: "/resource" },
+    { icon: TaskIcon, label: "Task", path: "/task" },
+    { icon: RewardsIcon, label: "Rewards" },
+    { icon: FeedbackIcon, label: "Feedback" },
+  ];
 
-  const handleChange = (field) => (event) => {
-    setFormData({
-      ...formData,
-      [field]: event.target.value,
-    });
-  };
+  const users = [
+    { name: "Harry", isOnline: false, image: "prof1.jpg" },
+    { name: "Keanu", isOnline: true, image: "prof2.jpg" },
+  ];
 
-  const handleSubmit = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      let response;
-      if (task?.taskId) {
-        response = await axios.put(
-          `http://localhost:8080/tasks/${task.taskId}`,
-          formData
-        );
-      } else {
-        response = await axios.post(
-          "http://localhost:8080/tasks/add",
-          formData
-        );
-      }
-      onSave(response.data);
-      onClose();
-    } catch (error) {
-      console.error("Error saving task:", error);
-      setError("Failed to save task. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle>{task ? "Edit Task" : "Create New Task"}</DialogTitle>
-      <DialogContent>
-        {error && (
-          <Alert severity="error" sx={{ mb: 2 }}>
-            {error}
-          </Alert>
-        )}
-        <Grid container spacing={3} sx={{ mt: 1 }}>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              label="Task Description"
-              value={formData.taskDescription}
-              onChange={handleChange("taskDescription")}
-              multiline
-              rows={3}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <FormControl fullWidth>
-              <InputLabel>Status</InputLabel>
-              <Select
-                value={formData.status}
-                onChange={handleChange("status")}
-                label="Status"
-              >
-                <MenuItem value="PENDING">Pending</MenuItem>
-                <MenuItem value="IN_PROGRESS">In Progress</MenuItem>
-                <MenuItem value="COMPLETED">Completed</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <FormControl fullWidth>
-              <InputLabel>Priority</InputLabel>
-              <Select
-                value={formData.priority}
-                onChange={handleChange("priority")}
-                label="Priority"
-              >
-                <MenuItem value="LOW">Low</MenuItem>
-                <MenuItem value="MEDIUM">Medium</MenuItem>
-                <MenuItem value="HIGH">High</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              fullWidth
-              label="Due Date"
-              type="date"
-              value={formData.dueDate}
-              onChange={handleChange("dueDate")}
-              InputLabelProps={{ shrink: true }}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <FormControl fullWidth>
-              <InputLabel>Task Type</InputLabel>
-              <Select
-                value={formData.taskType}
-                onChange={handleChange("taskType")}
-                label="Task Type"
-              >
-                <MenuItem value="GENERAL">General</MenuItem>
-                <MenuItem value="COMMUNITY_SERVICE">Community Service</MenuItem>
-                <MenuItem value="EDUCATION">Education</MenuItem>
-                <MenuItem value="ENVIRONMENT">Environment</MenuItem>
-                <MenuItem value="HEALTHCARE">Healthcare</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              label="Reward"
-              value={formData.reward}
-              onChange={handleChange("reward")}
-            />
-          </Grid>
-        </Grid>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose}>Cancel</Button>
-        <Button
-          onClick={handleSubmit}
-          variant="contained"
-          disabled={loading}
-          startIcon={loading ? <CircularProgress size={20} /> : null}
-        >
-          {task ? "Update Task" : "Create Task"}
-        </Button>
-      </DialogActions>
-    </Dialog>
-  );
-};
-
-// Task Card Component
-const TaskCard = ({ task, onEdit, onDelete }) => {
-  const getPriorityColor = (priority) => {
-    switch (priority) {
-      case "HIGH":
-        return "error";
-      case "MEDIUM":
-        return "warning";
-      case "LOW":
-        return "success";
-      default:
-        return "default";
-    }
-  };
-
-  const getStatusColor = (status) => {
-    switch (status) {
-      case "COMPLETED":
-        return "success";
-      case "IN_PROGRESS":
-        return "warning";
-      case "PENDING":
-        return "info";
-      default:
-        return "default";
-    }
-  };
-
-  return (
-    <Card elevation={3}>
-      <CardContent>
-        <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
-          <Typography variant="h6" component="div">
-            <AssignmentIcon sx={{ verticalAlign: "middle", mr: 1 }} />
-            {task.taskType.replace("_", " ")}
-          </Typography>
-          <Box>
-            <IconButton size="small" onClick={() => onEdit(task)}>
-              <EditIcon />
-            </IconButton>
-            <IconButton size="small" onClick={() => onDelete(task.taskId)}>
-              <DeleteIcon />
-            </IconButton>
-          </Box>
-        </Box>
-
-        <Typography variant="body1" sx={{ mb: 2 }}>
-          {task.taskDescription}
-        </Typography>
-
-        <Box sx={{ display: "flex", gap: 1, mb: 2 }}>
-          <Chip
-            icon={<FlagIcon />}
-            label={task.priority}
-            color={getPriorityColor(task.priority)}
-            size="small"
-          />
-          <Chip
-            label={task.status.replace("_", " ")}
-            color={getStatusColor(task.status)}
-            size="small"
-          />
-          <Chip
-            icon={<AccessTimeIcon />}
-            label={task.dueDate}
-            variant="outlined"
-            size="small"
-          />
-        </Box>
-
-        {task.reward && (
-          <Typography variant="body2" color="primary">
-            Reward: {task.reward}
-          </Typography>
-        )}
-      </CardContent>
-    </Card>
-  );
-};
-
-const TaskManager = () => {
-  const [tasks, setTasks] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [openDialog, setOpenDialog] = useState(false);
-  const [selectedTask, setSelectedTask] = useState(null);
+  const notifications = [
+    {
+      user: "Keanu",
+      image: "prof1.jpg",
+      message: "completed a task",
+      time: "2 minutes ago",
+    },
+    // Add more notifications as needed
+  ];
 
   useEffect(() => {
     fetchTasks();
   }, []);
 
   const fetchTasks = async () => {
+    setLoading(true);
     try {
       const response = await axios.get("http://localhost:8080/tasks/all");
       setTasks(response.data);
@@ -286,14 +70,40 @@ const TaskManager = () => {
     }
   };
 
-  const handleCreate = () => {
-    setSelectedTask(null);
-    setOpenDialog(true);
-  };
-
-  const handleEdit = (task) => {
-    setSelectedTask(task);
-    setOpenDialog(true);
+  const handleSave = async (e) => {
+    e.preventDefault();
+    try {
+      let response;
+      if (selectedTask?.taskId) {
+        response = await axios.put(
+          `http://localhost:8080/tasks/${selectedTask.taskId}`,
+          formData
+        );
+      } else {
+        response = await axios.post("http://localhost:8080/tasks/add", formData);
+      }
+      
+      if (selectedTask) {
+        setTasks(tasks.map((task) =>
+          task.taskId === response.data.taskId ? response.data : task
+        ));
+      } else {
+        setTasks([...tasks, response.data]);
+      }
+      
+      setOpenDialog(false);
+      setSelectedTask(null);
+      setFormData({
+        taskDescription: "",
+        status: "PENDING",
+        priority: "MEDIUM",
+        dueDate: "",
+        taskType: "GENERAL",
+        reward: "",
+      });
+    } catch (error) {
+      console.error("Error saving task:", error);
+    }
   };
 
   const handleDelete = async (taskId) => {
@@ -303,86 +113,342 @@ const TaskManager = () => {
         setTasks(tasks.filter((task) => task.taskId !== taskId));
       } catch (error) {
         console.error("Error deleting task:", error);
-        setError("Failed to delete task. Please try again.");
       }
     }
   };
 
-  const handleSave = (savedTask) => {
-    if (selectedTask) {
-      setTasks(
-        tasks.map((task) =>
-          task.taskId === savedTask.taskId ? savedTask : task
-        )
-      );
-    } else {
-      setTasks([...tasks, savedTask]);
+  const getPriorityClass = (priority) => {
+    switch (priority) {
+      case "HIGH":
+        return "priority-high";
+      case "MEDIUM":
+        return "priority-medium";
+      case "LOW":
+        return "priority-low";
+      default:
+        return "";
     }
   };
 
-  if (loading) {
-    return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        minHeight="400px"
-      >
-        <CircularProgress />
-      </Box>
-    );
-  }
-
-  if (error) {
-    return (
-      <Alert severity="error" sx={{ m: 2 }}>
-        {error}
-      </Alert>
-    );
-  }
+  const getStatusClass = (status) => {
+    switch (status) {
+      case "COMPLETED":
+        return "status-completed";
+      case "IN_PROGRESS":
+        return "status-in-progress";
+      case "PENDING":
+        return "status-pending";
+      default:
+        return "";
+    }
+  };
 
   return (
-    <Box sx={{ maxWidth: "1200px", mx: "auto", p: 4 }}>
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          mb: 4,
-        }}
-      >
-        <Typography variant="h4" component="h1">
-          Community Development Tasks
-        </Typography>
-        <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          onClick={handleCreate}
-        >
-          Add New Task
-        </Button>
-      </Box>
+    <div className="community-platform-resource">
+      {/* Left Sidebar */}
+      <div className="sidebar">
+        <div className="header">
+          <Link to="/">
+            <div className="logo">
+              <img src={LogoIcon} alt="Logo" className="logo-icon" />
+            </div>
+          </Link>
+          <div className="search-bar">
+            <input type="text" placeholder="Search" />
+          </div>
+        </div>
 
-      <Grid container spacing={3} sx={{ width: "1000px" }}>
-        {tasks.map((task) => (
-          <Grid item xs={12} sm={6} md={4} key={task.taskId}>
-            <TaskCard
-              task={task}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-              sx={{ width: { md: "300px" } }} // Set a fixed width for larger screens
-            />
-          </Grid>
-        ))}
-      </Grid>
+        <Link to="/profileuser" className="profile-sidebar-link">
+          <div className="profile-sidebar">
+            <div className="profile-avatar">
+              <img src={Prof1} alt="Profile" className="profile-image" />
+            </div>
+            <div className="profile-info">
+              <h4>Joel Chandler</h4>
+            </div>
+          </div>
+        </Link>
 
-      <TaskFormDialog
-        open={openDialog}
-        onClose={() => setOpenDialog(false)}
-        task={selectedTask}
-        onSave={handleSave}
-      />
-    </Box>
+        <div className="community-section">
+          <h3>YOUR COMMUNITY</h3>
+          <div className="community-item">
+            <span className="community-icon">🏛️ </span>
+            <span> Municipal Community</span>
+          </div>
+          <div className="community-item">
+            <span className="community-icon">🎨 </span>
+            <span> Barangay Community</span>
+          </div>
+        </div>
+
+        <div className="friends-section">
+          <h3>FRIENDS</h3>
+          <div className="scrollable-friends-list">
+            {users.map((user, index) => (
+              <div key={index} className="friend-item">
+                <div className="avatar">
+                  <div className={`status-indicator ${user.isOnline ? "online" : ""}`} />
+                </div>
+                <span>{user.name}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="main-content-resource">
+        <div className="navigation-bar">
+          <div className="nav-icons">
+            {navigationItems.map((item, index) => (
+              <Link
+                key={index}
+                to={item.path || `/${item.label.toLowerCase().replace(" ", "")}`}
+                className="nav-item"
+              >
+                <img src={item.icon} alt={`${item.label} icon`} className="nav-icon" />
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        <div className="storiesAndfeedResource">
+          <div className="create-post-section-resource">
+            <div className="resource-header-container">
+              <h2 className="feed-title-resource">Task Manager</h2>
+              <button
+                className="category-button active"
+                onClick={() => {
+                  setSelectedTask(null);
+                  setFormData({
+                    taskDescription: "",
+                    status: "PENDING",
+                    priority: "MEDIUM",
+                    dueDate: "",
+                    taskType: "GENERAL",
+                    reward: "",
+                  });
+                  setOpenDialog(true);
+                }}
+              >
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                Create Task
+              </button>
+            </div>
+            <div className="categories-container">
+              <button
+                onClick={() => setSelectedCategory("all")}
+                className={`category-button ${selectedCategory === "all" ? "active" : ""}`}
+              >
+                All Tasks
+              </button>
+              <button
+                onClick={() => setSelectedCategory("PENDING")}
+                className={`category-button ${selectedCategory === "PENDING" ? "active" : ""}`}
+              >
+                Pending
+              </button>
+              <button
+                onClick={() => setSelectedCategory("IN_PROGRESS")}
+                className={`category-button ${selectedCategory === "IN_PROGRESS" ? "active" : ""}`}
+              >
+                In Progress
+              </button>
+              <button
+                onClick={() => setSelectedCategory("COMPLETED")}
+                className={`category-button ${selectedCategory === "COMPLETED" ? "active" : ""}`}
+              >
+                Completed
+              </button>
+            </div>
+          </div>
+
+          <div className="resources-container grid">
+            {loading ? (
+              <div>Loading tasks...</div>
+            ) : tasks.length > 0 ? (
+              tasks
+                .filter(
+                  task =>
+                    selectedCategory === "all" || task.status === selectedCategory
+                )
+                .map((task) => (
+                  <article key={task.taskId} className="resource-item">
+                    <header className="post-header">
+                      <div className="profile-circlecover">
+                        <img className="profile-image" src={Prof1} alt="Profile" />
+                      </div>
+                      <div className="user-info">
+                        <div className="user-meta">
+                          <h3 className="username">Admin</h3>
+                          <span className="post-meta">•</span>
+                          <span className="post-meta">{task.dueDate}</span>
+                        </div>
+                        <div className="status-badges">
+                          <span className={`status-badge ${getStatusClass(task.status)}`}>
+                            {task.status}
+                          </span>
+                          <span className={`priority-badge ${getPriorityClass(task.priority)}`}>
+                            {task.priority}
+                          </span>
+                        </div>
+                      </div>
+                    </header>
+
+                    <div className="resource-content">
+                      <h3 className="resource-title">{task.taskType}</h3>
+                      <p className="resource-description">{task.taskDescription}</p>
+                      {task.reward && (
+                        <div className="reward-info">
+                          <span className="reward-label">Reward:</span>
+                          <span className="reward-value">{task.reward}</span>
+                        </div>
+                      )}
+                    </div>
+
+                    <footer className="resource-actions">
+                      <button
+                        className="download-button"
+                        onClick={() => {
+                          setSelectedTask(task);
+                          setFormData(task);
+                          setOpenDialog(true);
+                        }}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className="download-button"
+                        onClick={() => handleDelete(task.taskId)}
+                      >
+                        Delete
+                      </button>
+                    </footer>
+                  </article>
+                ))
+            ) : (
+              <div>No tasks found</div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Right Sidebar */}
+      <div className="left-sidebar">
+        <div className="calendar">
+          <h2>Calendar</h2>
+          <MyCalendar />
+        </div>
+
+        <div className="notifications-container">
+          <h2>Notifications</h2>
+          <div className="notifications">
+            {notifications.map((notification, index) => (
+              <div key={index} className="notification-item">
+                <div className="notification-header">
+                  <img
+                    src={`src/assets/prof/${notification.image}`}
+                    alt={`${notification.user}'s profile`}
+                    className="notification-image"
+                  />
+                  <div>
+                    <span className="notification-username">{notification.user}</span>
+                    <span className="notification-time">{notification.time}</span>
+                  </div>
+                </div>
+                <p className="notification-message">{notification.message}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Modal */}
+      {openDialog && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h3 className="modal-title">
+              {selectedTask ? 'Edit Task' : 'Create New Task'}
+            </h3>
+            <form onSubmit={handleSave}>
+              <textarea
+                value={formData.taskDescription}
+                onChange={(e) => setFormData({...formData, taskDescription: e.target.value})}
+                placeholder="Task Description"
+                className="modal-textarea"
+              />
+              <select
+                value={formData.status}
+                onChange={(e) => setFormData({...formData, status: e.target.value})}
+                className="modal-select"
+              >
+                <option value="PENDING">Pending</option>
+                <option value="IN_PROGRESS">In Progress</option>
+                <option value="COMPLETED">Completed</option>
+              </select>
+              <select
+                value={formData.priority}
+                onChange={(e) => setFormData({...formData, priority: e.target.value})}
+                className="modal-select"
+              >
+                <option value="LOW">Low Priority</option>
+                <option value="MEDIUM">Medium Priority</option>
+                <option value="HIGH">High Priority</option>
+              </select>
+              <select
+                value={formData.taskType}
+                onChange={(e) => setFormData({...formData, taskType: e.target.value})}
+                className="modal-select"
+              >
+                <option value="GENERAL">General</option>
+                <option value="COMMUNITY_SERVICE">Community Service</option>
+                <option value="EDUCATION">Education</option>
+                <option value="ENVIRONMENT">Environment</option>
+                <option value="HEALTHCARE">Healthcare</option>
+              </select>
+              <input
+                type="date"
+                value={formData.dueDate}
+                onChange={(e) => setFormData({...formData, dueDate: e.target.value})}
+                className="modal-input"
+              />
+              <input
+                type="text"
+                value={formData.reward}
+                onChange={(e) => setFormData({...formData, reward: e.target.value})}
+                placeholder="Reward"
+                className="modal-input"
+              />
+              <div className="modal-actions">
+                <button type="submit" className="btn btn-primary">
+                  {selectedTask ? 'Update Task' : 'Create Task'}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setOpenDialog(false);
+                    setSelectedTask(null);
+                  }}
+                  className="btn btn-secondary"
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+    </div>
   );
 };
 

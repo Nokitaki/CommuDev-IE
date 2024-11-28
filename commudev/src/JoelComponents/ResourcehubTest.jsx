@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import LogoIcon from "../assets/prof/logo.png";
 import HomeIcon from "../assets/HomeIcon.svg";
 import CommuIcon from "../assets/CommuIcon.svg";
+import FeedbackIcon from "../assets/FeedbackIcon.svg";
 import MessageIcon from "../assets/MessageIcon.svg";
 import RewardsIcon from "../assets/RewardsIcon.svg";
 import ResourceIcon from "../assets/ResourceIcon.svg";
@@ -33,6 +34,7 @@ const ResourceHub = () => {
     { icon: ResourceIcon, label: "Resources", path: "/resource" },
     { icon: TaskIcon, label: "Task", path: "/task" },
     { icon: RewardsIcon, label: "Rewards" },
+    { icon: FeedbackIcon, label: "Feedback" },
   ];
 
   const users = [
@@ -110,21 +112,22 @@ const ResourceHub = () => {
       );
       if (!response.ok) throw new Error("Failed to fetch resources");
       const data = await response.json();
+      console.log("Fetched resources:", data); // Debug log
+
       // Transform the data to match your existing structure
       const transformedData = data.map((item) => ({
-        id: item.resource_id,
-        title: item.resource_title,
-        description: item.resource_description,
-        type: item.resource_category,
-        date: new Date(item.upload_date).toLocaleDateString(),
-        downloads: item.heart_count || 0,
-        status: "Active",
+        resource_id: item.resource_id,
+        resource_title: item.resource_title,
+        resource_description: item.resource_description,
+        resource_category: item.resource_category,
+        heart_count: item.heart_count || 0,
+        upload_date: new Date(item.upload_date).toLocaleDateString(),
         fileSize: "2.5 MB", // You can modify this as needed
       }));
+
       setResources(transformedData);
     } catch (error) {
       console.error("Error fetching resources:", error);
-      // Keep the existing data on error
     } finally {
       setIsLoading(false);
     }
@@ -133,77 +136,112 @@ const ResourceHub = () => {
   const handleAddResource = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:8080/api/resource/addResourceDetails', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
-  
-      if (!response.ok) throw new Error('Failed to add resource');
-      
+      const response = await fetch(
+        "http://localhost:8080/api/resource/addResourceDetails",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
+        }
+      );
+
+      if (!response.ok) throw new Error("Failed to add resource");
+
       fetchResources();
       setIsModalOpen(false);
       setFormData({
-        resource_title: '',
-        resource_description: '',
-        resource_category: '',
+        resource_title: "",
+        resource_description: "",
+        resource_category: "",
         heart_count: 0,
-        upload_date: new Date().toISOString()
+        upload_date: new Date().toISOString(),
       });
     } catch (error) {
-      console.error('Error adding resource:', error);
+      console.error("Error adding resource:", error);
     }
   };
-  
+
   const handleUpdateResource = async (resource_id) => {
     try {
-      const response = await fetch('http://localhost:8080/api/resource/updateResourceDetails', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...formData, resource_id }),
-      });
-  
-      if (!response.ok) throw new Error('Failed to update resource');
-      
+      const response = await fetch(
+        "http://localhost:8080/api/resource/updateResourceDetails",
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ...formData, resource_id }),
+        }
+      );
+
+      if (!response.ok) throw new Error("Failed to update resource");
+
       fetchResources();
       setIsModalOpen(false);
       setEditingResource(null);
     } catch (error) {
-      console.error('Error updating resource:', error);
+      console.error("Error updating resource:", error);
     }
   };
-  
+
   const handleDeleteResource = async (resource_id) => {
-    if (window.confirm('Are you sure you want to delete this resource?')) {
+    if (window.confirm("Are you sure you want to delete this resource?")) {
       try {
-        const response = await fetch(`http://localhost:8080/api/resource/deleteResource/${resource_id}`, {
-          method: 'DELETE',
-        });
-  
-        if (!response.ok) throw new Error('Failed to delete resource');
-        
+        const response = await fetch(
+          `http://localhost:8080/api/resource/deleteResource/${resource_id}`,
+          {
+            method: "DELETE",
+          }
+        );
+
+        if (!response.ok) throw new Error("Failed to delete resource");
+
         fetchResources();
       } catch (error) {
-        console.error('Error deleting resource:', error);
+        console.error("Error deleting resource:", error);
       }
     }
   };
-  
+
   const handleLike = async (resource_id) => {
     try {
-      const response = await fetch(`http://localhost:8080/api/resource/likeResource/${resource_id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-      });
-  
-      if (!response.ok) throw new Error('Failed to like resource');
-      
-      fetchResources();
+      console.log("Liking resource:", resource_id);
+
+      const response = await fetch(
+        `http://localhost:8080/api/resource/likeResource/${resource_id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Failed to update download count: ${response.status}`);
+      }
+
+      const updatedResource = await response.json();
+      console.log("Updated resource:", updatedResource);
+
+      // Only update the state locally without re-fetching
+      setResources((currentResources) =>
+        currentResources.map((resource) =>
+          resource.resource_id === resource_id
+            ? {
+                ...resource,
+                heart_count: updatedResource.heart_count,
+              }
+            : resource
+        )
+      );
+
+      // Remove this line to prevent flickering
+      // fetchResources();
     } catch (error) {
-      console.error('Error liking resource:', error);
+      console.error("Error updating download count:", error);
     }
   };
-  
+
   // Add useEffect to fetch resources when component mounts
   useEffect(() => {
     fetchResources();
@@ -294,7 +332,36 @@ const ResourceHub = () => {
 
         <div className="storiesAndfeedResource">
           <div className="create-post-section-resource">
-            <h2 className="feed-title-resource">Resource Hub</h2>
+            <div className="resource-header-container">
+              <h2 className="feed-title-resource">Resource Hub</h2>
+              <button
+                className="category-button active"
+                onClick={() => {
+                  setEditingResource(null);
+                  setFormData({
+                    resource_title: "",
+                    resource_description: "",
+                    resource_category: "",
+                    heart_count: 0,
+                    upload_date: new Date().toISOString(),
+                  });
+                  setIsModalOpen(true);
+                }}
+              >
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                Create Resource
+              </button>
+            </div>
             <div className="categories-container">
               <button
                 onClick={() => setSelectedCategory("all")}
@@ -362,10 +429,10 @@ const ResourceHub = () => {
 
                   <div className="resource-content">
                     <h3 className="resource-title">
-                      {resource.title || resource.resource_title}
+                      {resource.resource_title}
                     </h3>
                     <p className="resource-description">
-                      {resource.description || resource.resource_description}
+                      {resource.resource_description}
                     </p>
                     <div className="resource-stats">
                       <span className="download-count">
@@ -380,8 +447,7 @@ const ResourceHub = () => {
                             fill="currentColor"
                           />
                         </svg>
-                        {resource.downloads || resource.heart_count || 0}{" "}
-                        downloads
+                        {resource.heart_count || 0} downloads
                       </span>
                       <span className="file-size">
                         {resource.fileSize || "2.5 MB"}
@@ -393,6 +459,7 @@ const ResourceHub = () => {
                     <button
                       className="download-button"
                       onClick={() => handleLike(resource.resource_id)}
+                      title="Download and like this resource"
                     >
                       <svg
                         width="16"
@@ -444,61 +511,6 @@ const ResourceHub = () => {
         </div>
       </div>
 
-      {isModalOpen && (
-  <div className="modal-overlay">
-    <div className="modal-content">
-      <h3 className="modal-title">
-        {editingResource ? 'Edit Resource' : 'Create New Resource'}
-      </h3>
-      <form onSubmit={(e) => {
-        e.preventDefault();
-        editingResource ? 
-          handleUpdateResource(editingResource.resource_id) : 
-          handleAddResource(e);
-      }}>
-        <input
-          type="text"
-          value={formData.resource_title}
-          onChange={(e) => setFormData({...formData, resource_title: e.target.value})}
-          placeholder="Resource Title"
-          className="modal-input"
-        />
-        <textarea
-          value={formData.resource_description}
-          onChange={(e) => setFormData({...formData, resource_description: e.target.value})}
-          placeholder="Resource Description"
-          className="modal-textarea"
-        />
-        <select
-          value={formData.resource_category}
-          onChange={(e) => setFormData({...formData, resource_category: e.target.value})}
-          className="modal-select"
-        >
-          <option value="">Select Category</option>
-          <option value="Document">Document</option>
-          <option value="Media">Media</option>
-          <option value="Other">Other</option>
-        </select>
-        <div className="modal-actions">
-          <button type="submit" className="btn btn-primary">
-            {editingResource ? 'Save Changes' : 'Create Resource'}
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setIsModalOpen(false);
-              setEditingResource(null);
-            }}
-            className="btn btn-secondary"
-          >
-            Cancel
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-)}
-
       {/* Right Sidebar */}
       <div className="left-sidebar">
         <div className="calendar">
@@ -532,6 +544,76 @@ const ResourceHub = () => {
           </div>
         </div>
       </div>
+
+      {/* Modal */}
+      {isModalOpen && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h3 className="modal-title">
+              {editingResource ? "Edit Resource" : "Create New Resource"}
+            </h3>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                editingResource
+                  ? handleUpdateResource(editingResource.resource_id)
+                  : handleAddResource(e);
+              }}
+            >
+              <input
+                type="text"
+                value={formData.resource_title}
+                onChange={(e) =>
+                  setFormData({ ...formData, resource_title: e.target.value })
+                }
+                placeholder="Resource Title"
+                className="modal-input"
+              />
+              <textarea
+                value={formData.resource_description}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    resource_description: e.target.value,
+                  })
+                }
+                placeholder="Resource Description"
+                className="modal-textarea"
+              />
+              <select
+                value={formData.resource_category}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    resource_category: e.target.value,
+                  })
+                }
+                className="modal-select"
+              >
+                <option value="">Select Category</option>
+                <option value="Document">Document</option>
+                <option value="Media">Media</option>
+                <option value="Other">Other</option>
+              </select>
+              <div className="modal-actions">
+                <button type="submit" className="btn btn-primary">
+                  {editingResource ? "Save Changes" : "Create Resource"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsModalOpen(false);
+                    setEditingResource(null);
+                  }}
+                  className="btn btn-secondary"
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
