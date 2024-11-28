@@ -41,28 +41,38 @@ const EditProfileDialog = ({ open, onClose, user, onSave }) => {
   const [editedUser, setEditedUser] = useState(user);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
- 
+
   useEffect(() => {
     setEditedUser(user);
   }, [user]);
- 
+
   const handleChange = (field) => (event) => {
     setEditedUser({
       ...editedUser,
       [field]: event.target.value
     });
   };
- 
+
   const handleSubmit = async () => {
     setLoading(true);
     setError(null);
     try {
       const userId = localStorage.getItem('userId');
-      if (!userId) {
-        throw new Error('No user ID found');
-      }
-      const response = await axios.put(`http://localhost:8080/api/user/${userId}`, editedUser);
-      onSave(response.data);
+      if (!userId) throw new Error('No user ID found');
+
+      // Save bio and goals to localStorage
+      localStorage.setItem('userBio', editedUser.biography || '');
+      localStorage.setItem('userGoals', editedUser.goals || '');
+
+      // Remove bio and goals before API call
+      const { biography, goals, ...dbUser } = editedUser;
+      
+      const response = await axios.put(`http://localhost:8080/api/user/${userId}`, dbUser);
+      onSave({
+        ...response.data,
+        biography: editedUser.biography,
+        goals: editedUser.goals
+      });
       onClose();
     } catch (error) {
       console.error('Error saving user:', error);
@@ -198,15 +208,19 @@ const ProfileUser = () => {
       }
       return userId;
     };
- 
+
     const fetchUserData = async () => {
       const userId = checkAuth();
       if (!userId) return;
- 
+
       try {
         const response = await axios.get(`http://localhost:8080/api/user/${userId}`);
         if (response.data) {
-          setUser(response.data);
+          setUser({
+            ...response.data,
+            biography: localStorage.getItem('userBio') || '',
+            goals: localStorage.getItem('userGoals') || ''
+          });
         } else {
           throw new Error('No data received');
         }
@@ -223,31 +237,25 @@ const ProfileUser = () => {
         setLoading(false);
       }
     };
- 
+
     fetchUserData();
   }, [navigate]);
- 
+
   const handleSave = async (updatedUser) => {
-    try {
-      const userId = localStorage.getItem('userId');
-      if (!userId) throw new Error('No user ID found');
- 
-      setUser(updatedUser);
-    } catch (error) {
-      console.error('Error updating user:', error);
-      setError('Failed to update profile. Please try again.');
-    }
+    setUser(updatedUser);
   };
- 
+
   const handleDelete = async () => {
     const userId = localStorage.getItem('userId');
     if (!userId) return;
- 
+
     if (window.confirm('Are you sure you want to delete your profile? This action cannot be undone.')) {
       try {
         await axios.delete(`http://localhost:8080/api/user/${userId}`);
         localStorage.removeItem('userId');
         localStorage.removeItem('username');
+        localStorage.removeItem('userBio');
+        localStorage.removeItem('userGoals');
         navigate('/login');
       } catch (error) {
         console.error('Error deleting user:', error);
@@ -255,10 +263,12 @@ const ProfileUser = () => {
       }
     }
   };
- 
+
   const handleLogout = () => {
     localStorage.removeItem('userId');
     localStorage.removeItem('username');
+    localStorage.removeItem('userBio');
+    localStorage.removeItem('userGoals');
     navigate('/login');
   };
  
