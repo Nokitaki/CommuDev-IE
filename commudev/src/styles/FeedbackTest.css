@@ -1,0 +1,142 @@
+
+/* Feedback.css*/
+
+.feedback-type-badge {
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.feedback-type-badge.bug-report {
+  background-color: #fee2e2;
+  color: #dc2626;
+}
+
+.feedback-type-badge.feature-request {
+  background-color: #e0f2fe;
+  color: #0369a1;
+}
+
+.feedback-type-badge.general-feedback {
+  background-color: #d1fae5;
+  color: #059669;
+}
+
+/* Modal styles specific to feedback */
+.modal-content {
+  max-width: 600px;
+}
+
+.modal-textarea {
+  min-height: 150px;
+}
+
+/* Feedback card specific styles */
+.feedback-container.grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+  }
+
+.resource-item {
+  color: #4CAF50;
+  font-size: 1.2rem;
+  margin-bottom: 8px;
+}
+
+.resource-item .resource-description {
+  color: #4b5563;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: 16px;
+  white-space: pre-wrap;
+}
+
+/* Category buttons */
+.categories-container {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+
+.category-button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  background-color: #f0f2f5;
+  color: #65676b;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.category-button.active {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.category-button:hover:not(.active) {
+  background-color: #e4e6eb;
+}
+
+/* Submit button */
+.submit-feedback-button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.submit-feedback-button:hover {
+  background-color: #45a049;
+}
+
+/* Empty state */
+.empty-feedback {
+  text-align: center;
+  padding: 40px;
+  color: #6b7280;
+}
+
+/* Loading state */
+.loading-feedback {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+}
+
+/* Action buttons */
+.resource-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.resource-actions .download-button {
+  padding: 6px 12px;
+  font-size: 0.9rem;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .categories-container {
+    flex-wrap: wrap;
+  }
+
+  .category-button {
+    flex: 1 1 calc(50% - 8px);
+    text-align: center;
+  }
+}
