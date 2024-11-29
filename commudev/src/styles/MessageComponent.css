@@ -111,27 +111,51 @@
   }
   
   .messagePage__navbar {
-    padding: 12px 20px;
-    background-color: white;
-    border-bottom: 1px solid #e4e6eb;
+    background-color: #d9ead9;
+    padding: 5px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    flex-shrink: 0;
+    width: 56.5%;           /* Takes 80% of parent width */
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 2.8%;
   }
   
   .messagePage__navIcons {
     display: flex;
-    gap: 24px;
+    justify-content: center; /* Center the items */
+    align-items: center;
+    padding: 0 16px;
+    gap: 10px; /* Reduced gap between items from previous larger values */
   }
   
   .messagePage__navIcon {
-    width: 24px;
-    height: 24px;
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
     opacity: 0.7;
     transition: opacity 0.2s;
   }
-  
+
+  .messagePage__navItem{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    padding: 6px 10px; /* Reduced padding from 8px 16px */
+    border-radius: 8px;
+    transition: background-color 0.2s;
+  }
+
   .messagePage__navIcon:hover {
-    opacity: 1;
+    background-color: rgba(0, 0, 0, 0.05); /* Light background on hover */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
   }
   
+
+
   .messagePage__chatContainer {
     flex-grow: 1;
     display: flex;

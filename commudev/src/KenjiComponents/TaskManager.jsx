@@ -345,7 +345,7 @@ const TaskManager = () => {
 
       {/* Right Sidebar */}
       <div className="left-sidebar">
-        <div className="calendar">
+        <div className="resource-calendar">
           <h2>Calendar</h2>
           <MyCalendar />
         </div>

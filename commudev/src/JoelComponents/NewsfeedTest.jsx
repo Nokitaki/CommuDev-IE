@@ -1,4 +1,4 @@
-//home.jsx
+//Newsfeed.jsx
 import "../styles/NewsfeedTest.css";
 import LogoIcon from "../assets/prof/logo.png";
 import HomeIcon from "../assets/HomeIcon.svg";

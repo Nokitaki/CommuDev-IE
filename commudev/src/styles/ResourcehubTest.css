@@ -346,3 +346,15 @@
 .create-resource-button:hover svg {
   transform: scale(1.1);
 }
+
+.resource-calendar {
+  color: #000;
+  width: 100%; /* Full width of the container */
+  height: 56%; /* Half the height of the parent container */
+  background-color: white;
+  padding: 5px; /* Inner padding for spacing */
+  overflow: hidden; /* Ensures no overflow issues */
+  display: flex;
+  flex-direction: column; /* Allows for stacking elements vertically */
+  margin-bottom: 0%;
+}
