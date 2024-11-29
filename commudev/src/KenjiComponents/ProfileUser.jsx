@@ -70,17 +70,18 @@ const EditProfileDialog = ({ open, onClose, user, onSave }) => {
     try {
       const userId = localStorage.getItem('userId');
       if (!userId) throw new Error('No user ID found');
-
+  
       localStorage.setItem('userBio', editedUser.biography || '');
       localStorage.setItem('userGoals', editedUser.goals || '');
-
-      const { biography, goals, ...dbUser } = editedUser;
+  
+      const { biography, goals, profilePicture, ...dbUser } = editedUser;
       
       const response = await axios.put(`http://localhost:8080/api/user/${userId}`, dbUser);
       onSave({
         ...response.data,
         biography: editedUser.biography,
-        goals: editedUser.goals
+        goals: editedUser.goals,
+        profilePicture: user.profilePicture // Keep the existing profile picture
       });
       onClose();
     } catch (error) {
@@ -274,7 +275,10 @@ const ProfileUser = () => {
   };
 
   const handleSave = async (updatedUser) => {
-    setUser(updatedUser);
+    setUser(prev => ({
+      ...updatedUser,
+      profilePicture: prev.profilePicture // Preserve the existing profile picture
+    }));
   };
 
   const handleDelete = async () => {
