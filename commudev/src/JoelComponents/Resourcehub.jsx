@@ -1,3 +1,4 @@
+//Resourcehub.jsx
 import React, { useEffect, useState } from 'react';
 import Resourcehubitem from './Resourcehubitem';
 import '../styles/Resourcehub.css'; // Import the CSS file
@@ -63,7 +64,7 @@ const ResourceHub = () => {
     return (
         <div className="resource-hub">
             <h1>Resource Hub</h1>
-            <form>
+            <form className='form-content'>
                 <input
                     type="text"
                     placeholder="Resource Title"

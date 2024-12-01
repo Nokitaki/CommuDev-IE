@@ -25,12 +25,30 @@ nav a:hover {
 .resource-hub-item h3 {
     font-size: 1.2em;
     margin-bottom: 5px;
+    color: black;
 }
 
 .resource-hub-item p {
     margin: 5px 0;
+    color: #000;
 }
 
+.form-content {
+    background-color: #ddd; /* Light gray background */
+    color: #000;           /* Black text */
+    padding: 20px;         /* Optional: Adds space inside the form */
+    border-radius: 5px;    /* Optional: Rounds the corners */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: Adds a subtle shadow */
+}
+input, textarea {
+    background-color: #fff; /* White background */
+    color: #000;           /* Black text */
+    border: 1px solid #ccc; /* Optional: Light gray border */
+    padding: 10px;          /* Optional: Add some padding for better readability */
+    border-radius: 4px;     /* Optional: Rounded corners */
+    width: 100%;            /* Optional: Make input stretch full width */
+    box-sizing: border-box; /* Optional: Includes padding in width/height */
+}
 .resource-hub-item input,
 .resource-hub-item textarea {
     display: block;

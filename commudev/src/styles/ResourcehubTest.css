@@ -1,0 +1,348 @@
+/* Resourcehub.css*/
+.create-post-section-resource{
+  width:  660px;
+}
+
+.community-platform-resource {
+  display: grid;
+  grid-template-columns: 250px 1fr 300px;
+  width: 100%;
+  max-width: 1400px;
+  height: 94.5vh;
+  margin: 20px auto;
+  background-color: white;
+  border-radius: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.feed-title-resource {
+  margin-top: 0%;
+    font-size: 1.5rem;
+    color: #333;
+    text-align: center;
+}
+
+.main-content-resource {
+  padding: 20px;
+  background-color: #f0f2f5;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.storiesAndfeedResource {
+  height: calc(100% - 70px); /* Subtract navigation bar height */
+  overflow-y: auto;
+  scrollbar-width: none;
+  overflow-x: hidden;
+  padding: 0 10px;
+} 
+
+.category-button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  background-color: #f0f2f5;
+  color: #65676b;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  outline: none; /* Remove outline on click/focus */
+}
+
+/* Or if you want to be more specific about focus state */
+.category-button:focus {
+  outline: none;
+}
+
+/*resource item*/
+.resource-item {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  gap: 15px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+
+
+.resource-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.resource-content {
+  margin: 15px 0;
+}
+
+.resource-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 8px;
+}
+
+.resource-description {
+  color: #4b5563;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+
+.resource-stats {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+.download-count {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.download-icon {
+  color: #059669;
+}
+
+.resource-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 12px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.download-button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background-color: #d9ead9;
+  color: #2e7d32;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.download-button:hover {
+  background-color: #c8e6c9;
+}
+
+
+.resource-hub {
+  background-color: white;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  height: calc(100vh - 140px);
+  overflow-y: auto;
+}
+
+.resource-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.resource-title {
+  font-size: 1.5rem;
+  color: #333;
+  font-weight: 600;
+}
+
+.view-toggles {
+  display: flex;
+  gap: 8px;
+}
+
+.view-button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 8px;
+  background: none;
+  color: #65676b;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.view-button.active {
+  background-color: #d9ead9;
+  color: #2e7d32;
+}
+
+.search-container {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #e4e6eb;
+  border-radius: 20px;
+  background-color: #f0f2f5;
+  font-size: 14px;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #2e7d32;
+}
+
+.categories-container {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+
+.category-button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  background-color: #f0f2f5;
+  color: #65676b;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.category-button.active {
+  background-color: #d9ead9;
+  color: #2e7d32;
+}
+
+.resources-container {
+  display: grid;
+  gap: 16px;
+}
+
+.resources-container.grid {
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+}
+
+.resources-container.list {
+  grid-template-columns: 1fr;
+}
+
+.resource-card {
+  background-color: #f9fafb;
+  border-radius: 8px;
+  padding: 16px;
+  transition: all 0.2s ease;
+}
+
+.resource-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.resource-info {
+  flex: 1;
+}
+
+.resource-card-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 4px;
+}
+
+.resource-date {
+  font-size: 13px;
+  color: #65676b;
+}
+
+.resource-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.resources-container.list .resource-actions {
+  margin-top: 0;
+}
+
+.download-count {
+  font-size: 13px;
+  color: #65676b;
+}
+
+.download-button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 8px;
+  background-color: #d9ead9;
+  color: #2e7d32;
+  cursor: pointer;
+  font-size: 13px;
+  transition: background-color 0.2s ease;
+}
+
+.download-button:hover {
+  background-color: #c8e6c9;
+}
+
+/* Scrollbar styling */
+.resource-hub::-webkit-scrollbar {
+  width: 8px;
+}
+
+.resource-hub::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.resource-hub::-webkit-scrollbar-thumb {
+  background-color: #a8abaf;
+  border-radius: 4px;
+}
+
+.resource-hub::-webkit-scrollbar-thumb:hover {
+  background-color: #4E5156;
+}
+
+.resource-header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.create-resource-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.create-resource-button:hover {
+  background-color: #0056b3;
+}
+
+.create-resource-button svg {
+  transition: transform 0.2s;
+}
+
+.create-resource-button:hover svg {
+  transform: scale(1.1);
+}

@@ -51,27 +51,26 @@ const NewsFeedItem = ({ post, handleUpdate, handleDelete }) => {
       console.error('No date provided');
       return 'No date available';
     }
-
+  
     const postDate = new Date(dateString);
     
     if (isNaN(postDate.getTime())) {
       console.error('Invalid date passed to getDaysAgo:', dateString);
       return 'Invalid date';
     }
-
+  
     const nowDate = new Date();
-    const diffInMilliseconds = nowDate.getTime() - postDate.getTime(); // Correct calculation
+    const diffInMilliseconds = nowDate.getTime() - postDate.getTime();
     const diffInDays = Math.floor(diffInMilliseconds / (1000 * 60 * 60 * 24));
-
+  
     if (diffInDays === 0) return 'Today';
     if (diffInDays === 1) return '1 day ago';
-    return `${diffInDays} days ago`; 
+    if (diffInDays <= 2) return `${diffInDays} days ago`;
+    
+    return postDate.toLocaleDateString();
   };
 
-  // Change this line to reference the correct property
   const timeAgo = post.post_date ? getDaysAgo(post.post_date) : 'No date available';
-
-  
 
   return (
     <article className="feed-item">
@@ -85,10 +84,21 @@ const NewsFeedItem = ({ post, handleUpdate, handleDelete }) => {
             <span className="post-meta">{timeAgo}</span>
           </div>
           <div className="status-badges">
-            <span className={`status-badge ${post.isActive || post.post_status === 'Active' ? 'status-badge-active' : 'status-badge-inactive'}`}>
-              {post.isActive || post.post_status === 'Active' ? 'Active' : 'Inactive'}
+            <span
+              className={`status-badge ${post.post_status === 'Active' ? 'status-badge-active' : 'status-badge-inactive'}`}
+            >
+              {post.post_status}
             </span>
-            <span className="post-meta">{post.type}</span>
+            
+            <span className="post-meta">
+              {post.post_type && (
+                <span
+                  className={`post-type-value post-type-${post.post_type.toLowerCase()}`}
+                >
+                  {post.post_type}
+                </span>
+              )}
+            </span>
           </div>
         </div>
       </header>
