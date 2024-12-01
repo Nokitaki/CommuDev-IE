@@ -12,7 +12,7 @@ import FeedbackIcon from "../assets/FeedbackIcon.svg";
 import MyCalendar from "../JoelComponents/MyCalendar";
 import CardGiftcardIcon from "@mui/icons-material/CardGiftcard";
 import axios from "axios";
-
+ 
 const Rewards = () => {
   const [rewards, setRewards] = useState([]);
   const [claimedRewards, setClaimedRewards] = useState([]);
@@ -25,7 +25,7 @@ const Rewards = () => {
   const [redemptionCode, setRedemptionCode] = useState("");
   const [redemptionError, setRedemptionError] = useState("");
   const [isRedeeming, setIsRedeeming] = useState(false);
-
+ 
   const navigationItems = [
     { icon: HomeIcon, label: "Home", path: "/" },
     { icon: MessageIcon, label: "Messages" },
@@ -34,12 +34,12 @@ const Rewards = () => {
     { icon: RewardsIcon, label: "Rewards" },
     { icon: FeedbackIcon, label: "Feedback" },
   ];
-
+ 
   const users = [
     { name: "Harry", isOnline: false, image: "prof1.jpg" },
     { name: "Keanu", isOnline: true, image: "prof2.jpg" },
   ];
-
+ 
   const notifications = [
     {
       user: "Keanu",
@@ -48,12 +48,12 @@ const Rewards = () => {
       time: "2 minutes ago",
     },
   ];
-
+ 
   useEffect(() => {
     fetchRewards();
     fetchClaimedRewards();
   }, []);
-
+ 
   const fetchRewards = async () => {
     setIsLoading(true);
     try {
@@ -65,7 +65,7 @@ const Rewards = () => {
       setIsLoading(false);
     }
   };
-
+ 
   const fetchClaimedRewards = async () => {
     try {
       const response = await axios.get("http://localhost:8080/api/rewards/claimed");
@@ -74,17 +74,17 @@ const Rewards = () => {
       console.error("Error fetching claimed rewards:", error);
     }
   };
-
+ 
   const handleRedemptionSubmit = async (e) => {
     e.preventDefault();
     setRedemptionError("");
     setIsRedeeming(true);
-
+ 
     try {
       const response = await axios.post(
         `http://localhost:8080/api/rewards/redeem/${redemptionCode.toUpperCase()}`
       );
-
+ 
       if (response.data) {
         setTotalPoints((prev) => prev + response.data.points);
         setIsModalOpen(false);
@@ -98,7 +98,7 @@ const Rewards = () => {
       setIsRedeeming(false);
     }
   };
-
+ 
   const claimReward = async (rewardId, rewardValue) => {
     if (totalPoints >= rewardValue) {
       setIsLoading(true);
@@ -106,7 +106,7 @@ const Rewards = () => {
         const response = await axios.post(
           `http://localhost:8080/api/rewards/claim/${rewardId}`
         );
-
+ 
         if (response.data) {
           setRewards(currentRewards =>
             currentRewards.map(reward =>
@@ -132,7 +132,7 @@ const Rewards = () => {
       alert("Not enough points to claim this reward");
     }
   };
-
+ 
   const renderRedemptionModal = () => (
     <div className="modal-overlay">
       <div className="modal-content">
@@ -175,11 +175,11 @@ const Rewards = () => {
       </div>
     </div>
   );
-
+ 
   const indexOfLastReward = page * itemsPerPage;
   const indexOfFirstReward = indexOfLastReward - itemsPerPage;
   const currentRewards = rewards.slice(indexOfFirstReward, indexOfLastReward);
-
+ 
   return (
     <div className="community-platform-resource">
       {/* Left Sidebar */}
@@ -194,7 +194,7 @@ const Rewards = () => {
             <input type="text" placeholder="Search" />
           </div>
         </div>
-
+ 
         <Link to="/profileuser" className="profile-sidebar-link">
           <div className="profile-sidebar">
             <div className="profile-avatar">
@@ -205,7 +205,7 @@ const Rewards = () => {
             </div>
           </div>
         </Link>
-
+ 
         <div className="community-section">
           <h3>YOUR COMMUNITY</h3>
           <div className="community-item">
@@ -217,7 +217,7 @@ const Rewards = () => {
             <span> Barangay Community</span>
           </div>
         </div>
-
+ 
         <div className="friends-section">
           <h3>FRIENDS</h3>
           <div className="scrollable-friends-list">
@@ -232,7 +232,7 @@ const Rewards = () => {
           </div>
         </div>
       </div>
-
+ 
       {/* Main Content */}
       <div className="main-content-resource">
         <div className="navigation-bar">
@@ -248,7 +248,7 @@ const Rewards = () => {
             ))}
           </div>
         </div>
-
+ 
         <div className="storiesAndfeedResource">
           <div className="create-post-section-resource">
             <div className="resource-header-container">
@@ -290,7 +290,7 @@ const Rewards = () => {
               </button>
             </div>
           </div>
-
+ 
           <div className="resources-container grid">
             {isLoading ? (
               <div>Loading rewards...</div>
@@ -307,7 +307,7 @@ const Rewards = () => {
                       <CardGiftcardIcon className="reward-banner-icon" />
                       <span className="reward-type">{reward.type}</span>
                     </div>
-
+ 
                     <div className="reward-content">
                       <div className="reward-header">
                         <h3 className="reward-title">{reward.name}</h3>
@@ -316,9 +316,9 @@ const Rewards = () => {
                           <span className="points-label">pts</span>
                         </div>
                       </div>
-
+ 
                       <p className="reward-description">{reward.description}</p>
-
+ 
                       <div className="reward-details">
                         <div className="reward-stock">
                           <span
@@ -336,14 +336,14 @@ const Rewards = () => {
                               : "Out of stock"}
                           </span>
                         </div>
-
+ 
                         <div className="reward-validity">
                           <span className="validity-date">
                             Valid until: {reward.expiryDate || "31 Dec 2024"}
                           </span>
                         </div>
                       </div>
-
+ 
                       <div className="reward-conditions">
                         <span className="condition-tag">Limited time</span>
                         {reward.isExclusive && (
@@ -357,7 +357,7 @@ const Rewards = () => {
                           </span>
                         )}
                       </div>
-
+ 
                       <footer className="reward-actions">
                         <button
                           className={`claim-button ${
@@ -392,7 +392,7 @@ const Rewards = () => {
               <div>No rewards found</div>
             )}
           </div>
-
+ 
           {rewards.length > itemsPerPage && (
             <div className="pagination">
               {Array.from({
@@ -410,14 +410,14 @@ const Rewards = () => {
           )}
         </div>
       </div>
-
+ 
       {/* Right Sidebar */}
       <div className="left-sidebar">
         <div className="calendar">
           <h2>Calendar</h2>
           <MyCalendar />
         </div>
-
+ 
         <div className="notifications-container">
           <h2>Notifications</h2>
           <div className="notifications">
@@ -440,11 +440,11 @@ const Rewards = () => {
           </div>
         </div>
       </div>
-
+ 
       {/* Redemption Modal */}
       {isModalOpen && renderRedemptionModal()}
     </div>
   );
 };
-
+ 
 export default Rewards;
