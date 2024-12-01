@@ -6,11 +6,12 @@ import HomeIcon from "../assets/HomeIcon.svg";
 import MessageIcon from "../assets/MessageIcon.svg";
 import RewardsIcon from "../assets/RewardsIcon.svg";
 import ResourceIcon from "../assets/ResourceIcon.svg";
-import FeedbackIcon from "../assets/FeedbackIcon.svg";
 import TaskIcon from "../assets/TaskIcon.svg";
 import Prof1 from "../assets/prof/prof1.jpg";
+import FeedbackIcon from "../assets/FeedbackIcon.svg";
 import MyCalendar from "../JoelComponents/MyCalendar";
 import CardGiftcardIcon from "@mui/icons-material/CardGiftcard";
+import axios from "axios";
 
 const Rewards = () => {
   const [rewards, setRewards] = useState([]);
@@ -20,6 +21,10 @@ const Rewards = () => {
   const [page, setPage] = useState(1);
   const [itemsPerPage] = useState(6);
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [redemptionCode, setRedemptionCode] = useState("");
+  const [redemptionError, setRedemptionError] = useState("");
+  const [isRedeeming, setIsRedeeming] = useState(false);
 
   const navigationItems = [
     { icon: HomeIcon, label: "Home", path: "/" },
@@ -50,22 +55,47 @@ const Rewards = () => {
   }, []);
 
   const fetchRewards = async () => {
+    setIsLoading(true);
     try {
-      const response = await fetch("http://localhost:8080/api/rewards/all");
-      const data = await response.json();
-      setRewards(data);
+      const response = await axios.get("http://localhost:8080/api/rewards/all");
+      setRewards(response.data);
     } catch (error) {
       console.error("Error fetching rewards:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const fetchClaimedRewards = async () => {
     try {
-      const response = await fetch("http://localhost:8080/api/rewards/claimed");
-      const data = await response.json();
-      setClaimedRewards(data);
+      const response = await axios.get("http://localhost:8080/api/rewards/claimed");
+      setClaimedRewards(response.data);
     } catch (error) {
       console.error("Error fetching claimed rewards:", error);
+    }
+  };
+
+  const handleRedemptionSubmit = async (e) => {
+    e.preventDefault();
+    setRedemptionError("");
+    setIsRedeeming(true);
+
+    try {
+      const response = await axios.post(
+        `http://localhost:8080/api/rewards/redeem/${redemptionCode.toUpperCase()}`
+      );
+
+      if (response.data) {
+        setTotalPoints((prev) => prev + response.data.points);
+        setIsModalOpen(false);
+        setRedemptionCode("");
+        alert(`Successfully redeemed ${response.data.points} points!`);
+        fetchRewards(); // Refresh rewards list
+      }
+    } catch (error) {
+      setRedemptionError(error.response?.data?.error || "Failed to redeem code");
+    } finally {
+      setIsRedeeming(false);
     }
   };
 
@@ -73,29 +103,24 @@ const Rewards = () => {
     if (totalPoints >= rewardValue) {
       setIsLoading(true);
       try {
-        const response = await fetch(
-          `http://localhost:8080/api/rewards/claim/${rewardId}`,
-          {
-            method: "POST",
-          }
+        const response = await axios.post(
+          `http://localhost:8080/api/rewards/claim/${rewardId}`
         );
 
-        if (response.ok) {
-          setRewards((currentRewards) =>
-            currentRewards.map((reward) =>
+        if (response.data) {
+          setRewards(currentRewards =>
+            currentRewards.map(reward =>
               reward.id === rewardId
                 ? { ...reward, quantity: reward.quantity - 1 }
                 : reward
             )
           );
-          setTotalPoints((currentPoints) => currentPoints - rewardValue);
-          setClaimedRewards((current) => [
+          setTotalPoints(currentPoints => currentPoints - rewardValue);
+          setClaimedRewards(current => [
             ...current,
             { rewardId, claimedAt: new Date() },
           ]);
           alert("Reward claimed successfully!");
-        } else {
-          alert("Failed to claim reward");
         }
       } catch (error) {
         console.error("Error claiming reward:", error);
@@ -108,7 +133,49 @@ const Rewards = () => {
     }
   };
 
-  // Calculate pagination
+  const renderRedemptionModal = () => (
+    <div className="modal-overlay">
+      <div className="modal-content">
+        <h3 className="modal-title">Redeem Points</h3>
+        <form onSubmit={handleRedemptionSubmit}>
+          <input
+            type="text"
+            value={redemptionCode}
+            onChange={(e) => setRedemptionCode(e.target.value.toUpperCase())}
+            placeholder="Enter 6-letter code"
+            className="modal-input"
+            maxLength={6}
+            pattern="[A-Za-z]{6}"
+            required
+          />
+          {redemptionError && (
+            <div className="error-message">{redemptionError}</div>
+          )}
+          <div className="modal-actions">
+            <button
+              type="submit"
+              className="btn btn-primary"
+              disabled={isRedeeming || redemptionCode.length !== 6}
+            >
+              {isRedeeming ? "Processing..." : "Redeem Code"}
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setIsModalOpen(false);
+                setRedemptionCode("");
+                setRedemptionError("");
+              }}
+              className="btn btn-secondary"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+
   const indexOfLastReward = page * itemsPerPage;
   const indexOfFirstReward = indexOfLastReward - itemsPerPage;
   const currentRewards = rewards.slice(indexOfFirstReward, indexOfLastReward);
@@ -157,11 +224,7 @@ const Rewards = () => {
             {users.map((user, index) => (
               <div key={index} className="friend-item">
                 <div className="avatar">
-                  <div
-                    className={`status-indicator ${
-                      user.isOnline ? "online" : ""
-                    }`}
-                  />
+                  <div className={`status-indicator ${user.isOnline ? "online" : ""}`} />
                 </div>
                 <span>{user.name}</span>
               </div>
@@ -177,16 +240,10 @@ const Rewards = () => {
             {navigationItems.map((item, index) => (
               <Link
                 key={index}
-                to={
-                  item.path || `/${item.label.toLowerCase().replace(" ", "")}`
-                }
+                to={item.path || `/${item.label.toLowerCase().replace(" ", "")}`}
                 className="nav-item"
               >
-                <img
-                  src={item.icon}
-                  alt={`${item.label} icon`}
-                  className="nav-icon"
-                />
+                <img src={item.icon} alt={`${item.label} icon`} className="nav-icon" />
               </Link>
             ))}
           </div>
@@ -199,30 +256,35 @@ const Rewards = () => {
               <div className="points-display">
                 <CardGiftcardIcon className="points-icon" />
                 <span className="points-text">{totalPoints} pts</span>
+                <button
+                  className="category-button active"
+                  onClick={() => {
+                    setRedemptionCode("");
+                    setRedemptionError("");
+                    setIsModalOpen(true);
+                  }}
+                  style={{ marginLeft: '10px' }}
+                >
+                  Redeem Code
+                </button>
               </div>
             </div>
             <div className="categories-container">
               <button
                 onClick={() => setSelectedCategory("all")}
-                className={`category-button ${
-                  selectedCategory === "all" ? "active" : ""
-                }`}
+                className={`category-button ${selectedCategory === "all" ? "active" : ""}`}
               >
                 All Rewards
               </button>
               <button
                 onClick={() => setSelectedCategory("voucher")}
-                className={`category-button ${
-                  selectedCategory === "voucher" ? "active" : ""
-                }`}
+                className={`category-button ${selectedCategory === "voucher" ? "active" : ""}`}
               >
                 Vouchers
               </button>
               <button
                 onClick={() => setSelectedCategory("item")}
-                className={`category-button ${
-                  selectedCategory === "item" ? "active" : ""
-                }`}
+                className={`category-button ${selectedCategory === "item" ? "active" : ""}`}
               >
                 Items
               </button>
@@ -235,7 +297,7 @@ const Rewards = () => {
             ) : currentRewards.length > 0 ? (
               currentRewards
                 .filter(
-                  (reward) =>
+                  reward =>
                     selectedCategory === "all" ||
                     reward.type.toLowerCase() === selectedCategory
                 )
@@ -327,7 +389,7 @@ const Rewards = () => {
                   </article>
                 ))
             ) : (
-              <div>No rewards available</div>
+              <div>No rewards found</div>
             )}
           </div>
 
@@ -338,9 +400,7 @@ const Rewards = () => {
               }).map((_, index) => (
                 <button
                   key={index + 1}
-                  className={`pagination-button ${
-                    page === index + 1 ? "active" : ""
-                  }`}
+                  className={`pagination-button ${page === index + 1 ? "active" : ""}`}
                   onClick={() => setPage(index + 1)}
                 >
                   {index + 1}
@@ -370,12 +430,8 @@ const Rewards = () => {
                     className="notification-image"
                   />
                   <div>
-                    <span className="notification-username">
-                      {notification.user}
-                    </span>
-                    <span className="notification-time">
-                      {notification.time}
-                    </span>
+                    <span className="notification-username">{notification.user}</span>
+                    <span className="notification-time">{notification.time}</span>
                   </div>
                 </div>
                 <p className="notification-message">{notification.message}</p>
@@ -384,6 +440,9 @@ const Rewards = () => {
           </div>
         </div>
       </div>
+
+      {/* Redemption Modal */}
+      {isModalOpen && renderRedemptionModal()}
     </div>
   );
 };
