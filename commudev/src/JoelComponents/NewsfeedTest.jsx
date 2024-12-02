@@ -88,6 +88,39 @@ const CommunityPlatform = () => {
     { icon: FeedbackIcon, label: "Feedback" },
   ];
 
+  const [currentUser, setCurrentUser] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await fetchPosts();
+    };
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    console.log('Current posts:', posts); // For debugging
+  }, [posts]);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const userId = localStorage.getItem("userId");
+      if (!userId) return;
+
+      try {
+        const response = await fetch(
+          `http://localhost:8080/api/user/${userId}`
+        );
+        if (!response.ok) throw new Error("Failed to fetch user data");
+        const userData = await response.json();
+        setCurrentUser(userData);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
   useEffect(() => {
     fetchPosts();
   }, []);
@@ -101,7 +134,16 @@ const CommunityPlatform = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
-      setPosts(data.map((post) => ({ ...post, type: post.post_type })));
+      console.log('Fetched posts raw data:', data); // Add this logging
+      
+      // Map the data to ensure we have user info
+      const processedPosts = data.map(post => ({
+        ...post,
+        user: post.user || null
+      }));
+      console.log('Processed posts:', processedPosts); // Add this logging
+      
+      setPosts(processedPosts);
     } catch (error) {
       console.error("Error fetching posts:", error);
     }
@@ -109,21 +151,33 @@ const CommunityPlatform = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
+    const userId = localStorage.getItem('userId');
+    console.log('Submitting post with userId:', userId);
+  
+    if (!userId) {
+      console.error('No userId found in localStorage');
+      navigate('/login');
+      return;
+    }
+  
+    // Add date if not provided
+    const date = formData.post_date || new Date().toISOString().split("T")[0];
+  
     const postData = {
-      username: formData.username,
       post_description: formData.post_description,
       post_type: formData.post_type,
-      post_date: new Date(formData.post_date).toISOString(),
+      post_date: new Date(date).toISOString(),
       like_count: editingPost ? editingPost.like_count : 0,
       post_status: "Active",
+      community: formData.community
     };
-
+  
     try {
       let response;
       if (editingPost) {
         response = await fetch(
-          `http://localhost:8080/api/newsfeed/updateFeedDetails?newsfeed_id=${editingPost.newsfeed_id}`,
+          `http://localhost:8080/api/newsfeed/updateFeedDetails?newsfeed_id=${editingPost.newsfeed_id}&userId=${userId}`,
           {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
@@ -134,34 +188,31 @@ const CommunityPlatform = () => {
           }
         );
       } else {
-        response = await fetch(
-          "http://localhost:8080/api/newsfeed/addFeedDetails",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(postData),
-          }
-        );
+        // Include userId in the URL for new posts
+        const url = `http://localhost:8080/api/newsfeed/addFeedDetails?userId=${userId}`;
+        console.log('Sending request to:', url);
+        
+        response = await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(postData),
+        });
       }
-
+  
       if (!response.ok) {
-        throw new Error("Network response was not ok");
+        const errorText = await response.text();
+        console.error('Response not ok:', errorText);
+        throw new Error(`Network response was not ok: ${errorText}`);
       }
-
+  
       const data = await response.json();
-
-      if (editingPost) {
-        setPosts(
-          posts.map((post) =>
-            post.newsfeed_id === editingPost.newsfeed_id ? data : post
-          )
-        );
-      } else {
-        setPosts([data, ...posts]);
-      }
-
+      console.log('Received response:', data);
+  
+      // Refresh the posts list
+      await fetchPosts();
+  
+      // Reset form and close modal
       setFormData({
-        username: formData.username,
         post_description: "",
         post_type: "",
         post_date: new Date().toISOString().split("T")[0],
@@ -169,8 +220,14 @@ const CommunityPlatform = () => {
       });
       setIsModalOpen(false);
       setEditingPost(null);
+  
+      // Optional: Show success message to user
+      // You can add a toast or alert here if you want
+  
     } catch (error) {
       console.error("Error saving post:", error);
+      // Optional: Show error message to user
+      // You can add a toast or alert here if you want
     }
   };
 
@@ -283,13 +340,21 @@ const CommunityPlatform = () => {
             <div className="profile-sidebar">
               <div className="profile-avatar">
                 <img
-                  src={`src/assets/prof/${users[0].image}`}
-                  alt={users[0].name}
+                  src={
+                    currentUser?.profilePicture
+                      ? `http://localhost:8080${currentUser.profilePicture}`
+                      : `src/assets/prof/${users[0].image}`
+                  }
+                  alt={currentUser?.firstname || "Profile"}
                   className="profile-image"
                 />
               </div>
               <div className="profile-info">
-                <h4>Joel Chandler</h4>
+                <h4>
+                  {currentUser
+                    ? `${currentUser.firstname} ${currentUser.lastname}`
+                    : "Loading..."}
+                </h4>
               </div>
             </div>
           </Link>
@@ -497,20 +562,27 @@ const CommunityPlatform = () => {
                     <div className="profile-circlecover">
                       <img
                         className="profile-image"
-                        src={Prof1}
+                        src={
+                          post.user?.profilePicture
+                            ? `http://localhost:8080${post.user.profilePicture}`
+                            : Prof1
+                        }
                         alt="Profile"
                       />
                     </div>
                     <div className="user-info">
                       <div className="user-meta">
                         <h3 className="username">
-                          {post.username || formData.username}
+                          {post.user
+                            ? `${post.user.firstname} ${post.user.lastname}`
+                            : "Unknown User"}
                         </h3>
                         <span className="post-meta">•</span>
                         <span className="post-meta">
                           {getDaysAgo(post.post_date)}
                         </span>
                       </div>
+
                       <div className="status-badges">
                         <span
                           className={`status-badge ${
