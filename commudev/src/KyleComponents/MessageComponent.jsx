@@ -20,6 +20,8 @@ import MessageIcon from "../assets/MessageIcon.svg";
 import RewardsIcon from "../assets/RewardsIcon.svg";
 import ResourceIcon from "../assets/ResourceIcon.svg";
 import TaskIcon from "../assets/TaskIcon.svg";
+import ProfPic from "../assets/prof/Kyle.jpg";
+import ProfPic2 from "../assets/prof/Joel.jpg";
 
 const MessagePage = () => {
   const [users, setUsers] = useState([]);
@@ -228,7 +230,7 @@ const MessagePage = () => {
             >
               <div className="messagePage__userAvatar">
                 <img 
-                  src={user.avatar} 
+                  src={user.avatar || ProfPic2} 
                   alt={user.name} 
                   onError={(e) => {
                     e.target.onerror = null;
@@ -270,7 +272,7 @@ const MessagePage = () => {
             <div className="messagePage__chatHeader">
               <div className="messagePage__chatUserInfo">
                 <img
-                  src={selectedUser.avatar}
+                  src={selectedUser.avatar || ProfPic2}
                   alt={selectedUser.name}
                   className="messagePage__chatAvatar"
                   onError={(e) => {
@@ -359,7 +361,7 @@ const MessagePage = () => {
         <div className="messagePage__rightSidebar">
           <div className="messagePage__userProfile">
             <img
-              src={selectedUser.avatar}
+              src={ProfPic}
               alt={selectedUser.name}
               className="messagePage__profileAvatar"
               onError={(e) => {
