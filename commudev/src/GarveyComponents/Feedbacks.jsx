@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "../styles/TaskManagerTest.css";
+import "../styles/FeedbackTest.css";
 import { Link } from "react-router-dom";
 import LogoIcon from "../assets/prof/logo.png";
 import HomeIcon from "../assets/HomeIcon.svg";
@@ -263,7 +263,7 @@ const Feedbacks = () => {
             </div>
           </div>
 
-          <div className="resources-container grid">
+          <div className="feedback-container grid">
             {feedbacks
               .filter(feedback => selectedCategory === "all" || feedback.feedbackType === selectedCategory)
               .map((feedback) => (
@@ -321,12 +321,12 @@ const Feedbacks = () => {
 
       {/* Right Sidebar */}
       <div className="left-sidebar">
-        <div className="calendar">
+        <div className="feedback-calendar">
           <h2>Calendar</h2>
           <MyCalendar />
         </div>
 
-        <div className="notifications-container">
+        <div className="feedback-notifications-container">
           <h2>Notifications</h2>
           <div className="notifications">
             {notifications.map((notification, index) => (
