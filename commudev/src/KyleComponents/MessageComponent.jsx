@@ -230,7 +230,7 @@ const MessagePage = () => {
             >
               <div className="messagePage__userAvatar">
                 <img 
-                  src={user.avatar || ProfPic2} 
+                  src={user.avatar || ProfPic} 
                   alt={user.name} 
                   onError={(e) => {
                     e.target.onerror = null;
@@ -272,7 +272,7 @@ const MessagePage = () => {
             <div className="messagePage__chatHeader">
               <div className="messagePage__chatUserInfo">
                 <img
-                  src={selectedUser.avatar || ProfPic2}
+                  src={selectedUser.avatar || ProfPic}
                   alt={selectedUser.name}
                   className="messagePage__chatAvatar"
                   onError={(e) => {
