@@ -483,3 +483,33 @@
       display: none;
     }
   }
+
+  .messagePage__aboutInfo {
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    margin-top: 8px;
+  }
+  
+  .messagePage__infoItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  }
+  
+  .messagePage__infoItem:last-child {
+    border-bottom: none;
+  }
+  
+  .messagePage__infoLabel {
+    color: #666;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+  
+  .messagePage__infoValue {
+    color: #333;
+    font-size: 0.9rem;
+  }
