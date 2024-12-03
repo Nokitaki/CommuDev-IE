@@ -45,10 +45,6 @@ const MessagePage = () => {
   };
 
   useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
-
-  useEffect(() => {
     const initializeData = async () => {
       try {
         setIsLoading(true);
@@ -64,12 +60,17 @@ const MessagePage = () => {
         const transformedUsers = usersData.map(user => ({
           id: user.userId,
           name: `${user.firstname} ${user.lastname}`,
-          // Use the profilePicture from the database, or fallback to a placeholder
           avatar: user.profilePicture ? 
             `http://localhost:8080${user.profilePicture}` : 
             "/api/placeholder/48/48",
           online: true,
           lastMessage: "",
+          // Add additional user details
+          age: user.age,
+          state: user.state,
+          employmentStatus: user.employmentStatus,
+          biography: user.biography,
+          dateJoined: user.dateOfBirth // Using this as join date for display
         }));
 
         setUsers(transformedUsers);
@@ -372,14 +373,29 @@ const MessagePage = () => {
           <div className="messagePage__userDetails">
             <section className="messagePage__detailsSection">
               <h3 className="messagePage__sectionTitle">About</h3>
-              <p className="messagePage__detailText">Software Developer</p>
-              <p className="messagePage__detailText">Joined January 2024</p>
+              <div className="messagePage__aboutInfo">
+                <p className="messagePage__infoItem">
+                  <span className="messagePage__infoLabel">Age:</span>
+                  <span className="messagePage__infoValue">{selectedUser.age || 'Not specified'}</span>
+                </p>
+                <p className="messagePage__infoItem">
+                  <span className="messagePage__infoLabel">State:</span>
+                  <span className="messagePage__infoValue">{selectedUser.state || 'Not specified'}</span>
+                </p>
+                <p className="messagePage__infoItem">
+                  <span className="messagePage__infoLabel">Employment:</span>
+                  <span className="messagePage__infoValue">{selectedUser.employmentStatus || 'Not specified'}</span>
+                </p>
+                <p className="messagePage__infoItem">
+                  <span className="messagePage__infoLabel">Joined:</span>
+                  <span className="messagePage__infoValue">January 2024</span>
+                </p>
+              </div>
             </section>
 
             <section className="messagePage__detailsSection">
               <h3 className="messagePage__sectionTitle">Shared Media</h3>
               <div className="messagePage__mediaGrid">
-                {/* Add shared media functionality if needed */}
                 <p>No shared media yet</p>
               </div>
             </section>
