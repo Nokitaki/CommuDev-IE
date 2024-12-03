@@ -469,7 +469,19 @@ const ProfileUser = () => {
             borderTop: '1px solid rgba(0,0,0,0.1)',
             background: 'rgba(255,255,255,0.5)'
           }}
-        >
+          >
+          <Button
+  onClick={() => navigate('/')} 
+  variant="contained"
+  color="primary"
+  sx={{ 
+    borderRadius: '20px',
+    textTransform: 'none'
+  }}
+>
+  Back to Newsfeed
+</Button>
+
           <Button
             variant="contained"
             color="primary"
@@ -480,7 +492,7 @@ const ProfileUser = () => {
               textTransform: 'none',
               px: 3
             }}
-          >
+            >
             Edit Profile
          </Button>
          <Button
