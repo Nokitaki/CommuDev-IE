@@ -15,6 +15,14 @@ import axios from "axios";
 
 // RewardItem Component
 const RewardItem = ({ reward, totalPoints, claimReward }) => {
+  const [isClaimingThis, setIsClaimingThis] = useState(false);
+
+  const handleClaim = async () => {
+    setIsClaimingThis(true);
+    await claimReward(reward.id, reward.value);
+    setIsClaimingThis(false);
+  };
+
   return (
     <article className="reward-item">
       <div className="reward-banner">
@@ -42,10 +50,10 @@ const RewardItem = ({ reward, totalPoints, claimReward }) => {
         <footer className="reward-actions">
           <button
             className={`claim-button ${totalPoints >= reward.value ? "ready" : "not-ready"}`}
-            onClick={() => claimReward(reward.id, reward.value)}
-            disabled={totalPoints < reward.value || reward.quantity <= 0}
+            onClick={handleClaim}
+            disabled={totalPoints < reward.value || reward.quantity <= 0 || isClaimingThis}
           >
-            {reward.quantity <= 0 ? "Out of Stock" : "Claim Reward"}
+            {isClaimingThis ? "Claiming..." : reward.quantity <= 0 ? "Out of Stock" : "Claim Reward"}
           </button>
         </footer>
       </div>
@@ -62,6 +70,8 @@ const Rewards = () => {
     const savedPoints = localStorage.getItem("totalPoints");
     return savedPoints ? parseInt(savedPoints, 10) : 500;
   });
+  const [claimingRewardId, setClaimingRewardId] = useState(null);
+  const [notification, setNotification] = useState({ message: "", type: "" });
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [itemsPerPage] = useState(6);
@@ -80,6 +90,11 @@ const Rewards = () => {
     { icon: FeedbackIcon, label: "Feedback" },
   ];
 
+  const showNotification = (message, type = "success") => {
+    setNotification({ message, type });
+    setTimeout(() => setNotification({ message: "", type: "" }), 3000);
+  };
+
   useEffect(() => {
     fetchRewards();
     fetchClaimedRewards();
@@ -87,14 +102,11 @@ const Rewards = () => {
 
   // Fetch rewards from the server
   const fetchRewards = async () => {
-    setIsLoading(true);
     try {
       const response = await axios.get("http://localhost:8080/api/rewards/all");
       setRewards(response.data);
     } catch (error) {
-      console.error("Error fetching rewards:", error);
-    } finally {
-      setIsLoading(false);
+      showNotification("Failed to fetch rewards", "error");
     }
   };
 
@@ -116,15 +128,13 @@ const Rewards = () => {
 
     try {
       const response = await axios.post(`http://localhost:8080/api/rewards/redeem/${redemptionCode.toUpperCase()}`);
-      if (response.data) {
-        const newPoints = totalPoints + response.data.points;
-        setTotalPoints(newPoints);
-        localStorage.setItem("totalPoints", newPoints); // Save updated points to local storage
-        setIsModalOpen(false);
-        setRedemptionCode("");
-        alert(`Successfully redeemed ${response.data.points} points!`);
-        fetchRewards(); // Refresh rewards list
-      }
+      const newPoints = totalPoints + response.data.points;
+      setTotalPoints(newPoints);
+      localStorage.setItem("totalPoints", newPoints);
+      setIsModalOpen(false);
+      setRedemptionCode("");
+      showNotification(`Successfully redeemed ${response.data.points} points!`);
+      fetchRewards();
     } catch (error) {
       setRedemptionError(error.response?.data?.error || "Failed to redeem code");
     } finally {
@@ -135,34 +145,31 @@ const Rewards = () => {
   // Claim a reward
   const claimReward = async (rewardId, rewardValue) => {
     if (totalPoints >= rewardValue) {
-      setIsLoading(true);
+      setClaimingRewardId(rewardId);
       try {
         const response = await axios.post(`http://localhost:8080/api/rewards/claim/${rewardId}`);
-        if (response.data) {
-          setRewards(currentRewards =>
-            currentRewards.map(reward =>
-              reward.id === rewardId
-                ? { ...reward, quantity: reward.quantity - 1 }
-                : reward
-            )
-          );
-          const newPoints = totalPoints - rewardValue;
-          setTotalPoints(newPoints);
-          localStorage.setItem("totalPoints", newPoints); // Save updated points to local storage
-          setClaimedRewards(current => [
-            ...current,
-            { rewardId, claimedAt: new Date() },
-          ]);
-          alert("Reward claimed successfully!");
-        }
+        setRewards(currentRewards =>
+          currentRewards.map(reward =>
+            reward.id === rewardId
+              ? { ...reward, quantity: reward.quantity - 1 }
+              : reward
+          )
+        );
+        const newPoints = totalPoints - rewardValue;
+        setTotalPoints(newPoints);
+        localStorage.setItem("totalPoints", newPoints);
+        setClaimedRewards(current => [
+          ...current,
+          { rewardId, claimedAt: new Date() },
+        ]);
+        showNotification("Reward claimed successfully!");
       } catch (error) {
-        console.error("Error claiming reward:", error);
-        alert("Failed to claim reward");
+        showNotification("Failed to claim reward", "error");
       } finally {
-        setIsLoading(false);
+        setClaimingRewardId(null);
       }
     } else {
-      alert("Not enough points to claim this reward");
+      showNotification("Not enough points to claim this reward", "error");
     }
   };
 
@@ -216,6 +223,11 @@ const Rewards = () => {
 
   return (
     <div className="community-platform-resource">
+      {notification.message && (
+        <div className={`notification ${notification.type}`}>
+          {notification.message}
+        </div>
+      )}
       {/* Left Sidebar */}
       <div className="sidebar">
         <div className="header">
@@ -301,7 +313,7 @@ const Rewards = () => {
                   }}
                   style={{ marginLeft: '10px' }}
                 >
-                  Redeem Code
+                  Redeem Points
                 </button>
               </div>
             </div>
@@ -328,27 +340,22 @@ const Rewards = () => {
           </div>
 
           <div className="resources-container grid">
-            {isLoading ? (
-              <div>Loading rewards...</div>
-            ) : currentRewards.length > 0 ? (
-              currentRewards
-                .filter(
-                  reward =>
-                    selectedCategory === "all" ||
-                    reward.type.toLowerCase() === selectedCategory
-                )
-                .map((reward) => (
-                  <RewardItem 
-                    key={reward.id} 
-                    reward={reward} 
-                    totalPoints={totalPoints} 
-                    claimReward={claimReward} 
-                  />
-                ))
-            ) : (
-              <div>No rewards found</div>
-            )}
-          </div>
+        {currentRewards
+          .filter(reward =>
+            selectedCategory === "all" ||
+            reward.type.toLowerCase() === selectedCategory
+          )
+          .map((reward) => (
+            <RewardItem 
+              key={reward.id} 
+              reward={reward} 
+              totalPoints={totalPoints} 
+              claimReward={claimReward}
+              isClaimLoading={claimingRewardId === reward.id}
+            />
+          ))
+        }
+      </div>
 
           {rewards.length > itemsPerPage && (
             <div className="pagination">

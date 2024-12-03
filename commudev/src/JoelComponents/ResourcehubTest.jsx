@@ -560,7 +560,51 @@ const ResourceHub = () => {
                   </div>
 
                   <footer className="resource-actions">
-                    {/* Buttons for actions */}
+                    <button
+                      className="download-button"
+                      onClick={() => handleLike(resource.resource_id)}
+                      title="Download and like this resource"
+                    >
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        className="download-icon"
+                      >
+                        <path
+                          d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                      Download
+                    </button>
+                    <button
+                      className="download-button"
+                      onClick={() => {
+                        setEditingResource(resource);
+                        setFormData({
+                          resource_title:
+                            resource.title || resource.resource_title,
+                          resource_description:
+                            resource.description ||
+                            resource.resource_description,
+                          resource_category:
+                            resource.type || resource.resource_category,
+                          heart_count:
+                            resource.downloads || resource.heart_count || 0,
+                          upload_date: resource.date || resource.upload_date,
+                        });
+                        setIsModalOpen(true);
+                      }}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      className="download-button"
+                      onClick={() => handleDeleteResource(resource.resource_id)}
+                    >
+                      Delete
+                    </button>
                   </footer>
                 </article>
               ))
