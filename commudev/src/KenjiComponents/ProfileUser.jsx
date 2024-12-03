@@ -524,7 +524,7 @@ const ProfileUser = () => {
         >
 
             <Button
-              onClick={() => navigate('/')} 
+              onClick={() => navigate('/newsfeed')} 
               variant="contained"
               color="primary"
               sx={{ 
