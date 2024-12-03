@@ -13,13 +13,17 @@ import React, { useState, useEffect } from "react";
 import MyCalendar from "./MyCalendar.jsx";
 import Prof1 from "../assets/prof/prof1.jpg";
 import { Link } from "react-router-dom";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const CommunityPlatform = () => {
   const navigate = useNavigate();
-  const [userId, setUserId] = useState(localStorage.getItem('userId'));
+  const [userId, setUserId] = useState(localStorage.getItem("userId"));
+  //prof-pic
+  const [profilePicture, setProfilePicture] = useState(null);
+  //
   const [userData, setUserData] = useState(null);
-  const [userName, setUserName] = useState('');
+  const [userName, setUserName] = useState("");
   const [posts, setPosts] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingPost, setEditingPost] = useState(null);
@@ -96,30 +100,39 @@ const CommunityPlatform = () => {
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const userId = localStorage.getItem('userId');
+      const userId = localStorage.getItem("userId");
       if (!userId) {
-        navigate('/login');
+        navigate("/");
         return;
       }
 
       try {
-        const response = await fetch(`http://localhost:8080/api/user/${userId}`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch user data');
-        }
-        const data = await response.json();
-       
+        const response = await axios.get(
+          `http://localhost:8080/api/user/${userId}`
+        );
+        const data = response.data;
+
         setUserData(data);
-        const fullName = String(`${data.firstname || ''} ${data.lastname || ''}`).trim();
+        // Set the profile picture URL
+        if (data.profilePicture) {
+          setProfilePicture(`http://localhost:8080${data.profilePicture}`);
+        }
+
+        const fullName = String(
+          `${data.firstname || ""} ${data.lastname || ""}`
+        ).trim();
         setUserName(fullName);
-        console.log('Set username to:', fullName);
       } catch (error) {
-        console.error('Error fetching user data:', error);
+        console.error("Error fetching user data:", error);
+        if (error.response?.status === 401 || error.response?.status === 403) {
+          localStorage.removeItem("userId");
+          navigate("/");
+        }
       }
     };
 
     fetchUserData();
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     fetchPosts();
@@ -146,7 +159,7 @@ const CommunityPlatform = () => {
     const postData = {
       creator: userName,
       post_description: formData.post_description,
-      post_type: formData.post_type, 
+      post_type: formData.post_type,
       post_date: new Date(formData.post_date).toISOString(),
       like_count: editingPost ? editingPost.like_count : 0,
       post_status: "Active",
@@ -315,14 +328,18 @@ const CommunityPlatform = () => {
           <Link to="/profileuser" className="profile-sidebar-link">
             <div className="profile-sidebar">
               <div className="profile-avatar">
-                <img
-                  src={`src/assets/prof/${users[0].image}`}
-                  alt={users[0].name}
+              <img
+                  src={profilePicture || Prof1}
+                  alt="Profile"
                   className="profile-image"
                 />
               </div>
               <div className="profile-info">
-              <h4>{userData ? `${userData.firstname} ${userData.lastname}` : 'Loading...'}</h4>
+                <h4>
+                  {userData
+                    ? `${userData.firstname} ${userData.lastname}`
+                    : "Loading..."}
+                </h4>
               </div>
             </div>
           </Link>
