@@ -11,7 +11,7 @@ import FeedbackIcon from "../assets/FeedbackIcon.svg";
 import LeaderboardsIcon from "../assets/LeaderboardsIcon.svg";
 import React, { useState, useEffect } from "react";
 import MyCalendar from "./MyCalendar.jsx";
-import Prof1 from "../assets/prof/prof1.jpg";
+import Prof1 from "../assets/prof/prof1.png";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -38,7 +38,7 @@ const CommunityPlatform = () => {
   });
 
   const users = [
-    { name: "Harry", isOnline: false, image: "prof1.jpg" },
+    { name: "Harry", isOnline: false, image: "prof1.png" },
     { name: "Keanu", isOnline: true, image: "prof2.jpg" },
     { name: "Ariana", isOnline: true, image: "prof3.jpg" },
     { name: "Justin", isOnline: true, image: "prof4.jpg" },
@@ -59,7 +59,7 @@ const CommunityPlatform = () => {
   const notifications = [
     {
       user: "Keanu",
-      image: "prof1.jpg",
+      image: "prof1.png",
       message: "liked your post",
       time: "2 minutes ago",
     },

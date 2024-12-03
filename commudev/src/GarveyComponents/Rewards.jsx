@@ -7,11 +7,13 @@ import MessageIcon from "../assets/MessageIcon.svg";
 import RewardsIcon from "../assets/RewardsIcon.svg";
 import ResourceIcon from "../assets/ResourceIcon.svg";
 import TaskIcon from "../assets/TaskIcon.svg";
-import Prof1 from "../assets/prof/prof1.jpg";
+import Prof1 from "../assets/prof/prof1.png";
 import FeedbackIcon from "../assets/FeedbackIcon.svg";
 import MyCalendar from "../JoelComponents/MyCalendar";
 import CardGiftcardIcon from "@mui/icons-material/CardGiftcard";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
 
 // RewardItem Component
 const RewardItem = ({ reward, totalPoints, claimReward }) => {
@@ -221,6 +223,58 @@ const Rewards = () => {
   const indexOfFirstReward = indexOfLastReward - itemsPerPage;
   const currentRewards = rewards.slice(indexOfFirstReward, indexOfLastReward);
 
+  const [profilePicture, setProfilePicture] = useState(null);
+  const navigate = useNavigate();
+  const [userId, setUserId] = useState(localStorage.getItem("userId"));
+  const [userData, setUserData] = useState(null);
+  const [userName, setUserName] = useState("");
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const userId = localStorage.getItem("userId");
+      if (!userId) {
+        navigate("/");
+        return;
+      }
+
+      try {
+        const response = await axios.get(
+          `http://localhost:8080/api/user/${userId}`
+        );
+        const data = response.data;
+
+        setUserData(data);
+        // Set the profile picture URL
+        if (data.profilePicture) {
+          setProfilePicture(`http://localhost:8080${data.profilePicture}`);
+        }
+
+        const fullName = String(
+          `${data.firstname || ""} ${data.lastname || ""}`
+        ).trim();
+        setUserName(fullName);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        if (error.response?.status === 401 || error.response?.status === 403) {
+          localStorage.removeItem("userId");
+          navigate("/");
+        }
+      }
+    };
+
+    fetchUserData();
+  }, [navigate]);
+
+  const notifications = [
+    {
+      user: "Keanu",
+      image: "prof1.png",
+      message: "submitted new feedback",
+      time: "2 minutes ago",
+    },
+  ];
+
+
   return (
     <div className="community-platform-resource">
       {notification.message && (
@@ -243,11 +297,21 @@ const Rewards = () => {
 
         <Link to="/profileuser" className="profile-sidebar-link">
           <div className="profile-sidebar">
-            <div className="profile-avatar">
+          <div className="profile-avatar">
+              <img
+                src={profilePicture || Prof1}
+                alt="Profile"
+                className="profile-image"
+              />
+
               <img src={Prof1} alt="Profile" className="profile-image" />
             </div>
             <div className="profile-info">
-              <h4>Joel Chandler</h4>
+            <h4>
+                {userData
+                  ? `${userData.firstname} ${userData.lastname}`
+                  : "Loading..."}
+              </h4>
             </div>
           </div>
         </Link>
@@ -375,20 +439,35 @@ const Rewards = () => {
 
       {/* Right Sidebar */}
       <div className="left-sidebar">
-        <div className="calendar">
+        <div className="rewards-calendar">
           <h2>Calendar</h2>
           <MyCalendar />
         </div>
 
         <div className="notifications-container">
           <h2>Notifications</h2>
-          {/* Example notifications list */}
-          {/* Replace with actual notifications data */}
-          {["Keanu claimed a reward", "Harry sent you a message"].map((notification, index) => (
-            <div key={index} className="notification-item">
-              <span>{notification}</span>
-            </div>
-          ))}
+          <div className="notifications">
+            {notifications.map((notification, index) => (
+              <div key={index} className="notification-item">
+                <div className="notification-header">
+                  <img
+                    src={`src/assets/prof/${notification.image}`}
+                    alt={`${notification.user}'s profile`}
+                    className="notification-image"
+                  />
+                  <div>
+                    <span className="notification-username">
+                      {notification.user}
+                    </span>
+                    <span className="notification-time">
+                      {notification.time}
+                    </span>
+                  </div>
+                </div>
+                <p className="notification-message">{notification.message}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 

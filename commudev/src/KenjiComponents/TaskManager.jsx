@@ -7,10 +7,11 @@ import MessageIcon from "../assets/MessageIcon.svg";
 import RewardsIcon from "../assets/RewardsIcon.svg";
 import ResourceIcon from "../assets/ResourceIcon.svg";
 import TaskIcon from "../assets/TaskIcon.svg";
-import Prof1 from "../assets/prof/prof1.jpg";
+import Prof1 from "../assets/prof/prof1.png";
 import FeedbackIcon from "../assets/FeedbackIcon.svg";
 import MyCalendar from '../JoelComponents/MyCalendar';
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const TaskManager = () => {
   const [tasks, setTasks] = useState([]);
@@ -19,6 +20,49 @@ const TaskManager = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState("all");
+
+  const [profilePicture, setProfilePicture] = useState(null);
+  const navigate = useNavigate();
+  const [userId, setUserId] = useState(localStorage.getItem("userId"));
+  const [userData, setUserData] = useState(null);
+  const [userName, setUserName] = useState("");
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const userId = localStorage.getItem("userId");
+      if (!userId) {
+        navigate("/");
+        return;
+      }
+
+      try {
+        const response = await axios.get(
+          `http://localhost:8080/api/user/${userId}`
+        );
+        const data = response.data;
+
+        setUserData(data);
+        // Set the profile picture URL
+        if (data.profilePicture) {
+          setProfilePicture(`http://localhost:8080${data.profilePicture}`);
+        }
+
+        const fullName = String(
+          `${data.firstname || ""} ${data.lastname || ""}`
+        ).trim();
+        setUserName(fullName);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        if (error.response?.status === 401 || error.response?.status === 403) {
+          localStorage.removeItem("userId");
+          navigate("/");
+        }
+      }
+    };
+
+    fetchUserData();
+  }, [navigate]);
+
 
   const [formData, setFormData] = useState({
     taskDescription: "",
@@ -46,7 +90,7 @@ const TaskManager = () => {
   const notifications = [
     {
       user: "Keanu",
-      image: "prof1.jpg",
+      image: "prof1.png",
       message: "completed a task",
       time: "2 minutes ago",
     },
@@ -160,11 +204,20 @@ const TaskManager = () => {
 
         <Link to="/profileuser" className="profile-sidebar-link">
           <div className="profile-sidebar">
-            <div className="profile-avatar">
-              <img src={Prof1} alt="Profile" className="profile-image" />
+          <div className="profile-avatar">
+              <img
+                src={profilePicture || Prof1}
+                alt="Profile"
+                className="profile-image"
+              />
+
             </div>
             <div className="profile-info">
-              <h4>Joel Chandler</h4>
+            <h4>
+                {userData
+                  ? `${userData.firstname} ${userData.lastname}`
+                  : "Loading..."}
+              </h4>
             </div>
           </div>
         </Link>
@@ -345,7 +398,7 @@ const TaskManager = () => {
 
       {/* Right Sidebar */}
       <div className="left-sidebar">
-        <div className="calendar">
+        <div className="task-calendar">
           <h2>Calendar</h2>
           <MyCalendar />
         </div>

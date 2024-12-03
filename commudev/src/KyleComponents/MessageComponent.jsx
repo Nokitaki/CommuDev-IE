@@ -19,7 +19,7 @@ import RewardsIcon from "../assets/RewardsIcon.svg";
 import ResourceIcon from "../assets/ResourceIcon.svg";
 import TaskIcon from "../assets/TaskIcon.svg";
 import FeedbackIcon from "../assets/FeedbackIcon.svg";
-import Prof1 from "../assets/prof/prof1.jpg"
+import Prof1 from "../assets/prof/prof1.png"
 
 const MessagePage = () => {
   const [users, setUsers] = useState([]);

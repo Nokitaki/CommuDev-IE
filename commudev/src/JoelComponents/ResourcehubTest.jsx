@@ -10,7 +10,7 @@ import MessageIcon from "../assets/MessageIcon.svg";
 import RewardsIcon from "../assets/RewardsIcon.svg";
 import ResourceIcon from "../assets/ResourceIcon.svg";
 import TaskIcon from "../assets/TaskIcon.svg";
-import Prof1 from "../assets/prof/prof1.jpg";
+import Prof1 from "../assets/prof/prof1.png";
 import MyCalendar from "./MyCalendar.jsx";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -93,19 +93,19 @@ const ResourceHub = () => {
   const notifications = [
     {
       user: "Keanu",
-      image: "prof1.jpg",
+      image: "prof1.png",
       message: "downloaded your resource",
       time: "2 minutes ago",
     },
     {
       user: "Keanu",
-      image: "prof1.jpg",
+      image: "prof1.png",
       message: "downloaded your resource",
       time: "2 minutes ago",
     },
     {
       user: "Keanu",
-      image: "prof1.jpg",
+      image: "prof1.png",
       message: "downloaded your resource",
       time: "2 minutes ago",
     },
@@ -627,7 +627,7 @@ const ResourceHub = () => {
 
       {/* Right Sidebar */}
       <div className="left-sidebar">
-        <div className="calendar">
+        <div className="resource-calendar">
           <h2>Calendar</h2>
           <MyCalendar />
         </div>
