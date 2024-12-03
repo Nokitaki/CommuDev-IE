@@ -11,6 +11,9 @@ import {
   Logout as LogoutIcon
 } from '@mui/icons-material';
 import axios from 'axios';
+import { MessageCircle } from 'lucide-react';
+
+
 
 const ProfileCard = styled(Card)(({ theme }) => ({
   background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
@@ -47,6 +50,46 @@ const StyledAvatar = styled(Avatar)(({ theme }) => ({
     height: '100%'
   }
 }));
+const MessageButton = ({ recipientId, recipientName }) => {
+  const navigate = useNavigate();
+  const currentUserId = localStorage.getItem('userId');
+
+  const handleMessageClick = () => {
+    if (currentUserId === recipientId) {
+      alert("You cannot send a message to yourself");
+      return;
+    }
+
+    localStorage.setItem('selectedRecipientId', recipientId);
+    localStorage.setItem('selectedRecipientName', recipientName);
+    navigate('/messages');
+  };
+
+  return (
+    <Button
+      variant="contained"
+      startIcon={<MessageCircle />}
+      onClick={handleMessageClick}
+      sx={{
+        mt: 4,
+        mb: 2,
+        width: '100%',
+        background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
+        color: 'white',
+        boxShadow: '0 3px 5px 2px rgba(33, 203, 243, .3)',
+        '&:hover': {
+          background: 'linear-gradient(45deg, #1976D2 30%, #21CBF3 90%)',
+        },
+        borderRadius: '8px',
+        textTransform: 'none',
+        fontSize: '1rem',
+        padding: '10px 20px',
+      }}
+    >
+      Send Message
+    </Button>
+  );
+};
 
 const EditProfileDialog = ({ open, onClose, user, onSave }) => {
   const [editedUser, setEditedUser] = useState(user);
@@ -90,6 +133,7 @@ const EditProfileDialog = ({ open, onClose, user, onSave }) => {
       setLoading(false);
     }
   };
+  
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
@@ -348,7 +392,9 @@ const ProfileUser = () => {
     );
   }
 
-  return (
+  
+
+   return (
     <Box sx={{ maxWidth: '1200px', mx: 'auto', p: 4 }}>
       <ProfileCard elevation={5}>
         <CardContent>
@@ -401,7 +447,7 @@ const ProfileUser = () => {
                 >
                   {user.biography || 'No biography available'}
                 </Typography>
-                
+
                 <List sx={{ width: '100%', bgcolor: 'background.paper', borderRadius: 2 }}>
                   {[
                     { label: 'Age', value: user.age },
@@ -456,6 +502,12 @@ const ProfileUser = () => {
                   </Grid>
                 ))}
               </Grid>
+
+              {/* Message Button */}
+              <MessageButton 
+                recipientId={user.userId}
+                recipientName={`${user.firstname} ${user.lastname}`}
+              />
             </Grid>
           </Grid>
         </CardContent>
@@ -469,19 +521,19 @@ const ProfileUser = () => {
             borderTop: '1px solid rgba(0,0,0,0.1)',
             background: 'rgba(255,255,255,0.5)'
           }}
-          >
-          <Button
-  onClick={() => navigate('/')} 
-  variant="contained"
-  color="primary"
-  sx={{ 
-    borderRadius: '20px',
-    textTransform: 'none'
-  }}
->
-  Back to Newsfeed
-</Button>
+        >
 
+            <Button
+              onClick={() => navigate('/')} 
+              variant="contained"
+              color="primary"
+              sx={{ 
+                borderRadius: '20px',
+                textTransform: 'none'
+              }}
+            >
+              Back to Newsfeed
+            </Button>
           <Button
             variant="contained"
             color="primary"
@@ -492,7 +544,7 @@ const ProfileUser = () => {
               textTransform: 'none',
               px: 3
             }}
-            >
+          >
             Edit Profile
          </Button>
          <Button
