@@ -69,6 +69,16 @@
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
+.resources-containerZ{
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(2, 1fr); /* Default: 2 items per row */
+}
+@media (max-width: 768px) {
+  .resources-containerZ {
+    grid-template-columns: 1fr; /* 1 item per row on smaller screens */
+  }
+}
 
 
 .resource-item:hover {

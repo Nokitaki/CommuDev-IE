@@ -12,6 +12,8 @@ import ResourceIcon from "../assets/ResourceIcon.svg";
 import TaskIcon from "../assets/TaskIcon.svg";
 import Prof1 from "../assets/prof/prof1.jpg";
 import MyCalendar from "./MyCalendar.jsx";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const ResourceHub = () => {
   const [viewMode, setViewMode] = useState("grid");
@@ -19,7 +21,52 @@ const ResourceHub = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingResource, setEditingResource] = useState(null);
 
+  const [profilePicture, setProfilePicture] = useState(null);
+  const navigate = useNavigate();
+  const [userId, setUserId] = useState(localStorage.getItem("userId"));
+  const [userData, setUserData] = useState(null);
+  const [userName, setUserName] = useState("");
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const userId = localStorage.getItem("userId");
+      if (!userId) {
+        navigate("/");
+        return;
+      }
+
+      try {
+        const response = await axios.get(
+          `http://localhost:8080/api/user/${userId}`
+        );
+        const data = response.data;
+
+        setUserData(data);
+        // Set the profile picture URL
+        if (data.profilePicture) {
+          setProfilePicture(`http://localhost:8080${data.profilePicture}`);
+        }
+
+        const fullName = String(
+          `${data.firstname || ""} ${data.lastname || ""}`
+        ).trim();
+        setUserName(fullName);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        if (error.response?.status === 401 || error.response?.status === 403) {
+          localStorage.removeItem("userId");
+          navigate("/");
+        }
+      }
+    };
+
+    fetchUserData();
+  }, [navigate]);
+
   const [formData, setFormData] = useState({
+    creator: userName,
+    creator_id: userId,
+    creator_profile_picture: profilePicture,
     resource_title: "",
     resource_description: "",
     resource_category: "",
@@ -112,20 +159,48 @@ const ResourceHub = () => {
       );
       if (!response.ok) throw new Error("Failed to fetch resources");
       const data = await response.json();
-      console.log("Fetched resources:", data); // Debug log
 
-      // Transform the data to match your existing structure
-      const transformedData = data.map((item) => ({
-        resource_id: item.resource_id,
-        resource_title: item.resource_title,
-        resource_description: item.resource_description,
-        resource_category: item.resource_category,
-        heart_count: item.heart_count || 0,
-        upload_date: new Date(item.upload_date).toLocaleDateString(),
-        fileSize: "2.5 MB", // You can modify this as needed
-      }));
+      // Fetch profile pictures for each resource's creator
+      const resourcesWithProfilePictures = await Promise.all(
+        data.map(async (item) => {
+          try {
+            const userResponse = await axios.get(
+              `http://localhost:8080/api/user/${item.creator_id}`
+            );
+            const userData = userResponse.data;
+            return {
+              creator: userData.firstname + " " + userData.lastname,
+              resource_id: item.resource_id,
+              resource_title: item.resource_title,
+              resource_description: item.resource_description,
+              resource_category: item.resource_category,
+              heart_count: item.heart_count || 0,
+              upload_date: new Date(item.upload_date).toLocaleDateString(),
+              fileSize: "2.5 MB",
+              creator_profile_picture: userData.profilePicture
+                ? `http://localhost:8080${userData.profilePicture}`
+                : null,
+            };
+          } catch (error) {
+            console.error(
+              `Error fetching profile picture for resource ${item.resource_id}:`,
+              error
+            );
+            return {
+              resource_id: item.resource_id,
+              resource_title: item.resource_title,
+              resource_description: item.resource_description,
+              resource_category: item.resource_category,
+              heart_count: item.heart_count || 0,
+              upload_date: new Date(item.upload_date).toLocaleDateString(),
+              fileSize: "2.5 MB",
+              creator_profile_picture: null,
+            };
+          }
+        })
+      );
 
-      setResources(transformedData);
+      setResources(resourcesWithProfilePictures);
     } catch (error) {
       console.error("Error fetching resources:", error);
     } finally {
@@ -135,13 +210,22 @@ const ResourceHub = () => {
 
   const handleAddResource = async (e) => {
     e.preventDefault();
+
+    // Ensure the formData is up-to-date with the latest values
+    const updatedFormData = {
+      ...formData,
+      creator: userName,
+      creator_id: userId,
+      creator_profile_picture: profilePicture,
+    };
+
     try {
       const response = await fetch(
         "http://localhost:8080/api/resource/addResourceDetails",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
+          body: JSON.stringify(updatedFormData),
         }
       );
 
@@ -150,6 +234,9 @@ const ResourceHub = () => {
       fetchResources();
       setIsModalOpen(false);
       setFormData({
+        creator: userName,
+        creator_id: userId,
+        creator_profile_picture: profilePicture,
         resource_title: "",
         resource_description: "",
         resource_category: "",
@@ -247,6 +334,17 @@ const ResourceHub = () => {
     fetchResources();
   }, []);
 
+  const filteredResources = resources.filter((resource) => {
+    if (selectedCategory === "all") {
+      return true; // Show all resources if "all" is selected
+    } else if (selectedCategory === "documents") {
+      return resource.resource_category === "Document"; // Filter documents
+    } else if (selectedCategory === "media") {
+      return resource.resource_category === "Media"; // Filter media
+    }
+    return true; // Default fallback
+  });
+
   return (
     <div className="community-platform-resource">
       {/* Left Sidebar */}
@@ -266,13 +364,17 @@ const ResourceHub = () => {
           <div className="profile-sidebar">
             <div className="profile-avatar">
               <img
-                src={`src/assets/prof/${users[0].image}`}
-                alt={users[0].name}
+                src={profilePicture || Prof1}
+                alt="Profile"
                 className="profile-image"
               />
             </div>
             <div className="profile-info">
-              <h4>Joel Chandler</h4>
+              <h4>
+                {userData
+                  ? `${userData.firstname} ${userData.lastname}`
+                  : "Loading..."}
+              </h4>
             </div>
           </div>
         </Link>
@@ -390,11 +492,11 @@ const ResourceHub = () => {
             </div>
           </div>
 
-          <div className={`resources-container ${viewMode}`}>
+          <div className="resources-containerZ">
             {isLoading ? (
               <div>Loading resources...</div>
-            ) : resources.length > 0 ? (
-              resources.map((resource) => (
+            ) : filteredResources.length > 0 ? (
+              filteredResources.map((resource) => (
                 <article
                   key={resource.id || resource.resource_id}
                   className="resource-item"
@@ -403,13 +505,15 @@ const ResourceHub = () => {
                     <div className="profile-circlecover">
                       <img
                         className="profile-image"
-                        src={Prof1}
+                        src={resource.creator_profile_picture || Prof1}
                         alt="Profile"
                       />
                     </div>
                     <div className="user-info">
                       <div className="user-meta">
-                        <h3 className="username">Admin</h3>
+                        <h3 className="username">
+                          {resource.creator || "Unknown User"}
+                        </h3>
                         <span className="post-meta">•</span>
                         <span className="post-meta">
                           {resource.date ||
@@ -456,51 +560,7 @@ const ResourceHub = () => {
                   </div>
 
                   <footer className="resource-actions">
-                    <button
-                      className="download-button"
-                      onClick={() => handleLike(resource.resource_id)}
-                      title="Download and like this resource"
-                    >
-                      <svg
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        className="download-icon"
-                      >
-                        <path
-                          d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"
-                          fill="currentColor"
-                        />
-                      </svg>
-                      Download
-                    </button>
-                    <button
-                      className="download-button"
-                      onClick={() => {
-                        setEditingResource(resource);
-                        setFormData({
-                          resource_title:
-                            resource.title || resource.resource_title,
-                          resource_description:
-                            resource.description ||
-                            resource.resource_description,
-                          resource_category:
-                            resource.type || resource.resource_category,
-                          heart_count:
-                            resource.downloads || resource.heart_count || 0,
-                          upload_date: resource.date || resource.upload_date,
-                        });
-                        setIsModalOpen(true);
-                      }}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      className="download-button"
-                      onClick={() => handleDeleteResource(resource.resource_id)}
-                    >
-                      Delete
-                    </button>
+                    {/* Buttons for actions */}
                   </footer>
                 </article>
               ))
