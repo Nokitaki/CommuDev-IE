@@ -311,9 +311,9 @@ const Rewards = () => {
                     setRedemptionError("");
                     setIsModalOpen(true);
                   }}
-                  style={{ marginLeft: '10px' }}
+                  style={{ marginLeft: '10px', outline: '1px solid #BFF4BE',boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)' }}
                 >
-                  Redeem Points
+                  + Redeem Points
                 </button>
               </div>
             </div>

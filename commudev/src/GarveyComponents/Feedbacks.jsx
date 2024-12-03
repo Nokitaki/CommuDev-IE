@@ -263,11 +263,11 @@ const Feedbacks = () => {
             </div>
           </div>
 
-          <div className="feedback-container grid">
+          <div className="feedback-container">
             {feedbacks
               .filter(feedback => selectedCategory === "all" || feedback.feedbackType === selectedCategory)
               .map((feedback) => (
-                <article key={feedback.feedback_id} className="resource-item">
+                <article key={feedback.feedback_id} className="resource-itemZ">
                   <header className="post-header">
                     <div className="profile-circlecover">
                       <img className="profile-image" src={Prof1} alt="Profile" />
@@ -287,8 +287,8 @@ const Feedbacks = () => {
                   </header>
 
                   <div className="resource-content">
-                    <h3 className="resource-title">{feedback.subject}</h3>
-                    <p className="resource-description">{feedback.description}</p>
+                    <h3 className="resource-titleX">{feedback.subject}</h3>
+                    <p className="resource-descriptionX">{feedback.description}</p>
                   </div>
 
                   <footer className="resource-actions">
