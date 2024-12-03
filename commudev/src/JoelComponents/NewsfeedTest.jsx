@@ -147,7 +147,37 @@ const CommunityPlatform = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
-      setPosts(data.map((post) => ({ ...post, type: post.post_type })));
+
+      // Fetch profile pictures for each post's creator
+      const postsWithProfilePictures = await Promise.all(
+        data.map(async (post) => {
+          try {
+            const userResponse = await axios.get(
+              `http://localhost:8080/api/user/${post.creator_id}`
+            );
+            const userData = userResponse.data;
+            return {
+              ...post,
+              type: post.post_type,
+              creator_profile_picture: userData.profilePicture
+                ? `http://localhost:8080${userData.profilePicture}`
+                : null,
+            };
+          } catch (error) {
+            console.error(
+              `Error fetching profile picture for post ${post.newsfeed_id}:`,
+              error
+            );
+            return {
+              ...post,
+              type: post.post_type,
+              creator_profile_picture: null,
+            };
+          }
+        })
+      );
+
+      setPosts(postsWithProfilePictures);
     } catch (error) {
       console.error("Error fetching posts:", error);
     }
@@ -163,6 +193,8 @@ const CommunityPlatform = () => {
       post_date: new Date(formData.post_date).toISOString(),
       like_count: editingPost ? editingPost.like_count : 0,
       post_status: "Active",
+      creator_id: userId, // Add creator's ID
+      creator_profile_picture: profilePicture,
     };
 
     try {
@@ -328,7 +360,7 @@ const CommunityPlatform = () => {
           <Link to="/profileuser" className="profile-sidebar-link">
             <div className="profile-sidebar">
               <div className="profile-avatar">
-              <img
+                <img
                   src={profilePicture || Prof1}
                   alt="Profile"
                   className="profile-image"
@@ -547,7 +579,7 @@ const CommunityPlatform = () => {
                     <div className="profile-circlecover">
                       <img
                         className="profile-image"
-                        src={Prof1}
+                        src={post.creator_profile_picture || Prof1}
                         alt="Profile"
                       />
                     </div>
