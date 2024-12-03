@@ -15,9 +15,9 @@ import { Routes, Route } from 'react-router-dom';
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<Newsfeed />} />
+      <Route path="/newsfeed" element={<Newsfeed />} />
       <Route path="/profileuser" element={<Profile />} />
-      <Route path="/login" element={<AuthPage />} />
+      <Route path="/" element={<AuthPage />} />
       <Route path="/resource" element={<ResourcehubTest />} />
       <Route path="/messages" element={<Message />} />
       <Route path="/task" element={<TaskManager />} />

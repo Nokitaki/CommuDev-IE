@@ -214,7 +214,7 @@ const AuthPage = () => {
           setSuccessMessage('Login successful!');
           
           setTimeout(() => {
-            navigate('/');
+            navigate('/newsfeed');
           }, 1000);
         }
       } else {
