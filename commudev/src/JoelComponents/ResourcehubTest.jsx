@@ -250,22 +250,34 @@ const ResourceHub = () => {
 
   const handleUpdateResource = async (resource_id) => {
     try {
+      const updatedResource = {
+        resource_title: formData.resource_title?.trim(),
+        resource_description: formData.resource_description?.trim(),
+        resource_category: formData.resource_category || "Document",
+        creator_id: parseInt(userId),
+        upload_date: new Date().toISOString()
+      };
+  
+      // Notice the URL change here - adding resource_id as a query parameter
       const response = await fetch(
-        "http://localhost:8080/api/resource/updateResourceDetails",
+        `http://localhost:8080/api/resource/updateResourceDetails?resource_id=${resource_id}`,
         {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ ...formData, resource_id }),
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(updatedResource)
         }
       );
-
-      if (!response.ok) throw new Error("Failed to update resource");
-
+  
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText);
+      }
+  
       fetchResources();
       setIsModalOpen(false);
       setEditingResource(null);
     } catch (error) {
-      console.error("Error updating resource:", error);
+      console.error('Update failed:', error);
     }
   };
 
@@ -583,16 +595,14 @@ const ResourceHub = () => {
                       onClick={() => {
                         setEditingResource(resource);
                         setFormData({
-                          resource_title:
-                            resource.title || resource.resource_title,
-                          resource_description:
-                            resource.description ||
-                            resource.resource_description,
-                          resource_category:
-                            resource.type || resource.resource_category,
-                          heart_count:
-                            resource.downloads || resource.heart_count || 0,
-                          upload_date: resource.date || resource.upload_date,
+                          resource_title: resource.resource_title,
+                          resource_description: resource.resource_description,
+                          resource_category: resource.resource_category,
+                          heart_count: resource.heart_count || 0,
+                          upload_date: resource.upload_date,
+                          creator: userName,
+                          creator_id: userId,
+                          creator_profile_picture: profilePicture,
                         });
                         setIsModalOpen(true);
                       }}

@@ -19,6 +19,7 @@ import RewardsIcon from "../assets/RewardsIcon.svg";
 import ResourceIcon from "../assets/ResourceIcon.svg";
 import TaskIcon from "../assets/TaskIcon.svg";
 import FeedbackIcon from "../assets/FeedbackIcon.svg";
+import Prof1 from "../assets/prof/prof1.jpg"
 
 const MessagePage = () => {
   const [users, setUsers] = useState([]);
@@ -62,7 +63,7 @@ const MessagePage = () => {
           name: `${user.firstname} ${user.lastname}`,
           avatar: user.profilePicture ? 
             `http://localhost:8080${user.profilePicture}` : 
-            "/api/placeholder/48/48",
+            Prof1,
           online: true,
           lastMessage: "",
           // Add additional user details
@@ -231,7 +232,7 @@ const MessagePage = () => {
                   className="messagePage__avatarImage"
                   onError={(e) => {
                     e.target.onerror = null;
-                    e.target.src = "/api/placeholder/48/48";
+                    e.target.src = Prof1;
                   }}
                 />
                 {user.online && <span className="messagePage__onlineIndicator"></span>}
@@ -273,7 +274,7 @@ const MessagePage = () => {
                   className="messagePage__chatAvatar"
                   onError={(e) => {
                     e.target.onerror = null;
-                    e.target.src = "/api/placeholder/48/48";
+                    e.target.src = Prof1;
                   }}
                 />
                 <div className="messagePage__chatUserDetails">

@@ -15,6 +15,7 @@ import Prof1 from "../assets/prof/prof1.jpg";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import ReactMarkdown from 'react-markdown';
 
 const CommunityPlatform = () => {
   const navigate = useNavigate();
@@ -615,7 +616,7 @@ const CommunityPlatform = () => {
                   </header>
 
                   <div className="post-content">
-                    <p>{post.post_description}</p>
+                  <ReactMarkdown>{post.post_description}</ReactMarkdown>
                     {post.image && (
                       <div className="post-image">
                         <img src={post.image} alt="Post content" />

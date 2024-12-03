@@ -59,6 +59,14 @@
 }
 
 /*resource item*/
+.resources-containerZ {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Ensures minimum width for items */
+  justify-content: center; /* Center items if there's extra space */
+}
+
+/* Resource Item */
 .resource-item {
   background: white;
   border-radius: 8px;
@@ -66,20 +74,20 @@
   gap: 15px;
   margin-bottom: 20px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  width: 285px; /* Set a fixed width */
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.resources-containerZ{
-  display: grid;
-  gap: 16px;
-  grid-template-columns: repeat(2, 1fr); /* Default: 2 items per row */
-}
+/* Responsive Behavior */
 @media (max-width: 768px) {
   .resources-containerZ {
-    grid-template-columns: 1fr; /* 1 item per row on smaller screens */
+    grid-template-columns: 1fr; /* Stack items vertically on smaller screens */
+  }
+
+  .resource-item {
+    width: auto; /* Allow full width in single-column view */
   }
 }
-
 
 .resource-item:hover {
   transform: translateY(-2px);
