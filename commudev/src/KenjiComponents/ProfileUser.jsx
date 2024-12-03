@@ -269,7 +269,7 @@ const ProfileUser = () => {
     const checkAuth = () => {
       const userId = localStorage.getItem('userId');
       if (!userId) {
-        navigate('/login');
+        navigate('/');
         return false;
       }
       return userId;
@@ -295,7 +295,7 @@ const ProfileUser = () => {
         if (error.response?.status === 401 || error.response?.status === 403) {
           localStorage.removeItem('userId');
           localStorage.removeItem('username');
-          navigate('/login');
+          navigate('/');
         } else {
           setError('Failed to load user data');
         }
@@ -352,7 +352,7 @@ const ProfileUser = () => {
         localStorage.removeItem('username');
         localStorage.removeItem('userBio');
         localStorage.removeItem('userGoals');
-        navigate('/login');
+        navigate('/');
       } catch (error) {
         console.error('Error deleting user:', error);
         setError('Failed to delete profile. Please try again.');
@@ -365,7 +365,7 @@ const ProfileUser = () => {
     localStorage.removeItem('username');
     localStorage.removeItem('userBio');
     localStorage.removeItem('userGoals');
-    navigate('/login');
+    navigate('/');
   };
 
   if (loading) {
