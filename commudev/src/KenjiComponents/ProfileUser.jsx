@@ -71,18 +71,17 @@ const EditProfileDialog = ({ open, onClose, user, onSave }) => {
       const userId = localStorage.getItem('userId');
       if (!userId) throw new Error('No user ID found');
   
-      localStorage.setItem('userBio', editedUser.biography || '');
-      localStorage.setItem('userGoals', editedUser.goals || '');
+      const updatedUser = {
+        ...editedUser,
+        biography: editedUser.biography || '',
+        goals: editedUser.goals || ''
+      };
   
-      const { biography, goals, profilePicture, ...dbUser } = editedUser;
-      
-      const response = await axios.put(`http://localhost:8080/api/user/${userId}`, dbUser);
-      onSave({
-        ...response.data,
-        biography: editedUser.biography,
-        goals: editedUser.goals,
-        profilePicture: user.profilePicture // Keep the existing profile picture
-      });
+      // Send the updated user data to the backend
+      const response = await axios.put(`http://localhost:8080/api/user/${userId}`, updatedUser);
+  
+      // Call onSave with updated user data
+      onSave(response.data);
       onClose();
     } catch (error) {
       console.error('Error saving user:', error);
@@ -123,6 +122,15 @@ const EditProfileDialog = ({ open, onClose, user, onSave }) => {
               label="Last Name"
               value={editedUser?.lastname || ''}
               onChange={handleChange('lastname')}
+              margin="normal"
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              label="Email"
+              value={editedUser?.email || ''}
+              onChange={handleChange('email')}
               margin="normal"
             />
           </Grid>
@@ -172,7 +180,17 @@ const EditProfileDialog = ({ open, onClose, user, onSave }) => {
               value={editedUser?.goals || ''}
               onChange={handleChange('goals')}
               multiline
-              rows={2}
+              rows={3}
+              margin="normal"
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              label="Hobbies"
+              value={editedUser?.hobbies || ''}
+              onChange={handleChange('hobbies')}
+              helperText="Enter hobbies separated by commas"
               margin="normal"
             />
           </Grid>
@@ -222,8 +240,6 @@ const ProfileUser = () => {
         if (response.data) {
           setUser({
             ...response.data,
-            biography: localStorage.getItem('userBio') || '',
-            goals: localStorage.getItem('userGoals') || '',
             profilePicture: response.data.profilePicture ? 
               `http://localhost:8080${response.data.profilePicture}` : null
           });
@@ -407,7 +423,7 @@ const ProfileUser = () => {
               <Grid container spacing={3}>
                 {[
                   { title: 'Rewards', data: user.rewards, icon: '🏆' },
-                  { title: 'Hobbies', data: user.hobbies, icon: '🎯' },
+                  { title: 'Hobbies', data: [user.hobbies], icon: '🎯' },
                   { title: 'Goals', data: [user.goals], icon: '🎯' },
                   { title: 'Followers', data: [user.followers + ' followers'], icon: '👥' }
                 ].map((section, index) => (
