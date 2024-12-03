@@ -28,12 +28,55 @@ import {
   Edit as EditIcon
 } from '@mui/icons-material';
 import axios from 'axios';
+import { MessageCircle } from 'lucide-react';
+
+
 
 const StyledAvatar = styled(Avatar)(({ theme }) => ({
   width: theme.spacing(16),
   height: theme.spacing(16),
   marginBottom: theme.spacing(2)
 }));
+const MessageButton = ({ recipientId, recipientName }) => {
+  const navigate = useNavigate();
+  const currentUserId = localStorage.getItem('userId');
+
+  const handleMessageClick = () => {
+    if (currentUserId === recipientId) {
+      alert("You cannot send a message to yourself");
+      return;
+    }
+
+    localStorage.setItem('selectedRecipientId', recipientId);
+    localStorage.setItem('selectedRecipientName', recipientName);
+    navigate('/messages');
+  };
+
+  return (
+    <Button
+      variant="contained"
+      startIcon={<MessageCircle />}
+      onClick={handleMessageClick}
+      sx={{
+        mt: 4,
+        mb: 2,
+        width: '100%',
+        background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
+        color: 'white',
+        boxShadow: '0 3px 5px 2px rgba(33, 203, 243, .3)',
+        '&:hover': {
+          background: 'linear-gradient(45deg, #1976D2 30%, #21CBF3 90%)',
+        },
+        borderRadius: '8px',
+        textTransform: 'none',
+        fontSize: '1rem',
+        padding: '10px 20px',
+      }}
+    >
+      Send Message
+    </Button>
+  );
+};
 
 // Edit Profile Dialog Component
 const EditProfileDialog = ({ open, onClose, user, onSave }) => {
@@ -71,6 +114,7 @@ const EditProfileDialog = ({ open, onClose, user, onSave }) => {
       setLoading(false);
     }
   };
+  
 
   return (
     <Dialog
@@ -256,6 +300,8 @@ const ProfileUser = () => {
     );
   }
 
+  
+
   return (
     <Box sx={{ maxWidth: '1200px', mx: 'auto', p: 4 }}>
       <Card elevation={3}>
@@ -276,6 +322,24 @@ const ProfileUser = () => {
                 <Typography color="text.secondary">
                   {user.biography || 'No biography available'}
                 </Typography>
+<<<<<<< Updated upstream
+=======
+
+                <List sx={{ width: '100%', bgcolor: 'background.paper', borderRadius: 2 }}>
+                  {[
+                    { label: 'Age', value: user.age },
+                    { label: 'State', value: user.state },
+                    { label: 'Employment', value: user.employmentStatus }
+                  ].map((item, index) => (
+                    <ListItem key={index} sx={{ py: 2 }}>
+                      <ListItemText
+                        primary={<Typography variant="body2" color="text.secondary">{item.label}</Typography>}
+                        secondary={<Typography variant="subtitle1" sx={{ fontWeight: 500 }}>{item.value || 'Not specified'}</Typography>}
+                      />
+                    </ListItem>
+                  ))}
+                </List>
+>>>>>>> Stashed changes
               </Box>
 
               <List>
@@ -347,6 +411,12 @@ const ProfileUser = () => {
                   </Paper>
                 </Grid>
               </Grid>
+
+              {/* Message Button */}
+              <MessageButton 
+                recipientId={user.userId}
+                recipientName={`${user.firstname} ${user.lastname}`}
+              />
             </Grid>
           </Grid>
         </CardContent>
