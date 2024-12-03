@@ -25,7 +25,7 @@ const Feedbacks = () => {
   const [editId, setEditId] = useState(null);
 
   const navigationItems = [
-    { icon: HomeIcon, label: "Home", path: "/" },
+    { icon: HomeIcon, label: "Home", path: "/newsfeed" },
     { icon: MessageIcon, label: "Messages" },
     { icon: ResourceIcon, label: "Resources", path: "/resource" },
     { icon: TaskIcon, label: "Task", path: "/task" },
@@ -160,7 +160,7 @@ const Feedbacks = () => {
       {/* Left Sidebar */}
       <div className="sidebar">
         <div className="header">
-          <Link to="/">
+          <Link to="/newsfeed">
             <div className="logo">
               <img src={LogoIcon} alt="Logo" className="logo-icon" />
             </div>

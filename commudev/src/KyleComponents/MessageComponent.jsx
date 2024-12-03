@@ -35,7 +35,7 @@ const MessagePage = () => {
   const messagesEndRef = useRef(null);
 
   const navigationItems = [
-    { icon: HomeIcon, label: "Home", path: "/" },
+    { icon: HomeIcon, label: "Home", path: "/newsfeed" },
     { icon: MessageIcon, label: "Messages" },
     { icon: ResourceIcon, label: "Resources", path: "/resource" },
     { icon: TaskIcon, label: "Task", path: "/task" },
