@@ -14,14 +14,11 @@ import axios from "axios";
 import "../styles/MessageComponent.css";
 import LogoIcon from "../assets/prof/logo.png";
 import HomeIcon from "../assets/HomeIcon.svg";
-import CommuIcon from "../assets/CommuIcon.svg";
-import FeedbackIcon from "../assets/FeedbackIcon.svg";
 import MessageIcon from "../assets/MessageIcon.svg";
 import RewardsIcon from "../assets/RewardsIcon.svg";
 import ResourceIcon from "../assets/ResourceIcon.svg";
 import TaskIcon from "../assets/TaskIcon.svg";
-import ProfPic from "../assets/prof/Kyle.jpg";
-import ProfPic2 from "../assets/prof/Joel.jpg";
+import FeedbackIcon from "../assets/FeedbackIcon.svg";
 
 const MessagePage = () => {
   const [users, setUsers] = useState([]);
@@ -43,7 +40,6 @@ const MessagePage = () => {
     { icon: FeedbackIcon, label: "Feedback" },
   ];
 
-  // Scroll to bottom of messages
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -52,29 +48,28 @@ const MessagePage = () => {
     scrollToBottom();
   }, [messages]);
 
-  // Initialize user data
   useEffect(() => {
     const initializeData = async () => {
       try {
         setIsLoading(true);
-        // Get current user ID from localStorage (set during login)
         const userId = localStorage.getItem('userId');
         if (!userId) {
           throw new Error('User not authenticated');
         }
         setCurrentUserId(userId);
 
-        // Fetch all users
         const response = await axios.get('http://localhost:8080/api/user/all');
         const usersData = response.data.filter(user => user.userId.toString() !== userId);
         
-        // Transform user data
         const transformedUsers = usersData.map(user => ({
           id: user.userId,
           name: `${user.firstname} ${user.lastname}`,
-          avatar: user.profilePicture,
-          online: true, // You could implement real online status
-          lastMessage: "", // Will be updated when fetching messages
+          // Use the profilePicture from the database, or fallback to a placeholder
+          avatar: user.profilePicture ? 
+            `http://localhost:8080${user.profilePicture}` : 
+            "/api/placeholder/48/48",
+          online: true,
+          lastMessage: "",
         }));
 
         setUsers(transformedUsers);
@@ -230,11 +225,12 @@ const MessagePage = () => {
             >
               <div className="messagePage__userAvatar">
                 <img 
-                  src={user.avatar || ProfPic} 
-                  alt={user.name} 
+                  src={user.avatar}
+                  alt={user.name}
+                  className="messagePage__avatarImage"
                   onError={(e) => {
                     e.target.onerror = null;
-                    e.target.src = DefaultAvatar;
+                    e.target.src = "/api/placeholder/48/48";
                   }}
                 />
                 {user.online && <span className="messagePage__onlineIndicator"></span>}
@@ -268,16 +264,15 @@ const MessagePage = () => {
         {/* Chat Area */}
         {selectedUser ? (
           <div className="messagePage__chatContainer">
-            {/* Chat Header */}
             <div className="messagePage__chatHeader">
               <div className="messagePage__chatUserInfo">
                 <img
-                  src={selectedUser.avatar || ProfPic}
+                  src={selectedUser.avatar}
                   alt={selectedUser.name}
                   className="messagePage__chatAvatar"
                   onError={(e) => {
                     e.target.onerror = null;
-                    e.target.src = DefaultAvatar;
+                    e.target.src = "/api/placeholder/48/48";
                   }}
                 />
                 <div className="messagePage__chatUserDetails">
@@ -356,17 +351,16 @@ const MessagePage = () => {
         )}
       </div>
 
-      {/* Right Sidebar - User Info */}
       {selectedUser && (
         <div className="messagePage__rightSidebar">
           <div className="messagePage__userProfile">
             <img
-              src={ProfPic}
+              src={selectedUser.avatar}
               alt={selectedUser.name}
               className="messagePage__profileAvatar"
               onError={(e) => {
                 e.target.onerror = null;
-                e.target.src = DefaultAvatar;
+                e.target.src = "/api/placeholder/96/96";
               }}
             />
             <h2 className="messagePage__profileName">{selectedUser.name}</h2>
