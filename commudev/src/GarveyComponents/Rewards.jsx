@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "../styles/RewardsTest.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import LogoIcon from "../assets/prof/logo.png";
 import HomeIcon from "../assets/HomeIcon.svg";
 import MessageIcon from "../assets/MessageIcon.svg";
@@ -12,10 +12,8 @@ import FeedbackIcon from "../assets/FeedbackIcon.svg";
 import MyCalendar from "../JoelComponents/MyCalendar";
 import CardGiftcardIcon from "@mui/icons-material/CardGiftcard";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
 
-
-// RewardItem Component
 const RewardItem = ({ reward, totalPoints, claimReward }) => {
   const [isClaimingThis, setIsClaimingThis] = useState(false);
 
@@ -63,12 +61,10 @@ const RewardItem = ({ reward, totalPoints, claimReward }) => {
   );
 };
 
-// Main Rewards Component
 const Rewards = () => {
   const [rewards, setRewards] = useState([]);
   const [claimedRewards, setClaimedRewards] = useState([]);
   const [totalPoints, setTotalPoints] = useState(() => {
-    // Retrieve points from local storage or set default value
     const savedPoints = localStorage.getItem("totalPoints");
     return savedPoints ? parseInt(savedPoints, 10) : 500;
   });
@@ -82,6 +78,26 @@ const Rewards = () => {
   const [redemptionCode, setRedemptionCode] = useState("");
   const [redemptionError, setRedemptionError] = useState("");
   const [isRedeeming, setIsRedeeming] = useState(false);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [newReward, setNewReward] = useState({
+    name: '',
+    type: '',
+    value: '',
+    quantity: '',
+    description: '',
+    expiryDate: '',
+    redemptionCode: '',
+    isExclusive: false,
+    isFeatured: false,
+    isRedeemed: false
+  });
+  const [isEditPointsModalOpen, setIsEditPointsModalOpen] = useState(false);
+  const [editPointsAmount, setEditPointsAmount] = useState('');
+  const [profilePicture, setProfilePicture] = useState(null);
+  const navigate = useNavigate();
+  const [userId, setUserId] = useState(localStorage.getItem("userId"));
+  const [userData, setUserData] = useState(null);
+  const [userName, setUserName] = useState("");
 
   const navigationItems = [
     { icon: HomeIcon, label: "Home", path: "/newsfeed" },
@@ -102,7 +118,35 @@ const Rewards = () => {
     fetchClaimedRewards();
   }, []);
 
-  // Fetch rewards from the server
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const userId = localStorage.getItem("userId");
+      if (!userId) {
+        navigate("/");
+        return;
+      }
+
+      try {
+        const response = await axios.get(`http://localhost:8080/api/user/${userId}`);
+        const data = response.data;
+        setUserData(data);
+        if (data.profilePicture) {
+          setProfilePicture(`http://localhost:8080${data.profilePicture}`);
+        }
+        const fullName = String(`${data.firstname || ""} ${data.lastname || ""}`).trim();
+        setUserName(fullName);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        if (error.response?.status === 401 || error.response?.status === 403) {
+          localStorage.removeItem("userId");
+          navigate("/");
+        }
+      }
+    };
+
+    fetchUserData();
+  }, [navigate]);
+
   const fetchRewards = async () => {
     try {
       const response = await axios.get("http://localhost:8080/api/rewards/all");
@@ -112,7 +156,6 @@ const Rewards = () => {
     }
   };
 
-  // Fetch claimed rewards from the server
   const fetchClaimedRewards = async () => {
     try {
       const response = await axios.get("http://localhost:8080/api/rewards/claimed");
@@ -122,7 +165,6 @@ const Rewards = () => {
     }
   };
 
-  // Handle redemption code submission
   const handleRedemptionSubmit = async (e) => {
     e.preventDefault();
     setRedemptionError("");
@@ -132,19 +174,89 @@ const Rewards = () => {
       const response = await axios.post(`http://localhost:8080/api/rewards/redeem/${redemptionCode.toUpperCase()}`);
       const newPoints = totalPoints + response.data.points;
       setTotalPoints(newPoints);
-      localStorage.setItem("totalPoints", newPoints);
+      localStorage.setItem("totalPoints", newPoints.toString());
       setIsModalOpen(false);
       setRedemptionCode("");
       showNotification(`Successfully redeemed ${response.data.points} points!`);
       fetchRewards();
     } catch (error) {
-      setRedemptionError(error.response?.data?.error || "Failed to redeem code");
+      setRedemptionError(error.response?.data?.error || "Invalid redemption code");
     } finally {
       setIsRedeeming(false);
     }
   };
 
-  // Claim a reward
+  const handleCreateReward = async (e) => {
+    e.preventDefault();
+    try {
+      const formattedReward = {
+        ...newReward,
+        value: parseFloat(newReward.value),
+        quantity: parseInt(newReward.quantity),
+        expiryDate: new Date(newReward.expiryDate).toISOString(),
+        isExclusive: false,
+        isFeatured: false,
+        isRedeemed: false
+      };
+
+      const response = await axios.post("http://localhost:8080/api/rewards/add", formattedReward);
+      setRewards(prev => [...prev, response.data]);
+      setIsCreateModalOpen(false);
+      setNewReward({
+        name: '',
+        type: '',
+        value: '',
+        quantity: '',
+        description: '',
+        expiryDate: '',
+        redemptionCode: '',
+        isExclusive: false,
+        isFeatured: false,
+        isRedeemed: false
+      });
+      showNotification("Reward created successfully!");
+    } catch (error) {
+      const errorMessage = error.response?.data?.error || error.response?.data?.message || "Failed to create reward";
+      showNotification(errorMessage, "error");
+    }
+  };
+
+  const handleUpdatePoints = async (e) => {
+    e.preventDefault();
+    const points = parseInt(editPointsAmount);
+    
+    try {
+      if (points > 0) {
+        // Generate code for adding points
+        const response = await axios.post('http://localhost:8080/api/rewards/generate-points-code', {
+          points: points
+        });
+        setIsEditPointsModalOpen(false);
+        setRedemptionCode(response.data.code);
+        setIsModalOpen(true);
+        showNotification(`Use code ${response.data.code} to add ${points} points`, "success");
+      } else {
+        // Direct deduction with positive display
+        const deductAmount = Math.abs(points);
+        if (deductAmount > totalPoints) {
+          showNotification("Cannot deduct more points than available", "error");
+          return;
+        }
+        const response = await axios.post(`http://localhost:8080/api/rewards/deduct-points/${userId}`, {
+          points: -deductAmount // Send negative value to backend
+        });
+        const newTotal = totalPoints - deductAmount;
+        setTotalPoints(newTotal);
+        localStorage.setItem("totalPoints", newTotal.toString());
+        setIsEditPointsModalOpen(false);
+        showNotification(`Successfully deducted ${deductAmount} points`);
+      }
+      setEditPointsAmount('');
+    } catch (error) {
+      showNotification(error.response?.data?.error || "Failed to process points", "error");
+    }
+  };
+
   const claimReward = async (rewardId, rewardValue) => {
     if (totalPoints >= rewardValue) {
       setClaimingRewardId(rewardId);
@@ -159,11 +271,8 @@ const Rewards = () => {
         );
         const newPoints = totalPoints - rewardValue;
         setTotalPoints(newPoints);
-        localStorage.setItem("totalPoints", newPoints);
-        setClaimedRewards(current => [
-          ...current,
-          { rewardId, claimedAt: new Date() },
-        ]);
+        localStorage.setItem("totalPoints", newPoints.toString());
+        setClaimedRewards(current => [...current, { rewardId, claimedAt: new Date() }]);
         showNotification("Reward claimed successfully!");
       } catch (error) {
         showNotification("Failed to claim reward", "error");
@@ -175,31 +284,38 @@ const Rewards = () => {
     }
   };
 
-  // Render redemption modal
   const renderRedemptionModal = () => (
     <div className="modal-overlay">
       <div className="modal-content">
         <h3 className="modal-title">Redeem Points</h3>
         <form onSubmit={handleRedemptionSubmit}>
-          <input
-            type="text"
-            value={redemptionCode}
-            onChange={(e) => setRedemptionCode(e.target.value.toUpperCase())}
-            placeholder="Enter 6-letter code"
-            className="modal-input"
-            maxLength={6}
-            pattern="[A-Za-z]{6}"
-            required
-          />
-          {redemptionError && (
-            <div className="error-message">{redemptionError}</div>
-          )}
-          <div className="modal-actions">
+          <div className="code-input-container" style={{ display: 'flex', marginBottom: '1rem' }}>
+            <input
+              type="text"
+              value={redemptionCode}
+              onChange={(e) => setRedemptionCode(e.target.value.toUpperCase())}
+              placeholder="Enter 6-letter code"
+              className="modal-input"
+              maxLength={6}
+              pattern="[A-Za-z]{6}"
+              required
+              style={{ marginRight: '0.5rem' }}
+            />
             <button
-              type="submit"
-              className="btn btn-primary"
-              disabled={isRedeeming || redemptionCode.length !== 6}
+              type="button"
+              onClick={() => {
+                navigator.clipboard.writeText(redemptionCode);
+                showNotification("Code copied to clipboard", "success");
+              }}
+              className="btn btn-secondary"
+              style={{ padding: '0.5rem 1rem' }}
             >
+              Copy
+            </button>
+          </div>
+          {redemptionError && <div className="error-message">{redemptionError}</div>}
+          <div className="modal-actions">
+            <button type="submit" className="btn btn-primary" disabled={isRedeeming || redemptionCode.length !== 6}>
               {isRedeeming ? "Processing..." : "Redeem Code"}
             </button>
             <button
@@ -223,58 +339,6 @@ const Rewards = () => {
   const indexOfFirstReward = indexOfLastReward - itemsPerPage;
   const currentRewards = rewards.slice(indexOfFirstReward, indexOfLastReward);
 
-  const [profilePicture, setProfilePicture] = useState(null);
-  const navigate = useNavigate();
-  const [userId, setUserId] = useState(localStorage.getItem("userId"));
-  const [userData, setUserData] = useState(null);
-  const [userName, setUserName] = useState("");
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      const userId = localStorage.getItem("userId");
-      if (!userId) {
-        navigate("/");
-        return;
-      }
-
-      try {
-        const response = await axios.get(
-          `http://localhost:8080/api/user/${userId}`
-        );
-        const data = response.data;
-
-        setUserData(data);
-        // Set the profile picture URL
-        if (data.profilePicture) {
-          setProfilePicture(`http://localhost:8080${data.profilePicture}`);
-        }
-
-        const fullName = String(
-          `${data.firstname || ""} ${data.lastname || ""}`
-        ).trim();
-        setUserName(fullName);
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-        if (error.response?.status === 401 || error.response?.status === 403) {
-          localStorage.removeItem("userId");
-          navigate("/");
-        }
-      }
-    };
-
-    fetchUserData();
-  }, [navigate]);
-
-  const notifications = [
-    {
-      user: "Keanu",
-      image: "prof1.png",
-      message: "submitted new feedback",
-      time: "2 minutes ago",
-    },
-  ];
-
-
   return (
     <div className="community-platform-resource">
       {notification.message && (
@@ -282,10 +346,11 @@ const Rewards = () => {
           {notification.message}
         </div>
       )}
+      
       {/* Left Sidebar */}
       <div className="sidebar">
         <div className="header">
-          <Link to="/newsfeed">
+          <Link to="/">
             <div className="logo">
               <img src={LogoIcon} alt="Logo" className="logo-icon" />
             </div>
@@ -297,21 +362,11 @@ const Rewards = () => {
 
         <Link to="/profileuser" className="profile-sidebar-link">
           <div className="profile-sidebar">
-          <div className="profile-avatar">
-              <img
-                src={profilePicture || Prof1}
-                alt="Profile"
-                className="profile-image"
-              />
-
-              <img src={Prof1} alt="Profile" className="profile-image" />
+            <div className="profile-avatar">
+              <img src={profilePicture || Prof1} alt="Profile" className="profile-image" />
             </div>
             <div className="profile-info">
-            <h4>
-                {userData
-                  ? `${userData.firstname} ${userData.lastname}`
-                  : "Loading..."}
-              </h4>
+              <h4>{userData ? `${userData.firstname} ${userData.lastname}` : "Loading..."}</h4>
             </div>
           </div>
         </Link>
@@ -331,8 +386,6 @@ const Rewards = () => {
         <div className="friends-section">
           <h3>FRIENDS</h3>
           <div className="scrollable-friends-list">
-            {/* Example friends list */}
-            {/* Replace with actual users data */}
             {["Harry", "Keanu"].map((user, index) => (
               <div key={index} className="friend-item">
                 <div className="avatar">
@@ -367,7 +420,7 @@ const Rewards = () => {
               <h2 className="feed-title-resource">Rewards Center</h2>
               <div className="points-display">
                 <CardGiftcardIcon className="points-icon" />
-                <span className="points-text">{totalPoints} pts</span>
+                <span className="points-text">{totalPoints.toLocaleString()} pts</span>
                 <button
                   className="category-button active"
                   onClick={() => {
@@ -375,9 +428,23 @@ const Rewards = () => {
                     setRedemptionError("");
                     setIsModalOpen(true);
                   }}
-                  style={{ marginLeft: '10px', outline: '1px solid #BFF4BE',boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)' }}
+                  style={{ marginLeft: '10px', outline: '1px solid #BFF4BE', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)' }}
                 >
                   + Redeem Points
+                </button>
+                <button
+                  className="category-button active"
+                  onClick={() => setIsCreateModalOpen(true)}
+                  style={{ marginLeft: '10px' }}
+                >
+                  Create Reward
+                </button>
+                <button
+                  className="category-button active"
+                  onClick={() => setIsEditPointsModalOpen(true)}
+                  style={{ marginLeft: '10px' }}
+                >
+                  Edit Points
                 </button>
               </div>
             </div>
@@ -404,22 +471,21 @@ const Rewards = () => {
           </div>
 
           <div className="resources-container grid">
-        {currentRewards
-          .filter(reward =>
-            selectedCategory === "all" ||
-            reward.type.toLowerCase() === selectedCategory
-          )
-          .map((reward) => (
-            <RewardItem 
-              key={reward.id} 
-              reward={reward} 
-              totalPoints={totalPoints} 
-              claimReward={claimReward}
-              isClaimLoading={claimingRewardId === reward.id}
-            />
-          ))
-        }
-      </div>
+            {currentRewards
+              .filter(reward =>
+                selectedCategory === "all" ||
+                reward.type.toLowerCase() === selectedCategory
+              )
+              .map((reward) => (
+                <RewardItem
+                  key={reward.id}
+                  reward={reward}
+                  totalPoints={totalPoints}
+                  claimReward={claimReward}
+                  isClaimLoading={claimingRewardId === reward.id}
+                />
+              ))}
+          </div>
 
           {rewards.length > itemsPerPage && (
             <div className="pagination">
@@ -439,7 +505,7 @@ const Rewards = () => {
 
       {/* Right Sidebar */}
       <div className="left-sidebar">
-        <div className="rewards-calendar">
+        <div className="calendar">
           <h2>Calendar</h2>
           <MyCalendar />
         </div>
@@ -447,7 +513,14 @@ const Rewards = () => {
         <div className="notifications-container">
           <h2>Notifications</h2>
           <div className="notifications">
-            {notifications.map((notification, index) => (
+            {[
+              {
+                user: "Keanu",
+                image: "prof1.png",
+                message: "submitted new feedback",
+                time: "2 minutes ago",
+              },
+            ].map((notification, index) => (
               <div key={index} className="notification-item">
                 <div className="notification-header">
                   <img
@@ -456,12 +529,8 @@ const Rewards = () => {
                     className="notification-image"
                   />
                   <div>
-                    <span className="notification-username">
-                      {notification.user}
-                    </span>
-                    <span className="notification-time">
-                      {notification.time}
-                    </span>
+                    <span className="notification-username">{notification.user}</span>
+                    <span className="notification-time">{notification.time}</span>
                   </div>
                 </div>
                 <p className="notification-message">{notification.message}</p>
@@ -473,6 +542,110 @@ const Rewards = () => {
 
       {/* Redemption Modal */}
       {isModalOpen && renderRedemptionModal()}
+
+      {/* Create Reward Modal */}
+      <Dialog open={isCreateModalOpen} onClose={() => setIsCreateModalOpen(false)}>
+        <DialogTitle>Create New Reward</DialogTitle>
+        <DialogContent>
+          <form onSubmit={handleCreateReward}>
+            <TextField
+              margin="dense"
+              label="Name"
+              type="text"
+              fullWidth
+              value={newReward.name}
+              onChange={(e) => setNewReward({ ...newReward, name: e.target.value })}
+              required
+            />
+            <FormControl fullWidth margin="dense" required>
+              <InputLabel>Type</InputLabel>
+              <Select
+                value={newReward.type}
+                onChange={(e) => setNewReward({ ...newReward, type: e.target.value })}
+              >
+                <MenuItem value="voucher">Voucher</MenuItem>
+                <MenuItem value="item">Item</MenuItem>
+              </Select>
+            </FormControl>
+            <TextField
+              margin="dense"
+              label="Value (points)"
+              type="number"
+              fullWidth
+              value={newReward.value}
+              onChange={(e) => setNewReward({ ...newReward, value: e.target.value })}
+              required
+            />
+            <TextField
+              margin="dense"
+              label="Quantity"
+              type="number"
+              fullWidth
+              value={newReward.quantity}
+              onChange={(e) => setNewReward({ ...newReward, quantity: e.target.value })}
+              required
+            />
+            <TextField
+              margin="dense"
+              label="Description"
+              type="text"
+              fullWidth
+              multiline
+              rows={4}
+              value={newReward.description}
+              onChange={(e) => setNewReward({ ...newReward, description: e.target.value })}
+              required
+            />
+            <TextField
+              margin="dense"
+              label="Expiry Date"
+              type="date"
+              fullWidth
+              InputLabelProps={{
+                shrink: true,
+              }}
+              value={newReward.expiryDate}
+              onChange={(e) => setNewReward({ ...newReward, expiryDate: e.target.value })}
+              required
+            />
+            <DialogActions>
+              <button type="button" onClick={() => setIsCreateModalOpen(false)} className="btn btn-secondary">
+                Cancel
+              </button>
+              <button type="submit" className="btn btn-primary">
+                Create Reward
+              </button>
+            </DialogActions>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Points Modal */}
+      <Dialog open={isEditPointsModalOpen} onClose={() => setIsEditPointsModalOpen(false)}>
+        <DialogTitle>Edit User Points</DialogTitle>
+        <DialogContent>
+          <form onSubmit={handleUpdatePoints}>
+            <TextField
+              margin="dense"
+              label="Points to Add/Subtract"
+              type="number"
+              fullWidth
+              value={editPointsAmount}
+              onChange={(e) => setEditPointsAmount(e.target.value)}
+              required
+              helperText="Use positive numbers to add points, negative to subtract"
+            />
+            <DialogActions>
+              <button type="button" onClick={() => setIsEditPointsModalOpen(false)} className="btn btn-secondary">
+                Cancel
+              </button>
+              <button type="submit" className="btn btn-primary">
+                Update Points
+              </button>
+            </DialogActions>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
