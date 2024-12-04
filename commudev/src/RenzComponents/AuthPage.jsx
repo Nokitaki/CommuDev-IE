@@ -1,4 +1,3 @@
-// AuthPage.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -17,16 +16,20 @@ import {
   CircularProgress,
   Container,
   Divider,
-  Grid
+  Grid,
+  Stack
 } from '@mui/material';
 import {
   Visibility,
   VisibilityOff,
   Person as PersonIcon,
   Email as EmailIcon,
-  Lock as LockIcon
+  Lock as LockIcon,
+  Google as GoogleIcon,
+  Facebook as FacebookIcon,
+  Apple as AppleIcon,
 } from '@mui/icons-material';
-
+import logo from '../assets/prof/logo.png';
 // Create theme
 const theme = createTheme({
   typography: {
@@ -67,84 +70,85 @@ const AuthPage = () => {
   // Styles
   const styles = {
     mainContainer: {
-      marginTop: '6%',
       minHeight: '100vh',
       background: '#e4efe4',
       display: 'flex',
-      flexDirection: 'column',
       alignItems: 'center',
-      py: 4,
-      px: 2
-    },
-    logoContainer: {
-      textAlign: 'center',
-      marginBottom: 4,
-      animation: 'fadeIn 0.5s ease-in',
-    },
-    brandText: {
-      fontSize: '2.5rem',
-      fontWeight: 800,
-      background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
-      WebkitBackgroundClip: 'text',
-      backgroundClip: 'text',
-      WebkitTextFillColor: 'transparent',
-      marginBottom: 1,
-      display: 'inline-flex',
-      alignItems: 'center',
-      gap: '0.5rem',
-    },
-    brandUnderline: {
-      width: 80,
-      height: 4,
-      margin: '8px auto',
-      background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
-      borderRadius: 2,
+      justifyContent: 'center',
+      padding: '2rem',
+      position: 'relative',
+      overflow: 'hidden',
     },
     card: {
+      display: 'flex',
       width: '100%',
-      borderRadius: 4,
+      maxWidth: '1200px',
+      minHeight: '600px',
+      borderRadius: '24px',
+      overflow: 'hidden',
       boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
-      background: 'rgba(255, 255, 255, 0.95)',
-      backdropFilter: 'blur(10px)',
-      border: '1px solid rgba(255, 255, 255, 0.3)',
+      position: 'relative',
+      background: 'white',
+    },
+    leftSection: {
+      flex: 1,
+      background: `linear-gradient(135deg, #99FF99 0%, #2196F3 100%)`,
+      display: { xs: 'none', md: 'flex' },
+      flexDirection: 'column',
+      position: 'relative',
+      padding: '3rem',
+      color: 'white',
+    },
+    rightSection: {
+      flex: 1,
+      background: 'white',
+      padding: '3rem',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
     },
     formContainer: {
-      p: 4,
+      width: '100%',
+      maxWidth: '400px',
     },
     textField: {
       '& .MuiOutlinedInput-root': {
-        borderRadius: 2,
-        backgroundColor: 'rgba(255, 255, 255, 0.8)',
-        transition: 'all 0.2s ease-in-out',
-        '&:hover': {
-          backgroundColor: 'rgba(255, 255, 255, 0.95)',
-        },
+        borderRadius: '12px',
+        backgroundColor: 'white',
         '&.Mui-focused': {
-          backgroundColor: '#fff',
           boxShadow: '0 0 0 2px rgba(33, 150, 243, 0.2)',
         },
       },
     },
     submitButton: {
       height: 48,
+      borderRadius: '12px',
       background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
       color: 'white',
-      boxShadow: '0 3px 5px 2px rgba(33, 203, 243, .3)',
-      '&:hover': {
-        background: 'linear-gradient(45deg, #1976D2 30%, #21CBF3 90%)',
-      },
-    },
-    dividerContainer: {
-      my: 3,
-    },
-    toggleLink: {
-      cursor: 'pointer',
-      color: '#2196F3',
+      fontSize: '1rem',
       fontWeight: 600,
       '&:hover': {
-        textDecoration: 'underline',
+        background: 'linear-gradient(45deg, #1976D2 30%, #2196F3 90%)',
       },
-    }
+    },
+    socialButton: {
+      width: '60px',
+      height: '60px',
+      borderRadius: '12px',
+      border: '1px solid #e0e0e0',
+      '&:hover': {
+        backgroundColor: 'rgba(0, 0, 0, 0.04)',
+      },
+    },
+    decorativeImage: {
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      width: '100%',
+      height: 'auto',
+      opacity: 0.2,
+    },
   };
 
   // Handle form input changes
@@ -265,38 +269,51 @@ const AuthPage = () => {
   return (
     <ThemeProvider theme={theme}>
       <Box sx={styles.mainContainer}>
-        <Container maxWidth="sm">
-          {/* Logo Section */}
-          <Box sx={styles.logoContainer}>
-            <Typography component="h1" sx={styles.brandText}>
-              <span>{'<'}</span>
+        <Card sx={styles.card}>
+          
+          {/* Left Section */}
+          <Box sx={styles.leftSection}>
+            <Typography variant="h3" component="h1" sx={{ color: '#40694b',mb: 2, fontWeight: 'bold' }}>
               CommuDev
-              <span>{'>'}</span>
             </Typography>
-            <Box sx={styles.brandUnderline} />
-            <Typography
-              variant="subtitle1"
-              sx={{
-                color: '#666',
-                mt: 1,
-                fontWeight: 500,
-              }}
-            >
+            <Typography variant="h6" sx={{ color: '#40694b', mb: 4 }}>
               Connect. Collaborate. Create.
             </Typography>
+            <Box 
+              component="img" 
+              src={logo}
+              alt="Decorative"
+              sx={{
+                width: '100%',
+                height: 'auto',
+                objectFit: 'cover',
+                borderRadius: '16px',
+                mt: 'auto'
+              }}
+            />
+            <Box 
+              component="img" 
+              src="../assets/prof/logo.png?height=100&width=600" 
+              alt="Decorative landmarks"
+              sx={styles.decorativeImage}
+            />
           </Box>
 
-          {/* Form Card */}
-          <Card sx={styles.card}>
-            <CardContent sx={styles.formContainer}>
+          {/* Right Section */}
+          <Box sx={styles.rightSection}>
+            <Box sx={styles.formContainer}>
               <Typography 
-                variant="h5" 
+                variant="h4" 
                 component="h2" 
-                align="center" 
-                gutterBottom
-                sx={{ fontWeight: 700, mb: 3 }}
+                sx={{ fontWeight: 700, mb: 1, textAlign: 'center' }}
               >
-                {isLogin ? 'Welcome Back' : 'Create Account'}
+                Welcome
+              </Typography>
+              <Typography 
+                variant="body2" 
+                sx={{ mb: 4, textAlign: 'center', color: 'text.secondary' }}
+              >
+                {isLogin ? 'Login with Email' : 'Create your account'}
               </Typography>
 
               {error && (
@@ -312,59 +329,55 @@ const AuthPage = () => {
               )}
 
               <form onSubmit={handleSubmit}>
-                <Grid container spacing={2}>
-                  <Grid item xs={12}>
-                    <TextField
-                      required
-                      fullWidth
-                      id="username"
-                      label="Username"
-                      value={formData.username}
-                      onChange={handleChange}
-                      sx={styles.textField}
-                      InputProps={{
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            <PersonIcon color="primary" />
-                          </InputAdornment>
-                        ),
-                      }}
-                    />
-                  </Grid>
+                <Stack spacing={2.5}>
+                  <TextField
+                    required
+                    fullWidth
+                    id="username"
+                    label="Email"
+                    value={formData.username}
+                    onChange={handleChange}
+                    sx={styles.textField}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <EmailIcon color="primary" />
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
 
-                  <Grid item xs={12}>
-                    <TextField
-                      required
-                      fullWidth
-                      id="password"
-                      label="Password"
-                      type={showPassword ? 'text' : 'password'}
-                      value={formData.password}
-                      onChange={handleChange}
-                      sx={styles.textField}
-                      InputProps={{
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            <LockIcon color="primary" />
-                          </InputAdornment>
-                        ),
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <IconButton
-                              onClick={() => setShowPassword(!showPassword)}
-                              edge="end"
-                            >
-                              {showPassword ? <VisibilityOff /> : <Visibility />}
-                            </IconButton>
-                          </InputAdornment>
-                        ),
-                      }}
-                    />
-                  </Grid>
+                  <TextField
+                    required
+                    fullWidth
+                    id="password"
+                    label="Password"
+                    type={showPassword ? 'text' : 'password'}
+                    value={formData.password}
+                    onChange={handleChange}
+                    sx={styles.textField}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <LockIcon color="primary" />
+                        </InputAdornment>
+                      ),
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            onClick={() => setShowPassword(!showPassword)}
+                            edge="end"
+                          >
+                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
 
                   {!isLogin && (
                     <>
-                      <Grid item xs={12} sm={6}>
+                      <Stack direction="row" spacing={2}>
                         <TextField
                           required
                           fullWidth
@@ -374,9 +387,6 @@ const AuthPage = () => {
                           onChange={handleChange}
                           sx={styles.textField}
                         />
-                      </Grid>
-
-                      <Grid item xs={12} sm={6}>
                         <TextField
                           required
                           fullWidth
@@ -386,28 +396,26 @@ const AuthPage = () => {
                           onChange={handleChange}
                           sx={styles.textField}
                         />
-                      </Grid>
+                      </Stack>
 
-                      <Grid item xs={12}>
-                        <TextField
-                          fullWidth
-                          id="email"
-                          label="Email"
-                          type="email"
-                          value={formData.email}
-                          onChange={handleChange}
-                          sx={styles.textField}
-                          InputProps={{
-                            startAdornment: (
-                              <InputAdornment position="start">
-                                <EmailIcon color="primary" />
-                              </InputAdornment>
-                            ),
-                          }}
-                        />
-                      </Grid>
+                      <TextField
+                        fullWidth
+                        id="email"
+                        label="Email"
+                        type="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        sx={styles.textField}
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <EmailIcon color="primary" />
+                            </InputAdornment>
+                          ),
+                        }}
+                      />
 
-                      <Grid item xs={12} sm={6}>
+                      <Stack direction="row" spacing={2}>
                         <TextField
                           fullWidth
                           id="age"
@@ -417,9 +425,6 @@ const AuthPage = () => {
                           onChange={handleChange}
                           sx={styles.textField}
                         />
-                      </Grid>
-
-                      <Grid item xs={12} sm={6}>
                         <TextField
                           fullWidth
                           id="state"
@@ -428,69 +433,87 @@ const AuthPage = () => {
                           onChange={handleChange}
                           sx={styles.textField}
                         />
-                      </Grid>
+                      </Stack>
 
-                      <Grid item xs={12}>
-                        <TextField
-                          fullWidth
-                          id="employmentStatus"
-                          label="Employment Status"
-                          value={formData.employmentStatus}
-                          onChange={handleChange}
-                          sx={styles.textField}
-                        />
-                      </Grid>
-
-                      
-
-                      
+                      <TextField
+                        fullWidth
+                        id="employmentStatus"
+                        label="Employment Status"
+                        value={formData.employmentStatus}
+                        onChange={handleChange}
+                        sx={styles.textField}
+                      />
                     </>
                   )}
 
-                  <Grid item xs={12}>
-                    <Button
-                      type="submit"
-                      fullWidth
-                      disabled={loading}
-                      sx={styles.submitButton}
-                    >
-                      {loading ? (
-                        <CircularProgress size={24} sx={{ color: 'white' }} />
-                      ) : (
-                        isLogin ? 'Sign In' : 'Create Account'
-                      )}
-                    </Button>
-                  </Grid>
-                </Grid>
+                  <Typography 
+                    variant="body2" 
+                    align="right" 
+                    sx={{ color: 'text.secondary', cursor: 'pointer', '&:hover': { textDecoration: 'underline' } }}
+                  >
+                    Forgot your password?
+                  </Typography>
+
+                  <Button
+                    type="submit"
+                    fullWidth
+                    disabled={loading}
+                    sx={styles.submitButton}
+                  >
+                    {loading ? (
+                      <CircularProgress size={24} sx={{ color: 'white' }} />
+                    ) : (
+                      'LOGIN'
+                    )}
+                  </Button>
+                </Stack>
               </form>
 
-              <Box sx={styles.dividerContainer}>
+              <Box sx={{ my: 3 }}>
                 <Divider>
-                  <Typography variant="body2" color="textSecondary">
+                  <Typography variant="body2" sx={{ color: 'text.secondary', px: 2 }}>
                     OR
                   </Typography>
                 </Divider>
               </Box>
 
+              <Stack direction="row" spacing={2} justifyContent="center" sx={{ mb: 3 }}>
+                <Button variant="outlined" sx={styles.socialButton}>
+                  <GoogleIcon />
+                </Button>
+                <Button variant="outlined" sx={styles.socialButton}>
+                  <FacebookIcon />
+                </Button>
+                <Button variant="outlined" sx={styles.socialButton}>
+                  <AppleIcon />
+                </Button>
+              </Stack>
+
               <Box sx={{ textAlign: 'center' }}>
-                <Typography variant="body2">
-                  {isLogin ? "Don't have an account?" : 'Already have an account?'}{' '}
+                <Typography variant="body2" color="text.secondary">
+                  Don't have an account?{' '}
                   <Link
                     component="button"
                     variant="body2"
                     onClick={toggleAuthMode}
-                    sx={styles.toggleLink}
+                    sx={{
+                      color: 'primary.main',
+                      fontWeight: 600,
+                      textDecoration: 'none',
+                      '&:hover': { textDecoration: 'underline' },
+                    }}
                   >
-                    {isLogin ? 'Sign Up' : 'Sign In'}
+                    Register Now
                   </Link>
                 </Typography>
               </Box>
-            </CardContent>
-          </Card>
-        </Container>
+            </Box>
+          </Box>
+        </Card>
       </Box>
     </ThemeProvider>
   );
 };
 
 export default AuthPage;
+
