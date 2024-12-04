@@ -463,7 +463,7 @@ const AuthPage = () => {
                     {loading ? (
                       <CircularProgress size={24} sx={{ color: 'white' }} />
                     ) : (
-                      'LOGIN'
+                      isLogin ? 'LOGIN' : 'REGISTER'
                     )}
                   </Button>
                 </Stack>
@@ -491,19 +491,23 @@ const AuthPage = () => {
 
               <Box sx={{ textAlign: 'center' }}>
                 <Typography variant="body2" color="text.secondary">
-                  Don't have an account?{' '}
+                  {isLogin ? (
+                    "Don't have an account? "
+                  ) : (
+                    "Already have an account? "
+                  )}
                   <Link
                     component="button"
                     variant="body2"
                     onClick={toggleAuthMode}
                     sx={{
-                      color: 'primary.main',
-                      fontWeight: 600,
-                      textDecoration: 'none',
-                      '&:hover': { textDecoration: 'underline' },
+                    color: 'primary.main',
+                    fontWeight: 600,
+                    textDecoration: 'none',
+                    '&:hover': { textDecoration: 'underline' },
                     }}
                   >
-                    Register Now
+                    {isLogin ? 'Register Now' : 'Login Now'}
                   </Link>
                 </Typography>
               </Box>
