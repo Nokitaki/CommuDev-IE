@@ -110,7 +110,11 @@
   .resource-item .post-header {
     margin-bottom: 16px;
   }
-  
+  .messagePage__logoIcon{
+    width: 90px;
+    height: 90px;
+
+  }
   .resource-item .resource-content {
     margin-bottom: 20px;
   }

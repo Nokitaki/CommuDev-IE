@@ -350,7 +350,7 @@ const Rewards = () => {
       {/* Left Sidebar */}
       <div className="sidebar">
         <div className="header">
-          <Link to="/">
+          <Link to="/newsfeed">
             <div className="logo">
               <img src={LogoIcon} alt="Logo" className="logo-icon" />
             </div>
