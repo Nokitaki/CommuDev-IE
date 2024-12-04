@@ -334,7 +334,7 @@ const AuthPage = () => {
                     required
                     fullWidth
                     id="username"
-                    label="Email"
+                    label="Username"
                     value={formData.username}
                     onChange={handleChange}
                     sx={styles.textField}
