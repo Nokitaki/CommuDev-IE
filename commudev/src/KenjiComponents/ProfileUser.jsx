@@ -13,6 +13,8 @@ import {
 import axios from 'axios';
 import { MessageCircle } from 'lucide-react';
 import { Email, Person, LocationOn, Work } from '@mui/icons-material';
+import UserActivityTracker from './UserActivityTracker';
+
 
 const ProfileCard = styled(Card)(({ theme }) => ({
   background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)', // Soft blue-grey gradient
@@ -610,52 +612,38 @@ const ProfileUser = () => {
     { title: 'Goals', data: [user.goals], icon: '🎯' },
     { 
       title: 'Recent Activity', 
-      data: ['Joined the community', 'Started learning'], 
+      data: [<UserActivityTracker userId={user.userId} />], // Note the array brackets
       icon: '📋' 
     }
   ].map((section, index) => (
     <Grid item xs={12} sm={6} key={index}>
       <StatCard 
-        elevation={2} 
-        sx={{ 
-          p: 3,
-          height: 200, // Fixed height
-          cursor: 'pointer',
-          overflow: 'hidden',
-          '&:hover': {
-            transform: 'translateY(-5px)',
-            boxShadow: 8
-          }
-        }}
-        onClick={() => setSelectedSection(section)}
-      >
-        <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-          <Typography variant="h6" sx={{ mr: 1 }}>
-            {section.icon} {section.title}
-          </Typography>
-        </Box>
-        <Typography 
-          color="text.secondary" 
-          sx={{ 
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            display: '-webkit-box',
-            WebkitLineClamp: 3,
-            WebkitBoxOrient: 'vertical'
-          }}
-        >
-          {Array.isArray(section.data) && section.data.length > 0 
-            ? section.data.join(', ')
-            : `No ${section.title.toLowerCase()} yet`}
-        </Typography>
-        <Typography 
-          variant="body2" 
-          color="primary" 
-          sx={{ mt: 1, fontStyle: 'italic' }}
-        >
-          Click to view more
-        </Typography>
-      </StatCard>
+  elevation={2} 
+  sx={{ 
+    p: 3,
+    height: 200,
+    cursor: 'pointer',
+    overflow: 'auto', // Changed to auto
+    '&:hover': {
+      transform: 'translateY(-5px)',
+      boxShadow: 8
+    }
+  }}
+  onClick={() => setSelectedSection(section)}
+>
+  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+    <Typography variant="h6" sx={{ mr: 1 }}>
+      {section.icon} {section.title}
+    </Typography>
+  </Box>
+  {Array.isArray(section.data) ? 
+    section.data.map((item, i) => 
+      React.isValidElement(item) ? item : 
+      <Typography key={i} color="text.secondary">{item}</Typography>
+    ) :
+    <Typography color="text.secondary">{section.data}</Typography>
+  }
+</StatCard>
     </Grid>
   ))}
 
