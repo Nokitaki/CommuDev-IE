@@ -67,7 +67,6 @@ const Feedbacks = () => {
     fetchUserData();
   }, [navigate]);
 
-
   const navigationItems = [
     { icon: HomeIcon, label: "Home", path: "/newsfeed" },
     { icon: MessageIcon, label: "Messages" },
@@ -97,7 +96,9 @@ const Feedbacks = () => {
 
   const fetchFeedbacks = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/api/feedback/all");
+      const response = await axios.get(
+        `http://localhost:8080/api/feedback/user/${userId}`
+      );
       setFeedbacks(response.data);
     } catch (error) {
       console.error("Error fetching feedbacks:", error);
@@ -107,45 +108,55 @@ const Feedbacks = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-  
+
+    const userId = localStorage.getItem("userId");
     const feedbackData = {
+      userId: userId,
       feedbackType: form.feedbackType,
       subject: form.subject,
       description: form.description,
-      dateSubmitted: new Date().toISOString().split('T')[0]
+      dateSubmitted: new Date().toISOString().split("T")[0],
     };
-  
+
     try {
       const response = await axios.post(
         "http://localhost:8080/api/feedback/add",
         feedbackData,
         {
           headers: {
-            'Content-Type': 'application/json'
-          }
+            "Content-Type": "application/json",
+          },
         }
       );
-  
+
       if (response.data) {
-        setFeedbacks(prev => [...prev, response.data]);
+        // Immediately update the local state with the new feedback from the server response
+        setFeedbacks((prev) => [response.data, ...prev]);
+
+        // Reset form and modal
         setForm({
-          feedbackType: '',
-          subject: '',
-          description: ''
+          feedbackType: "",
+          subject: "",
+          description: "",
         });
         setIsModalOpen(false);
+
+        // Optional: Trigger a refetch to ensure latest data
+        await fetchFeedbacks();
       }
     } catch (error) {
       console.error("Error submitting feedback:", error);
+      // Optional: Show error message to user
+      alert("Failed to submit feedback. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
   };
-  
+
   const handleUpdateFeedback = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-  
+
     try {
       const response = await axios.put(
         `http://localhost:8080/api/feedback/${editId}`,
@@ -153,26 +164,26 @@ const Feedbacks = () => {
           feedbackType: form.feedbackType,
           subject: form.subject,
           description: form.description,
-          dateSubmitted: new Date().toISOString().split('T')[0]
+          dateSubmitted: new Date().toISOString().split("T")[0],
         },
         {
           headers: {
-            'Content-Type': 'application/json'
-          }
+            "Content-Type": "application/json",
+          },
         }
       );
-  
+
       if (response.data) {
-        setFeedbacks(prev =>
-          prev.map(feedback =>
+        setFeedbacks((prev) =>
+          prev.map((feedback) =>
             feedback.feedback_id === editId ? response.data : feedback
           )
         );
         setEditId(null);
         setForm({
-          feedbackType: '',
-          subject: '',
-          description: ''
+          feedbackType: "",
+          subject: "",
+          description: "",
         });
         setIsModalOpen(false);
       }
@@ -182,17 +193,19 @@ const Feedbacks = () => {
       setIsSubmitting(false);
     }
   };
-  
+
   const handleDeleteFeedback = async (id) => {
     if (window.confirm("Are you sure you want to delete this feedback?")) {
       try {
         await axios.delete(`http://localhost:8080/api/feedback/${id}`, {
           headers: {
-            'Content-Type': 'application/json'
-          }
+            "Content-Type": "application/json",
+          },
         });
-        
-        setFeedbacks(prev => prev.filter(feedback => feedback.feedback_id !== id));
+
+        setFeedbacks((prev) =>
+          prev.filter((feedback) => feedback.feedback_id !== id)
+        );
       } catch (error) {
         console.error("Error deleting feedback:", error);
       }
@@ -216,16 +229,15 @@ const Feedbacks = () => {
 
         <Link to="/profileuser" className="profile-sidebar-link">
           <div className="profile-sidebar">
-          <div className="profile-avatar">
+            <div className="profile-avatar">
               <img
                 src={profilePicture || Prof1}
                 alt="Profile"
                 className="profile-image"
               />
-
             </div>
             <div className="profile-info">
-            <h4>
+              <h4>
                 {userData
                   ? `${userData.firstname} ${userData.lastname}`
                   : "Loading..."}
@@ -252,7 +264,11 @@ const Feedbacks = () => {
             {users.map((user, index) => (
               <div key={index} className="friend-item">
                 <div className="avatar">
-                  <div className={`status-indicator ${user.isOnline ? "online" : ""}`} />
+                  <div
+                    className={`status-indicator ${
+                      user.isOnline ? "online" : ""
+                    }`}
+                  />
                 </div>
                 <span>{user.name}</span>
               </div>
@@ -268,10 +284,16 @@ const Feedbacks = () => {
             {navigationItems.map((item, index) => (
               <Link
                 key={index}
-                to={item.path || `/${item.label.toLowerCase().replace(" ", "")}`}
+                to={
+                  item.path || `/${item.label.toLowerCase().replace(" ", "")}`
+                }
                 className="nav-item"
               >
-                <img src={item.icon} alt={`${item.label} icon`} className="nav-icon" />
+                <img
+                  src={item.icon}
+                  alt={`${item.label} icon`}
+                  className="nav-icon"
+                />
               </Link>
             ))}
           </div>
@@ -281,7 +303,7 @@ const Feedbacks = () => {
           <div className="create-post-section-resource">
             <div className="resource-header-container">
               <h2 className="feed-title-resource">Feedback Center</h2>
-              <button 
+              <button
                 className="category-button active"
                 onClick={() => setIsModalOpen(true)}
               >
@@ -291,25 +313,33 @@ const Feedbacks = () => {
             <div className="categories-container">
               <button
                 onClick={() => setSelectedCategory("all")}
-                className={`category-button ${selectedCategory === "all" ? "active" : ""}`}
+                className={`category-button ${
+                  selectedCategory === "all" ? "active" : ""
+                }`}
               >
                 All Feedback
               </button>
               <button
                 onClick={() => setSelectedCategory("Bug Report")}
-                className={`category-button ${selectedCategory === "Bug Report" ? "active" : ""}`}
+                className={`category-button ${
+                  selectedCategory === "Bug Report" ? "active" : ""
+                }`}
               >
                 Bug Reports
               </button>
               <button
                 onClick={() => setSelectedCategory("Feature Request")}
-                className={`category-button ${selectedCategory === "Feature Request" ? "active" : ""}`}
+                className={`category-button ${
+                  selectedCategory === "Feature Request" ? "active" : ""
+                }`}
               >
                 Feature Requests
               </button>
               <button
                 onClick={() => setSelectedCategory("General Feedback")}
-                className={`category-button ${selectedCategory === "General Feedback" ? "active" : ""}`}
+                className={`category-button ${
+                  selectedCategory === "General Feedback" ? "active" : ""
+                }`}
               >
                 General
               </button>
@@ -318,22 +348,43 @@ const Feedbacks = () => {
 
           <div className="feedback-container">
             {feedbacks
-              .filter(feedback => selectedCategory === "all" || feedback.feedbackType === selectedCategory)
+              .filter(
+                (feedback) =>
+                  selectedCategory === "all" ||
+                  (feedback.feedbackType || "").toLowerCase() ===
+                    selectedCategory.toLowerCase()
+              )
               .map((feedback) => (
                 <article key={feedback.feedback_id} className="resource-itemZ">
                   <header className="post-header">
-                    <div className="profile-circlecover">
-                      <img className="profile-image" src={Prof1} alt="Profile" />
+                    <div className="profile-avatar">
+                      <img
+                        src={profilePicture || Prof1}
+                        alt="Profile"
+                        className="profile-image"
+                      />
                     </div>
                     <div className="user-info">
                       <div className="user-meta">
-                        <h3 className="username">User Feedback</h3>
-                        <span className="post-meta">•</span>
-                        <span className="post-meta">{feedback.dateSubmitted}</span>
+                        <h3 style={{marginBottom: "0"}}>
+                          {userData
+                            ? `${userData.firstname} ${userData.lastname}`
+                            : "Loading..."}
+                        </h3>
+                        <span className="post-meta" style={{marginTop: "1.5em"}}>•</span>
+                        <span className="post-meta" style={{marginTop: "1.5em"}}>
+                          {feedback.dateSubmitted}
+                        </span>
                       </div>
                       <div className="status-badges">
-                        <span className={`feedback-type-badge ${feedback.feedbackType.toLowerCase().replace(" ", "-")}`}>
-                          {feedback.feedbackType}
+                        <span
+                          className={`feedback-type-badge ${(
+                            feedback.feedbackType || ""
+                          )
+                            .toLowerCase()
+                            .replace(" ", "-")}`}
+                        >
+                          {feedback.feedbackType || "Unknown Type"}
                         </span>
                       </div>
                     </div>
@@ -341,7 +392,9 @@ const Feedbacks = () => {
 
                   <div className="resource-content">
                     <h3 className="resource-titleX">{feedback.subject}</h3>
-                    <p className="resource-descriptionX">{feedback.description}</p>
+                    <p className="resource-descriptionX">
+                      {feedback.description}
+                    </p>
                   </div>
 
                   <footer className="resource-actions">
@@ -391,8 +444,12 @@ const Feedbacks = () => {
                     className="notification-image"
                   />
                   <div>
-                    <span className="notification-username">{notification.user}</span>
-                    <span className="notification-time">{notification.time}</span>
+                    <span className="notification-username">
+                      {notification.user}
+                    </span>
+                    <span className="notification-time">
+                      {notification.time}
+                    </span>
                   </div>
                 </div>
                 <p className="notification-message">{notification.message}</p>
@@ -407,12 +464,14 @@ const Feedbacks = () => {
         <div className="modal-overlay">
           <div className="modal-content">
             <h3 className="modal-title">
-              {editId ? 'Edit Feedback' : 'Submit Feedback'}
+              {editId ? "Edit Feedback" : "Submit Feedback"}
             </h3>
             <form onSubmit={editId ? handleUpdateFeedback : handleSubmit}>
               <select
                 value={form.feedbackType}
-                onChange={(e) => setForm({...form, feedbackType: e.target.value})}
+                onChange={(e) =>
+                  setForm({ ...form, feedbackType: e.target.value })
+                }
                 className="modal-select"
                 required
               >
@@ -425,7 +484,7 @@ const Feedbacks = () => {
               <input
                 type="text"
                 value={form.subject}
-                onChange={(e) => setForm({...form, subject: e.target.value})}
+                onChange={(e) => setForm({ ...form, subject: e.target.value })}
                 placeholder="Subject"
                 className="modal-input"
                 required
@@ -433,19 +492,25 @@ const Feedbacks = () => {
 
               <textarea
                 value={form.description}
-                onChange={(e) => setForm({...form, description: e.target.value})}
+                onChange={(e) =>
+                  setForm({ ...form, description: e.target.value })
+                }
                 placeholder="Description"
                 className="modal-textarea"
                 required
               />
 
               <div className="modal-actions">
-                <button 
-                  type="submit" 
+                <button
+                  type="submit"
                   className="btn btn-primary"
                   disabled={isSubmitting}
                 >
-                  {isSubmitting ? 'Processing...' : (editId ? 'Update Feedback' : 'Submit Feedback')}
+                  {isSubmitting
+                    ? "Processing..."
+                    : editId
+                    ? "Update Feedback"
+                    : "Submit Feedback"}
                 </button>
                 <button
                   type="button"
