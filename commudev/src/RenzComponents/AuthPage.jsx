@@ -56,9 +56,7 @@ const AuthPage = () => {
     age: '',
     state: '',
     employmentStatus: '',
-    email: '',
-    biography: '',
-    goals: ''
+    email: ''
   });
 
   const [showPassword, setShowPassword] = useState(false);
@@ -260,9 +258,7 @@ const AuthPage = () => {
       age: '',
       state: '',
       employmentStatus: '',
-      email: '',
-      biography: '',
-      goals: ''
+      email: ''
     });
   };
 
@@ -445,31 +441,9 @@ const AuthPage = () => {
                         />
                       </Grid>
 
-                      <Grid item xs={12}>
-                        <TextField
-                          fullWidth
-                          id="biography"
-                          label="Biography"
-                          multiline
-                          rows={3}
-                          value={formData.biography}
-                          onChange={handleChange}
-                          sx={styles.textField}
-                        />
-                      </Grid>
+                      
 
-                      <Grid item xs={12}>
-                        <TextField
-                          fullWidth
-                          id="goals"
-                          label="Goals"
-                          multiline
-                          rows={2}
-                          value={formData.goals}
-                          onChange={handleChange}
-                          sx={styles.textField}
-                        />
-                      </Grid>
+                      
                     </>
                   )}
 
