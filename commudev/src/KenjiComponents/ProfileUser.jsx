@@ -4,15 +4,14 @@ import {
   Card, CardContent, TextField, Button, Grid, Typography,
   Avatar, IconButton, Paper, Box, styled, CircularProgress,
   Dialog, DialogTitle, DialogContent, DialogActions, Divider,
-  List, ListItem, ListItemText, Alert
+  List, ListItem, ListItemText, Alert, MenuItem
 } from '@mui/material';
 import {
   PhotoCamera, Close as CloseIcon, Edit as EditIcon,
-  Logout as LogoutIcon
+  Logout as LogoutIcon, Delete as DeleteIcon, Add as AddIcon
 } from '@mui/icons-material';
 import axios from 'axios';
 import { MessageCircle } from 'lucide-react';
-
 
 
 const ProfileCard = styled(Card)(({ theme }) => ({
@@ -50,6 +49,7 @@ const StyledAvatar = styled(Avatar)(({ theme }) => ({
     height: '100%'
   }
 }));
+
 const MessageButton = ({ recipientId, recipientName }) => {
   const navigate = useNavigate();
   const currentUserId = localStorage.getItem('userId');
@@ -97,7 +97,12 @@ const EditProfileDialog = ({ open, onClose, user, onSave }) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    setEditedUser(user);
+    if (user) {
+      setEditedUser({
+        ...user,
+        languageSkills: user.languageSkills || JSON.stringify([])
+      });
+    }
   }, [user]);
 
   const handleChange = (field) => (event) => {
@@ -114,16 +119,20 @@ const EditProfileDialog = ({ open, onClose, user, onSave }) => {
       const userId = localStorage.getItem('userId');
       if (!userId) throw new Error('No user ID found');
   
+      // Make sure languageSkills is properly structured before saving
       const updatedUser = {
         ...editedUser,
         biography: editedUser.biography || '',
-        goals: editedUser.goals || ''
+        goals: editedUser.goals || '',
+        // Ensure languageSkills is properly stringified
+        languageSkills: typeof editedUser.languageSkills === 'string' ? 
+          editedUser.languageSkills : 
+          JSON.stringify(editedUser.languageSkills || [])
       };
   
-      // Send the updated user data to the backend
-      const response = await axios.put(`http://localhost:8080/api/user/${userId}`, updatedUser);
+      console.log('Saving user data:', updatedUser); // Debug log
   
-      // Call onSave with updated user data
+      const response = await axios.put(`http://localhost:8080/api/user/${userId}`, updatedUser);
       onSave(response.data);
       onClose();
     } catch (error) {
@@ -133,7 +142,6 @@ const EditProfileDialog = ({ open, onClose, user, onSave }) => {
       setLoading(false);
     }
   };
-  
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
@@ -218,25 +226,97 @@ const EditProfileDialog = ({ open, onClose, user, onSave }) => {
             />
           </Grid>
           <Grid item xs={12}>
-            <TextField
-              fullWidth
-              label="Goals"
-              value={editedUser?.goals || ''}
-              onChange={handleChange('goals')}
-              multiline
-              rows={3}
-              margin="normal"
-            />
-          </Grid>
+  <TextField
+    fullWidth
+    label="Goals"
+    value={editedUser?.goals || ''}
+    onChange={handleChange('goals')}
+    multiline  // Add this
+    rows={3}   // Add this
+    margin="normal"
+  />
+</Grid>
+<Grid item xs={12}>
+  <TextField
+    fullWidth
+    label="Hobbies"
+    value={editedUser?.hobbies || ''}
+    onChange={handleChange('hobbies')}
+    multiline  // Add this
+    rows={3}   // Add this
+    helperText="Enter hobbies separated by commas"
+    margin="normal"
+  />
+</Grid>
+
           <Grid item xs={12}>
-            <TextField
-              fullWidth
-              label="Hobbies"
-              value={editedUser?.hobbies || ''}
-              onChange={handleChange('hobbies')}
-              helperText="Enter hobbies separated by commas"
-              margin="normal"
-            />
+            <Typography variant="subtitle1" gutterBottom>Languages</Typography>
+            {editedUser?.languageSkills && 
+  JSON.parse(editedUser.languageSkills).map((lang, index) => (
+    <Box key={index} sx={{ display: 'flex', gap: 2, mb: 2 }}>
+      <TextField
+        label="Language"
+        value={lang.language}
+        onChange={(e) => {
+          const skills = JSON.parse(editedUser.languageSkills);
+          skills[index].language = e.target.value;
+          setEditedUser({
+            ...editedUser,
+            languageSkills: JSON.stringify(skills)
+          });
+        }}
+        sx={{ flex: 1 }}
+      />
+      <TextField
+        select
+        label="Proficiency"
+        value={lang.proficiency}
+        onChange={(e) => {
+          const skills = JSON.parse(editedUser.languageSkills);
+          skills[index].proficiency = e.target.value;
+          setEditedUser({
+            ...editedUser,
+            languageSkills: JSON.stringify(skills)
+          });
+        }}
+        sx={{ width: '200px' }}
+      >
+        <MenuItem value="Native">Native</MenuItem>
+        <MenuItem value="Fluent">Fluent</MenuItem>
+        <MenuItem value="Intermediate">Intermediate</MenuItem>
+        <MenuItem value="Basic">Basic</MenuItem>
+      </TextField>
+      <IconButton 
+        onClick={() => {
+          const skills = JSON.parse(editedUser.languageSkills);
+          skills.splice(index, 1);
+          setEditedUser({
+            ...editedUser,
+            languageSkills: JSON.stringify(skills)
+          });
+        }}
+      >
+        <DeleteIcon />
+      </IconButton>
+    </Box>
+  ))
+}
+          <Button
+  startIcon={<AddIcon />}
+  onClick={() => {
+    const currentSkills = editedUser.languageSkills ? 
+      JSON.parse(editedUser.languageSkills) : [];
+    setEditedUser({
+      ...editedUser,
+      languageSkills: JSON.stringify([
+        ...currentSkills,
+        { language: '', proficiency: 'Basic' }
+      ])
+    });
+  }}
+>
+  Add Language
+</Button>
           </Grid>
         </Grid>
       </DialogContent>
@@ -264,7 +344,7 @@ const ProfileUser = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const fileInputRef = useRef(null);
-
+  const [selectedSection, setSelectedSection] = useState(null);
   useEffect(() => {
     const checkAuth = () => {
       const userId = localStorage.getItem('userId');
@@ -285,7 +365,8 @@ const ProfileUser = () => {
           setUser({
             ...response.data,
             profilePicture: response.data.profilePicture ? 
-              `http://localhost:8080${response.data.profilePicture}` : null
+              `http://localhost:8080${response.data.profilePicture}` : null,
+            languageSkills: response.data.languageSkills || JSON.stringify([])  // Ensure this is initialized
           });
         } else {
           throw new Error('No data received');
@@ -306,6 +387,45 @@ const ProfileUser = () => {
 
     fetchUserData();
   }, [navigate]);
+
+
+
+  const SectionDialog = ({ section, open, onClose }) => {
+    if (!section) return null;
+    
+    return (
+      <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
+        <DialogTitle>
+          <Box display="flex" justifyContent="space-between" alignItems="center">
+            <Typography variant="h6">
+              {section.icon} {section.title}
+            </Typography>
+            <IconButton onClick={onClose} size="small">
+              <CloseIcon />
+            </IconButton>
+          </Box>
+        </DialogTitle>
+        <DialogContent>
+          {Array.isArray(section.data) && section.data.length > 0 ? (
+            <List>
+              {section.data.map((item, idx) => (
+                <ListItem key={idx}>
+                  <ListItemText primary={item} />
+                </ListItem>
+              ))}
+            </List>
+          ) : (
+            <Typography color="text.secondary">
+              No {section.title.toLowerCase()} yet
+            </Typography>
+          )}
+        </DialogContent>
+      </Dialog>
+    );
+  };
+
+
+
 
   const handleImageUpload = async (event) => {
     const file = event.target.files[0];
@@ -337,7 +457,8 @@ const ProfileUser = () => {
   const handleSave = async (updatedUser) => {
     setUser(prev => ({
       ...updatedUser,
-      profilePicture: prev.profilePicture // Preserve the existing profile picture
+      profilePicture: prev.profilePicture,
+      languageSkills: updatedUser.languageSkills || JSON.stringify([])  // Ensure languageSkills is included
     }));
   };
 
@@ -350,8 +471,6 @@ const ProfileUser = () => {
         await axios.delete(`http://localhost:8080/api/user/${userId}`);
         localStorage.removeItem('userId');
         localStorage.removeItem('username');
-        localStorage.removeItem('userBio');
-        localStorage.removeItem('userGoals');
         navigate('/');
       } catch (error) {
         console.error('Error deleting user:', error);
@@ -363,8 +482,6 @@ const ProfileUser = () => {
   const handleLogout = () => {
     localStorage.removeItem('userId');
     localStorage.removeItem('username');
-    localStorage.removeItem('userBio');
-    localStorage.removeItem('userGoals');
     navigate('/');
   };
 
@@ -392,9 +509,7 @@ const ProfileUser = () => {
     );
   }
 
-  
-
-   return (
+  return (
     <Box sx={{ maxWidth: '1200px', mx: 'auto', p: 4 }}>
       <ProfileCard elevation={5}>
         <CardContent>
@@ -466,44 +581,75 @@ const ProfileUser = () => {
             </Grid>
 
             <Grid item xs={12} md={8}>
-              <Grid container spacing={3}>
-                {[
-                  { title: 'Rewards', data: user.rewards, icon: '🏆' },
-                  { title: 'Hobbies', data: [user.hobbies], icon: '🎯' },
-                  { title: 'Goals', data: [user.goals], icon: '🎯' },
-                  { title: 'Followers', data: [user.followers + ' followers'], icon: '👥' }
-                ].map((section, index) => (
-                  <Grid item xs={12} sm={6} key={index}>
-                    <StatCard elevation={2} sx={{ p: 3 }}>
-                      <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                        <Typography variant="h6" sx={{ mr: 1 }}>
-                          {section.icon} {section.title}
-                        </Typography>
-                      </Box>
-                      {Array.isArray(section.data) && section.data.length > 0 ? (
-                        section.data.map((item, idx) => (
-                          <Typography 
-                            key={idx} 
-                            color="text.secondary"
-                            sx={{ 
-                              py: 0.5,
-                              '&:hover': { color: 'primary.main' }
-                            }}
-                          >
-                            {item}
-                          </Typography>
-                        ))
-                      ) : (
-                        <Typography color="text.secondary">
-                          No {section.title.toLowerCase()} yet
-                        </Typography>
-                      )}
-                    </StatCard>
-                  </Grid>
-                ))}
+             <Grid container spacing={3}>
+  {[
+    { 
+      title: 'Languages', 
+      data: user.languageSkills ? 
+        JSON.parse(user.languageSkills).map(lang => 
+          `${lang.language} ${
+            lang.proficiency === 'Native' ? '🔵' :
+            lang.proficiency === 'Fluent' ? '🟢' :
+            lang.proficiency === 'Intermediate' ? '🟡' : '⚪'
+          } ${lang.proficiency}`
+        ) : [], 
+      icon: '🌐'
+    },
+    { title: 'Hobbies', data: [user.hobbies], icon: '🎯' },
+    { title: 'Goals', data: [user.goals], icon: '🎯' },
+    { 
+      title: 'Recent Activity', 
+      data: ['Joined the community', 'Started learning'], 
+      icon: '📋' 
+    }
+  ].map((section, index) => (
+    <Grid item xs={12} sm={6} key={index}>
+      <StatCard 
+        elevation={2} 
+        sx={{ 
+          p: 3,
+          height: 200, // Fixed height
+          cursor: 'pointer',
+          overflow: 'hidden',
+          '&:hover': {
+            transform: 'translateY(-5px)',
+            boxShadow: 8
+          }
+        }}
+        onClick={() => setSelectedSection(section)}
+      >
+        <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+          <Typography variant="h6" sx={{ mr: 1 }}>
+            {section.icon} {section.title}
+          </Typography>
+        </Box>
+        <Typography 
+          color="text.secondary" 
+          sx={{ 
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            display: '-webkit-box',
+            WebkitLineClamp: 3,
+            WebkitBoxOrient: 'vertical'
+          }}
+        >
+          {Array.isArray(section.data) && section.data.length > 0 
+            ? section.data.join(', ')
+            : `No ${section.title.toLowerCase()} yet`}
+        </Typography>
+        <Typography 
+          variant="body2" 
+          color="primary" 
+          sx={{ mt: 1, fontStyle: 'italic' }}
+        >
+          Click to view more
+        </Typography>
+      </StatCard>
+    </Grid>
+  ))}
+
               </Grid>
 
-              {/* Message Button */}
               <MessageButton 
                 recipientId={user.userId}
                 recipientName={`${user.firstname} ${user.lastname}`}
@@ -522,18 +668,17 @@ const ProfileUser = () => {
             background: 'rgba(255,255,255,0.5)'
           }}
         >
-
-            <Button
-              onClick={() => navigate('/newsfeed')} 
-              variant="contained"
-              color="primary"
-              sx={{ 
-                borderRadius: '20px',
-                textTransform: 'none'
-              }}
-            >
-              Back to Newsfeed
-            </Button>
+          <Button
+            onClick={() => navigate('/newsfeed')} 
+            variant="contained"
+            color="primary"
+            sx={{ 
+              borderRadius: '20px',
+              textTransform: 'none'
+            }}
+          >
+            Back to Homepage
+          </Button>
           <Button
             variant="contained"
             color="primary"
@@ -546,40 +691,46 @@ const ProfileUser = () => {
             }}
           >
             Edit Profile
-         </Button>
-         <Button
-           variant="outlined"
-           color="error"
-           onClick={handleDelete}
-           sx={{ 
-             borderRadius: '20px',
-             textTransform: 'none'
-           }}
-         >
-           Delete Account
-         </Button>
-         <Button
-           variant="outlined"
-           onClick={handleLogout}
-           startIcon={<LogoutIcon />}
-           sx={{ 
-             borderRadius: '20px',
-             textTransform: 'none'
-           }}
-         >
-           Logout
-         </Button>
-       </Box>
-     </ProfileCard>
+          </Button>
+          <Button
+            variant="outlined"
+            color="error"
+            onClick={handleDelete}
+            sx={{ 
+              borderRadius: '20px',
+              textTransform: 'none'
+            }}
+          >
+            Delete Account
+          </Button>
+          <Button
+            variant="outlined"
+            onClick={handleLogout}
+            startIcon={<LogoutIcon />}
+            sx={{ 
+              borderRadius: '20px',
+              textTransform: 'none'
+            }}
+          >
+            Logout
+          </Button>
+        </Box>
+      </ProfileCard>
 
-     <EditProfileDialog
-       open={openEditDialog}
-       onClose={() => setOpenEditDialog(false)}
-       user={user}
-       onSave={handleSave}
-     />
-   </Box>
- );
+      <EditProfileDialog
+        open={openEditDialog}
+        onClose={() => setOpenEditDialog(false)}
+        user={user}
+        onSave={handleSave}
+      />
+      <SectionDialog 
+      section={selectedSection} 
+      open={Boolean(selectedSection)} 
+      onClose={() => setSelectedSection(null)} 
+    />
+     
+    </Box>
+  );
 };
 
 export default ProfileUser;
