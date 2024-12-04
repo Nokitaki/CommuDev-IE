@@ -478,15 +478,21 @@ const AuthPage = () => {
               </Box>
 
               <Stack direction="row" spacing={2} justifyContent="center" sx={{ mb: 3 }}>
+              <Link href="https://accounts.google.com/" target="_blank" rel="noopener noreferrer" underline="none">
                 <Button variant="outlined" sx={styles.socialButton}>
                   <GoogleIcon />
                 </Button>
+              </Link>
+              <Link href="https://facebook.com/" target="_blank" rel="noopener noreferrer" underline="none">
                 <Button variant="outlined" sx={styles.socialButton}>
                   <FacebookIcon />
                 </Button>
+              </Link>
+              <Link href="https://www.icloud.com/" target="_blank" rel="noopener noreferrer" underline="none">
                 <Button variant="outlined" sx={styles.socialButton}>
                   <AppleIcon />
                 </Button>
+              </Link>
               </Stack>
 
               <Box sx={{ textAlign: 'center' }}>
