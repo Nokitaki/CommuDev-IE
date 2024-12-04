@@ -12,7 +12,7 @@ import {
 } from '@mui/icons-material';
 import axios from 'axios';
 import { MessageCircle } from 'lucide-react';
-
+import { Email, Person, LocationOn, Work } from '@mui/icons-material';
 
 const ProfileCard = styled(Card)(({ theme }) => ({
   background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
@@ -563,20 +563,38 @@ const ProfileUser = () => {
                   {user.biography || 'No biography available'}
                 </Typography>
 
-                <List sx={{ width: '100%', bgcolor: 'background.paper', borderRadius: 2 }}>
-                  {[
-                    { label: 'Age', value: user.age },
-                    { label: 'State', value: user.state },
-                    { label: 'Employment', value: user.employmentStatus }
-                  ].map((item, index) => (
-                    <ListItem key={index} sx={{ py: 2 }}>
-                      <ListItemText
-                        primary={<Typography variant="body2" color="text.secondary">{item.label}</Typography>}
-                        secondary={<Typography variant="subtitle1" sx={{ fontWeight: 500 }}>{item.value || 'Not specified'}</Typography>}
-                      />
-                    </ListItem>
-                  ))}
-                </List>
+                <Paper elevation={3} sx={{ width: '100%', mt: 2, overflow: 'hidden' }}>
+      {[
+        { label: 'Age', value: user.age, icon: <Person sx={{ color: 'primary.main' }}/> },
+        { label: 'Email', value: user.email, icon: <Email sx={{ color: 'primary.main' }}/> },
+        { label: 'State', value: user.state, icon: <LocationOn sx={{ color: 'primary.main' }}/> },
+        { label: 'Employment', value: user.employmentStatus, icon: <Work sx={{ color: 'primary.main' }}/> }
+      ].map((item, index, arr) => (
+        <Box key={item.label}>
+          <Box sx={{
+            p: 2,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            '&:hover': {
+              bgcolor: 'rgba(0,0,0,0.02)'
+            }
+          }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+              {item.icon}
+              <Typography color="text.secondary" variant="body2">
+                {item.label}
+              </Typography>
+            </Box>
+            <Typography variant="h6" sx={{ fontWeight: 500 }}>
+              {item.value || 'Not specified'}
+            </Typography>
+          </Box>
+          {index < arr.length - 1 && <Divider />}
+        </Box>
+      ))}
+    </Paper>
+
               </Box>
             </Grid>
 

@@ -44,6 +44,22 @@ const MessagePage = () => {
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
+  const handleScroll = (e) => {
+    e.stopPropagation(); // Prevents scroll event bubbling
+  };
+
+  useEffect(() => {
+    const messagesArea = document.querySelector('.messagePage__messagesArea');
+    if (messagesArea) {
+      messagesArea.addEventListener('scroll', handleScroll);
+      return () => messagesArea.removeEventListener('scroll', handleScroll);
+    }
+  }, []);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
 
   useEffect(() => {
     const initializeData = async () => {
@@ -295,7 +311,7 @@ const MessagePage = () => {
             </div>
 
             {/* Messages Area */}
-            <div className="messagePage__messagesArea">
+            <div className="messagePage__messagesArea"style={{ overflowY: 'auto', maxHeight: 'calc(100vh - 200px)' }}>
               {messages.map((msg) => (
                 <div
                   key={msg.id}
@@ -414,5 +430,6 @@ const MessagePage = () => {
     </div>
   );
 };
+
 
 export default MessagePage;
