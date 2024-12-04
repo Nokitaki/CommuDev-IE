@@ -15,38 +15,31 @@ import { MessageCircle } from 'lucide-react';
 import { Email, Person, LocationOn, Work } from '@mui/icons-material';
 
 const ProfileCard = styled(Card)(({ theme }) => ({
-  background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
+  background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)', // Soft blue-grey gradient
   backdropFilter: 'blur(10px)',
   borderRadius: '20px',
-  boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.37)'
-}));
-
-const StatCard = styled(Paper)(({ theme }) => ({
-  background: 'rgba(255, 255, 255, 0.9)',
-  borderRadius: '15px',
-  transition: 'transform 0.3s ease',
-  '&:hover': {
-    transform: 'translateY(-5px)',
-    boxShadow: theme.shadows[8]
-  }
+  boxShadow: '0 8px 24px rgba(0, 0, 0, 0.1)',
 }));
 
 const StyledAvatar = styled(Avatar)(({ theme }) => ({
   width: theme.spacing(20),
   height: theme.spacing(20),
-  border: '4px solid white',
-  boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-  marginBottom: theme.spacing(3),
-  cursor: 'pointer',
+  border: '4px solid rgba(255,255,255,0.7)',
+  boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
   transition: 'transform 0.3s ease',
   '&:hover': {
     transform: 'scale(1.05)',
     opacity: 0.9
-  },
-  '& .MuiAvatar-img': {
-    objectFit: 'cover',
-    width: '100%',
-    height: '100%'
+  }
+}));
+
+const StatCard = styled(Paper)(({ theme }) => ({
+  background: 'rgba(255, 255, 255, 0.8)', // Soft, translucent white
+  borderRadius: '15px',
+  transition: 'transform 0.3s ease',
+  '&:hover': {
+    transform: 'translateY(-5px)',
+    boxShadow: theme.shadows[4]
   }
 }));
 
@@ -210,7 +203,7 @@ const EditProfileDialog = ({ open, onClose, user, onSave }) => {
           <Grid item xs={12} sm={6}>
             <TextField
               fullWidth
-              label="State"
+              label="Country"
               value={editedUser?.state || ''}
               onChange={handleChange('state')}
               margin="normal"
@@ -567,7 +560,7 @@ const ProfileUser = () => {
       {[
         { label: 'Age', value: user.age, icon: <Person sx={{ color: 'primary.main' }}/> },
         { label: 'Email', value: user.email, icon: <Email sx={{ color: 'primary.main' }}/> },
-        { label: 'State', value: user.state, icon: <LocationOn sx={{ color: 'primary.main' }}/> },
+        { label: 'Country', value: user.state, icon: <LocationOn sx={{ color: 'primary.main' }}/> },
         { label: 'Employment', value: user.employmentStatus, icon: <Work sx={{ color: 'primary.main' }}/> }
       ].map((item, index, arr) => (
         <Box key={item.label}>

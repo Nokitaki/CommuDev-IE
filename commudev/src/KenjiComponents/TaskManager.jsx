@@ -8,6 +8,7 @@ import RewardsIcon from "../assets/RewardsIcon.svg";
 import ResourceIcon from "../assets/ResourceIcon.svg";
 import TaskIcon from "../assets/TaskIcon.svg";
 import Prof1 from "../assets/prof/prof1.png";
+import Kyle from "../assets/prof/Kyle.jpg";
 import FeedbackIcon from "../assets/FeedbackIcon.svg";
 import MyCalendar from '../JoelComponents/MyCalendar';
 import axios from "axios";
@@ -339,7 +340,7 @@ const TaskManager = () => {
                   <article key={task.taskId} className="resource-item">
                     <header className="post-header">
                       <div className="profile-circlecover">
-                        <img className="profile-image" src={Prof1} alt="Profile" />
+                        <img className="profile-image" src={Kyle} alt="Profile" />
                       </div>
                       <div className="user-info">
                         <div className="user-meta">
