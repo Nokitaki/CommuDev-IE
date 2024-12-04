@@ -564,19 +564,20 @@ const ProfileUser = () => {
                 </Typography>
 
                 <List sx={{ width: '100%', bgcolor: 'background.paper', borderRadius: 2 }}>
-                  {[
-                    { label: 'Age', value: user.age },
-                    { label: 'State', value: user.state },
-                    { label: 'Employment', value: user.employmentStatus }
-                  ].map((item, index) => (
-                    <ListItem key={index} sx={{ py: 2 }}>
-                      <ListItemText
-                        primary={<Typography variant="body2" color="text.secondary">{item.label}</Typography>}
-                        secondary={<Typography variant="subtitle1" sx={{ fontWeight: 500 }}>{item.value || 'Not specified'}</Typography>}
-                      />
-                    </ListItem>
-                  ))}
-                </List>
+  {[
+    { label: 'Age', value: user.age },
+    { label: 'Email', value: user.email },
+    { label: 'State', value: user.state },
+    { label: 'Employment', value: user.employmentStatus }
+  ].map((item, index) => (
+    <ListItem key={index} sx={{ py: 2 }}>
+      <ListItemText
+        primary={<Typography variant="body2" color="text.secondary">{item.label}</Typography>}
+        secondary={<Typography variant="subtitle1" sx={{ fontWeight: 500 }}>{item.value || 'Not specified'}</Typography>}
+      />
+    </ListItem>
+  ))}
+</List>
               </Box>
             </Grid>
 
