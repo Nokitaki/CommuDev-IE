@@ -17,6 +17,10 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import ReactMarkdown from 'react-markdown';
 
+
+
+
+import UserSearch from '../search/UserSearch';
 const CommunityPlatform = () => {
   const navigate = useNavigate();
   const [userId, setUserId] = useState(localStorage.getItem("userId"));
@@ -149,7 +153,7 @@ const CommunityPlatform = () => {
       }
       const data = await response.json();
 
-      // Fetch profile pictures for each post's creator
+     
       const postsWithProfilePictures = await Promise.all(
         data.map(async (post) => {
           try {
@@ -194,7 +198,7 @@ const CommunityPlatform = () => {
       post_date: new Date(formData.post_date).toISOString(),
       like_count: editingPost ? editingPost.like_count : 0,
       post_status: "Active",
-      creator_id: userId, // Add creator's ID
+      creator_id: userId, 
       creator_profile_picture: profilePicture,
     };
 
@@ -311,7 +315,7 @@ const CommunityPlatform = () => {
     }
   };
 
-  // Time ago function
+  
   const getDaysAgo = (dateString) => {
     if (!dateString) return "No date available";
 
@@ -354,9 +358,11 @@ const CommunityPlatform = () => {
                 <img src={LogoIcon} alt="Logo" className="logo-icon" />
               </div>
             </Link>
+
             <div className="search-bar">
-              <input type="text" placeholder="Search" />
-            </div>
+  <UserSearch />
+</div>
+
           </div>
           <Link to="/profileuser" className="profile-sidebar-link">
             <div className="profile-sidebar">
@@ -487,7 +493,7 @@ const CommunityPlatform = () => {
                 </div>
               </div>
 
-              {/* Modal */}
+              
               {isModalOpen && (
                 <div className="modal-overlay">
                   <div className="modal-content">

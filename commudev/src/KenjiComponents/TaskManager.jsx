@@ -14,6 +14,8 @@ import MyCalendar from '../JoelComponents/MyCalendar';
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
+import UserSearch from '../search/UserSearch';
+
 const TaskManager = () => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -43,7 +45,7 @@ const TaskManager = () => {
         const data = response.data;
 
         setUserData(data);
-        // Set the profile picture URL
+        
         if (data.profilePicture) {
           setProfilePicture(`http://localhost:8080${data.profilePicture}`);
         }
@@ -95,7 +97,7 @@ const TaskManager = () => {
       message: "completed a task",
       time: "2 minutes ago",
     },
-    // Add more notifications as needed
+    
   ];
 
   useEffect(() => {
@@ -190,7 +192,7 @@ const TaskManager = () => {
 
   return (
     <div className="community-platform-resource">
-      {/* Left Sidebar */}
+     
       <div className="sidebar">
         <div className="header">
           <Link to="/newsfeed">
@@ -199,8 +201,8 @@ const TaskManager = () => {
             </div>
           </Link>
           <div className="search-bar">
-            <input type="text" placeholder="Search" />
-          </div>
+              <UserSearch />
+        </div>
         </div>
 
         <Link to="/profileuser" className="profile-sidebar-link">
@@ -250,7 +252,6 @@ const TaskManager = () => {
         </div>
       </div>
 
-      {/* Main Content */}
       <div className="main-content-resource">
         <div className="navigation-bar">
           <div className="nav-icons">
@@ -397,7 +398,7 @@ const TaskManager = () => {
         </div>
       </div>
 
-      {/* Right Sidebar */}
+     
       <div className="left-sidebar">
         <div className="task-calendar">
           <h2>Calendar</h2>
@@ -427,7 +428,7 @@ const TaskManager = () => {
         </div>
       </div>
 
-      {/* Modal */}
+     
       {openDialog && (
         <div className="modal-overlay">
           <div className="modal-content">

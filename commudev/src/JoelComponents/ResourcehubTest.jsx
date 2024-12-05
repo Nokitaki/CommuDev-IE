@@ -15,6 +15,8 @@ import MyCalendar from "./MyCalendar.jsx";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
+import UserSearch from '../search/UserSearch';
+
 const ResourceHub = () => {
   const [viewMode, setViewMode] = useState("grid");
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -42,7 +44,7 @@ const ResourceHub = () => {
         const data = response.data;
 
         setUserData(data);
-        // Set the profile picture URL
+        
         if (data.profilePicture) {
           setProfilePicture(`http://localhost:8080${data.profilePicture}`);
         }
@@ -74,7 +76,7 @@ const ResourceHub = () => {
     upload_date: new Date().toISOString(),
   });
 
-  // Navigation items matching your structure
+ 
   const navigationItems = [
     { icon: HomeIcon, label: "Home", path: "/newsfeed" },
     { icon: MessageIcon, label: "Messages" },
@@ -87,7 +89,7 @@ const ResourceHub = () => {
   const users = [
     { name: "Harry", isOnline: false, image: "prof1.jpg" },
     { name: "Keanu", isOnline: true, image: "prof2.jpg" },
-    // ... add more users as needed
+  
   ];
 
   const notifications = [
@@ -109,7 +111,7 @@ const ResourceHub = () => {
       message: "downloaded your resource",
       time: "2 minutes ago",
     },
-    // ... add more notifications as needed
+    
   ];
 
   const [resources, setResources] = useState([
@@ -146,7 +148,7 @@ const ResourceHub = () => {
       status: "Active",
       fileSize: "2.5 MB",
     },
-    // ... your other initial resources
+    
   ]);
 
   const [isLoading, setIsLoading] = useState(true);
@@ -160,7 +162,7 @@ const ResourceHub = () => {
       if (!response.ok) throw new Error("Failed to fetch resources");
       const data = await response.json();
 
-      // Fetch profile pictures for each resource's creator
+     
       const resourcesWithProfilePictures = await Promise.all(
         data.map(async (item) => {
           try {
@@ -211,7 +213,7 @@ const ResourceHub = () => {
   const handleAddResource = async (e) => {
     e.preventDefault();
 
-    // Ensure the formData is up-to-date with the latest values
+    
     const updatedFormData = {
       ...formData,
       creator: userName,
@@ -258,7 +260,7 @@ const ResourceHub = () => {
         upload_date: new Date().toISOString()
       };
   
-      // Notice the URL change here - adding resource_id as a query parameter
+      
       const response = await fetch(
         `http://localhost:8080/api/resource/updateResourceDetails?resource_id=${resource_id}`,
         {
@@ -322,7 +324,7 @@ const ResourceHub = () => {
       const updatedResource = await response.json();
       console.log("Updated resource:", updatedResource);
 
-      // Only update the state locally without re-fetching
+     
       setResources((currentResources) =>
         currentResources.map((resource) =>
           resource.resource_id === resource_id
@@ -334,32 +336,31 @@ const ResourceHub = () => {
         )
       );
 
-      // Remove this line to prevent flickering
-      // fetchResources();
+      
     } catch (error) {
       console.error("Error updating download count:", error);
     }
   };
 
-  // Add useEffect to fetch resources when component mounts
+ 
   useEffect(() => {
     fetchResources();
   }, []);
 
   const filteredResources = resources.filter((resource) => {
     if (selectedCategory === "all") {
-      return true; // Show all resources if "all" is selected
+      return true; 
     } else if (selectedCategory === "documents") {
-      return resource.resource_category === "Document"; // Filter documents
+      return resource.resource_category === "Document"; 
     } else if (selectedCategory === "media") {
-      return resource.resource_category === "Media"; // Filter media
+      return resource.resource_category === "Media"; 
     }
-    return true; // Default fallback
+    return true;
   });
 
   return (
     <div className="community-platform-resource">
-      {/* Left Sidebar */}
+     
       <div className="sidebar">
         <div className="header">
           <Link to="/newsfeed">
@@ -368,7 +369,7 @@ const ResourceHub = () => {
             </div>
           </Link>
           <div className="search-bar">
-            <input type="text" placeholder="Search" />
+                <UserSearch />
           </div>
         </div>
 
@@ -422,7 +423,7 @@ const ResourceHub = () => {
         </div>
       </div>
 
-      {/* Main Content */}
+      
       <div className="main-content-resource">
         <div className="navigation-bar">
           <div className="nav-icons">
@@ -625,7 +626,7 @@ const ResourceHub = () => {
         </div>
       </div>
 
-      {/* Right Sidebar */}
+     
       <div className="left-sidebar">
         <div className="resource-calendar">
           <h2>Calendar</h2>
@@ -659,7 +660,7 @@ const ResourceHub = () => {
         </div>
       </div>
 
-      {/* Modal */}
+      
       {isModalOpen && (
         <div className="modal-overlay">
           <div className="modal-content">

@@ -13,6 +13,8 @@ import MyCalendar from "../JoelComponents/MyCalendar";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
+import UserSearch from '../search/UserSearch';
+
 const Feedbacks = () => {
   const [feedbacks, setFeedbacks] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -130,10 +132,10 @@ const Feedbacks = () => {
       );
 
       if (response.data) {
-        // Immediately update the local state with the new feedback from the server response
+       
         setFeedbacks((prev) => [response.data, ...prev]);
 
-        // Reset form and modal
+       
         setForm({
           feedbackType: "",
           subject: "",
@@ -141,12 +143,12 @@ const Feedbacks = () => {
         });
         setIsModalOpen(false);
 
-        // Optional: Trigger a refetch to ensure latest data
+      
         await fetchFeedbacks();
       }
     } catch (error) {
       console.error("Error submitting feedback:", error);
-      // Optional: Show error message to user
+    
       alert("Failed to submit feedback. Please try again.");
     } finally {
       setIsSubmitting(false);
@@ -214,7 +216,7 @@ const Feedbacks = () => {
 
   return (
     <div className="community-platform-resource">
-      {/* Left Sidebar */}
+     
       <div className="sidebar">
         <div className="header">
           <Link to="/newsfeed">
@@ -222,9 +224,14 @@ const Feedbacks = () => {
               <img src={LogoIcon} alt="Logo" className="logo-icon" />
             </div>
           </Link>
+
+
+
           <div className="search-bar">
-            <input type="text" placeholder="Search" />
-          </div>
+                <UserSearch />
+        </div>
+
+        
         </div>
 
         <Link to="/profileuser" className="profile-sidebar-link">
@@ -277,7 +284,7 @@ const Feedbacks = () => {
         </div>
       </div>
 
-      {/* Main Content */}
+     
       <div className="main-content-resource">
         <div className="navigation-bar">
           <div className="nav-icons">
@@ -425,7 +432,7 @@ const Feedbacks = () => {
         </div>
       </div>
 
-      {/* Right Sidebar */}
+      
       <div className="left-sidebar">
         <div className="feedback-calendar">
           <h2>Calendar</h2>
@@ -459,7 +466,7 @@ const Feedbacks = () => {
         </div>
       </div>
 
-      {/* Modal */}
+      
       {isModalOpen && (
         <div className="modal-overlay">
           <div className="modal-content">

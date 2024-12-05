@@ -13,6 +13,9 @@ import MyCalendar from "../JoelComponents/MyCalendar";
 import CardGiftcardIcon from "@mui/icons-material/CardGiftcard";
 import axios from "axios";
 import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
+import UserSearch from '../search/UserSearch';
+
+
 
 const RewardItem = ({ reward, totalPoints, claimReward }) => {
   const [isClaimingThis, setIsClaimingThis] = useState(false);
@@ -227,7 +230,7 @@ const Rewards = () => {
     
     try {
       if (points > 0) {
-        // Generate code for adding points
+       
         const response = await axios.post('http://localhost:8080/api/rewards/generate-points-code', {
           points: points
         });
@@ -236,14 +239,14 @@ const Rewards = () => {
         setIsModalOpen(true);
         showNotification(`Use code ${response.data.code} to add ${points} points`, "success");
       } else {
-        // Direct deduction with positive display
+        
         const deductAmount = Math.abs(points);
         if (deductAmount > totalPoints) {
           showNotification("Cannot deduct more points than available", "error");
           return;
         }
         const response = await axios.post(`http://localhost:8080/api/rewards/deduct-points/${userId}`, {
-          points: -deductAmount // Send negative value to backend
+          points: -deductAmount 
         });
         const newTotal = totalPoints - deductAmount;
         setTotalPoints(newTotal);
@@ -347,7 +350,7 @@ const Rewards = () => {
         </div>
       )}
       
-      {/* Left Sidebar */}
+    
       <div className="sidebar">
         <div className="header">
           <Link to="/newsfeed">
@@ -356,8 +359,8 @@ const Rewards = () => {
             </div>
           </Link>
           <div className="search-bar">
-            <input type="text" placeholder="Search" />
-          </div>
+          <UserSearch />
+        </div>
         </div>
 
         <Link to="/profileuser" className="profile-sidebar-link">
@@ -398,7 +401,7 @@ const Rewards = () => {
         </div>
       </div>
 
-      {/* Main Content */}
+     
       <div className="main-content-resource">
         <div className="navigation-bar">
           <div className="nav-icons">
@@ -503,7 +506,7 @@ const Rewards = () => {
         </div>
       </div>
 
-      {/* Right Sidebar */}
+      
       <div className="left-sidebar">
         <div className="calendar">
           <h2>Calendar</h2>
@@ -540,10 +543,10 @@ const Rewards = () => {
         </div>
       </div>
 
-      {/* Redemption Modal */}
+     
       {isModalOpen && renderRedemptionModal()}
 
-      {/* Create Reward Modal */}
+     
       <Dialog open={isCreateModalOpen} onClose={() => setIsCreateModalOpen(false)}>
         <DialogTitle>Create New Reward</DialogTitle>
         <DialogContent>
@@ -620,7 +623,7 @@ const Rewards = () => {
         </DialogContent>
       </Dialog>
 
-      {/* Edit Points Modal */}
+     
       <Dialog open={isEditPointsModalOpen} onClose={() => setIsEditPointsModalOpen(false)}>
         <DialogTitle>Edit User Points</DialogTitle>
         <DialogContent>

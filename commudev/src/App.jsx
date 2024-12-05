@@ -1,7 +1,5 @@
 import { ThemeProvider } from '@mui/material/styles';
 import theme from './KenjiComponents/theme'
-
-// Import your existing components
 import Newsfeed from './JoelComponents/NewsfeedTest'
 import Profile from './KenjiComponents/ProfileUser'
 import AuthPage from './RenzComponents/AuthPage'
@@ -16,6 +14,8 @@ import { Routes, Route } from 'react-router-dom';
 
 
 
+import ViewProfile from './Search/ViewProfile';
+
 function App() {
   return (
     <ThemeProvider theme={theme}>
@@ -28,6 +28,9 @@ function App() {
         <Route path="/task" element={<TaskManager />} />
         <Route path="/rewards" element={<Rewards />} />
         <Route path="/feedback" element={<Feedback />} />
+
+
+        <Route path="/view-profile/:userId" element={<ViewProfile />} />
       </Routes>
     </ThemeProvider>
   )
