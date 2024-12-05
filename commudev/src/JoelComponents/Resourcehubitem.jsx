@@ -19,32 +19,31 @@ const ResourceHubItem = ({ resource, onDelete, onUpdate }) => {
     };
 
     const handleHeartClick = async () => {
-        const updatedHeartCount = heartCount + 1; // Increment the heart count
-        setHeartCount(updatedHeartCount); // Update the local state immediately
+        const updatedHeartCount = heartCount + 1; 
+        setHeartCount(updatedHeartCount); 
     
         console.log('Trying to update heart count:', updatedHeartCount);
     
         try {
-            // Send a request to like the resource
+            
             const response = await fetch(`http://localhost:8080/api/resource/likeResource/${resource.resource_id}`, {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
-                // No need to send body since the server increments the heart count
+                
             });
     
             if (response.ok) {
                 const responseData = await response.json();
                 console.log('Successfully updated heart count:', responseData);
-                // Optionally update the heart count state if your API returns it
-                // setHeartCount(responseData.heart_count); // Uncomment if needed
+               
             } else {
                 console.error('Failed to update heart count:', response.statusText);
-                // Revert the heart count in case of error
+                
                 setHeartCount(heartCount);
             }
         } catch (error) {
             console.error('Error updating heart count:', error);
-            // Revert the heart count in case of error
+           
             setHeartCount(heartCount);
         }
     };
@@ -75,7 +74,7 @@ const ResourceHubItem = ({ resource, onDelete, onUpdate }) => {
             <p>Category: {resource.resource_category}</p>
             <p>Uploaded on: {new Date(resource.upload_date).toLocaleString()}</p>
 
-            {/* Heart Button */}
+            
             <button className="heart-button" onClick={handleHeartClick}>
                 ❤️ {heartCount}
             </button>

@@ -1,7 +1,7 @@
 //Resourcehub.jsx
 import React, { useEffect, useState } from 'react';
 import Resourcehubitem from './Resourcehubitem';
-import '../styles/Resourcehub.css'; // Import the CSS file
+import '../styles/Resourcehub.css'; 
 
 const ResourceHub = () => {
     const [resources, setResources] = useState([]);
@@ -23,10 +23,10 @@ const ResourceHub = () => {
     }, []);
 
     const handleAddResource = async () => {
-        const currentDate = new Date().toISOString(); // Get the current date in ISO format
+        const currentDate = new Date().toISOString(); 
         const resourceToAdd = {
             ...newResource,
-            upload_date: currentDate, // Add the upload date
+            upload_date: currentDate, 
         };
 
         const response = await fetch('http://localhost:8080/api/resource/addResourceDetails', {
@@ -36,9 +36,9 @@ const ResourceHub = () => {
         });
 
         if (response.ok) {
-            // Reset the newResource state
+            
             setNewResource({ resource_title: '', resource_description: '', resource_category: '', heart_count: 0 });
-            fetchResources(); // Refresh the resource list
+            fetchResources(); 
         }
     };
 
@@ -50,14 +50,14 @@ const ResourceHub = () => {
         });
 
         if (response.ok) {
-            fetchResources(); // Refresh the resource list
+            fetchResources(); 
         }
     };
 
     const handleDeleteResource = async (resource_id) => {
         const response = await fetch(`http://localhost:8080/api/resource/deleteResource/${resource_id}`, { method: 'DELETE' });
         if (response.ok) {
-            fetchResources(); // Refresh the resource list
+            fetchResources(); 
         }
     };
 

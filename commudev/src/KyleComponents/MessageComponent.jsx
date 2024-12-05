@@ -45,7 +45,7 @@ const MessagePage = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
   const handleScroll = (e) => {
-    e.stopPropagation(); // Prevents scroll event bubbling
+    e.stopPropagation(); 
   };
 
   useEffect(() => {
@@ -82,12 +82,12 @@ const MessagePage = () => {
             Prof1,
           online: true,
           lastMessage: "",
-          // Add additional user details
+          
           age: user.age,
           state: user.state,
           employmentStatus: user.employmentStatus,
           biography: user.biography,
-          dateJoined: user.dateOfBirth // Using this as join date for display
+          dateJoined: user.dateOfBirth 
         }));
 
         setUsers(transformedUsers);
@@ -105,7 +105,7 @@ const MessagePage = () => {
     initializeData();
   }, []);
 
-  // Fetch messages for selected user
+  
   useEffect(() => {
     const fetchMessages = async () => {
       if (!selectedUser || !currentUserId) return;
@@ -128,7 +128,7 @@ const MessagePage = () => {
 
         setMessages(formattedMessages);
 
-        // Update last message for user in users list
+       
         if (formattedMessages.length > 0) {
           const lastMessage = formattedMessages[formattedMessages.length - 1];
           setUsers(prevUsers => 
@@ -181,7 +181,7 @@ const MessagePage = () => {
       setMessages(prev => [...prev, sentMessage]);
       setNewMessage("");
 
-      // Update last message in users list
+     
       setUsers(prevUsers =>
         prevUsers.map(user =>
           user.id === selectedUser.id
@@ -217,7 +217,7 @@ const MessagePage = () => {
 
   return (
     <div className="messagePage">
-      {/* Left Sidebar - Users List */}
+     
       <div className="messagePage__leftSidebar">
         <div className="messagePage__leftSidebar__header">
           <Link to="/" className="messagePage__logo">
@@ -262,9 +262,9 @@ const MessagePage = () => {
         </div>
       </div>
 
-      {/* Main Content */}
+      
       <div className="messagePage__main">
-        {/* Navigation Bar */}
+       
         <div className="messagePage__navbar">
           <div className="nav-icons">
             {navigationItems.map((item, index) => (
@@ -279,7 +279,7 @@ const MessagePage = () => {
           </div>
         </div>
 
-        {/* Chat Area */}
+       
         {selectedUser ? (
           <div className="messagePage__chatContainer">
             <div className="messagePage__chatHeader">
@@ -310,7 +310,7 @@ const MessagePage = () => {
               </div>
             </div>
 
-            {/* Messages Area */}
+          
             <div className="messagePage__messagesArea"style={{ overflowY: 'auto', maxHeight: 'calc(100vh - 200px)' }}>
               {messages.map((msg) => (
                 <div
@@ -330,7 +330,7 @@ const MessagePage = () => {
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Input Area */}
+            
             <div className="messagePage__inputArea">
               <button className="messagePage__inputAction">
                 <Smile size={20} />

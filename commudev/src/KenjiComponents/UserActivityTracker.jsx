@@ -37,7 +37,7 @@ const UserActivityTracker = ({ userId }) => {
           }))
         ].sort((a, b) => b.date - a.date);
 
-        setActivities(allActivities); // Removed the slice
+        setActivities(allActivities); 
       } catch (error) {
         console.error('Error fetching activities:', error);
       }

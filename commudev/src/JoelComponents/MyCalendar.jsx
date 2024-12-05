@@ -58,7 +58,7 @@ const MyCalendar = () => (
           day: true,
           agenda: true, 
         }}
-        defaultView="month" // Set the default view to "month"
+        defaultView="month" 
         
       />
     </div>

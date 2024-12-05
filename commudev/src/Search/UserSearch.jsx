@@ -10,7 +10,7 @@ const UserSearch = () => {
   const searchRef = useRef(null);
   const navigate = useNavigate();
 
-  // Close dropdown when clicking outside
+  
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (searchRef.current && !searchRef.current.contains(event.target)) {
@@ -22,7 +22,7 @@ const UserSearch = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Fetch users based on search term
+  
   useEffect(() => {
     const fetchUsers = async () => {
       if (!searchTerm.trim()) {
@@ -35,7 +35,7 @@ const UserSearch = () => {
         const response = await axios.get('http://localhost:8080/api/user/all');
         const allUsers = response.data;
         
-        // Filter users based on search term
+        
         const filteredUsers = allUsers.filter(user => 
           (user.firstname?.toLowerCase() + ' ' + user.lastname?.toLowerCase())
             .includes(searchTerm.toLowerCase())

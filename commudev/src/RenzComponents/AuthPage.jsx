@@ -30,7 +30,7 @@ import {
   Apple as AppleIcon,
 } from '@mui/icons-material';
 import logo from '../assets/prof/logo.png';
-// Create theme
+
 const theme = createTheme({
   typography: {
     fontFamily: '"Poppins", sans-serif',
@@ -151,7 +151,7 @@ const AuthPage = () => {
     },
   };
 
-  // Handle form input changes
+ 
   const handleChange = (e) => {
     const { id, value } = e.target;
     setFormData(prev => ({
@@ -160,7 +160,7 @@ const AuthPage = () => {
     }));
   };
 
-  // Form validation
+ 
   const validateForm = () => {
     setError('');
 
@@ -194,7 +194,7 @@ const AuthPage = () => {
     return true;
   };
 
-  // Handle form submission
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;

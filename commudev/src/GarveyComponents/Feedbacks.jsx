@@ -13,8 +13,8 @@ import MyCalendar from "../JoelComponents/MyCalendar";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-import UserSearch from '../search/UserSearch';
-
+import UserSearch from '../Search/UserSearch';
+import PeopleYouMayKnow from '../Search/PeopleYouMayKnow.jsx';
 const Feedbacks = () => {
   const [feedbacks, setFeedbacks] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -266,7 +266,7 @@ const Feedbacks = () => {
         </div>
 
         <div className="friends-section">
-          <h3>FRIENDS</h3>
+          <h3><PeopleYouMayKnow /></h3>
           <div className="scrollable-friends-list">
             {users.map((user, index) => (
               <div key={index} className="friend-item">

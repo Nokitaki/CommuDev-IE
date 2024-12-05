@@ -36,7 +36,7 @@ const StyledAvatar = styled(Avatar)(({ theme }) => ({
 }));
 
 const StatCard = styled(Paper)(({ theme }) => ({
-  background: 'rgba(255, 255, 255, 0.8)', // Soft, translucent white
+  background: 'rgba(255, 255, 255, 0.8)', 
   borderRadius: '15px',
   transition: 'transform 0.3s ease',
   '&:hover': {
@@ -114,18 +114,18 @@ const EditProfileDialog = ({ open, onClose, user, onSave }) => {
       const userId = localStorage.getItem('userId');
       if (!userId) throw new Error('No user ID found');
   
-      // Make sure languageSkills is properly structured before saving
+      
       const updatedUser = {
         ...editedUser,
         biography: editedUser.biography || '',
         goals: editedUser.goals || '',
-        // Ensure languageSkills is properly stringified
+       
         languageSkills: typeof editedUser.languageSkills === 'string' ? 
           editedUser.languageSkills : 
           JSON.stringify(editedUser.languageSkills || [])
       };
   
-      console.log('Saving user data:', updatedUser); // Debug log
+      console.log('Saving user data:', updatedUser); 
   
       const response = await axios.put(`http://localhost:8080/api/user/${userId}`, updatedUser);
       onSave(response.data);
@@ -226,8 +226,8 @@ const EditProfileDialog = ({ open, onClose, user, onSave }) => {
     label="Goals"
     value={editedUser?.goals || ''}
     onChange={handleChange('goals')}
-    multiline  // Add this
-    rows={3}   // Add this
+    multiline  
+    rows={3}   
     margin="normal"
   />
 </Grid>
@@ -237,8 +237,8 @@ const EditProfileDialog = ({ open, onClose, user, onSave }) => {
     label="Hobbies"
     value={editedUser?.hobbies || ''}
     onChange={handleChange('hobbies')}
-    multiline  // Add this
-    rows={3}   // Add this
+    multiline  
+    rows={3}   
     helperText="Enter hobbies separated by commas"
     margin="normal"
   />
@@ -361,7 +361,7 @@ const ProfileUser = () => {
             ...response.data,
             profilePicture: response.data.profilePicture ? 
               `http://localhost:8080${response.data.profilePicture}` : null,
-            languageSkills: response.data.languageSkills || JSON.stringify([])  // Ensure this is initialized
+            languageSkills: response.data.languageSkills || JSON.stringify([])  
           });
         } else {
           throw new Error('No data received');
@@ -453,7 +453,7 @@ const ProfileUser = () => {
     setUser(prev => ({
       ...updatedUser,
       profilePicture: prev.profilePicture,
-      languageSkills: updatedUser.languageSkills || JSON.stringify([])  // Ensure languageSkills is included
+      languageSkills: updatedUser.languageSkills || JSON.stringify([])  
     }));
   };
 
@@ -612,7 +612,7 @@ const ProfileUser = () => {
     { title: 'Goals', data: [user.goals], icon: '🎯' },
     { 
       title: 'Recent Activity', 
-      data: [<UserActivityTracker userId={user.userId} />], // Note the array brackets
+      data: [<UserActivityTracker userId={user.userId} />], 
       icon: '📋' 
     }
   ].map((section, index) => (
@@ -623,7 +623,7 @@ const ProfileUser = () => {
     p: 3,
     height: 200,
     cursor: 'pointer',
-    overflow: 'auto', // Changed to auto
+    overflow: 'auto',
     '&:hover': {
       transform: 'translateY(-5px)',
       boxShadow: 8

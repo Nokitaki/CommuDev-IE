@@ -17,10 +17,9 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import ReactMarkdown from 'react-markdown';
 
+import UserSearch from '../Search/UserSearch.jsx';
+import PeopleYouMayKnow from '../Search/PeopleYouMayKnow.jsx';
 
-
-
-import UserSearch from '../search/UserSearch';
 const CommunityPlatform = () => {
   const navigate = useNavigate();
   const [userId, setUserId] = useState(localStorage.getItem("userId"));
@@ -396,8 +395,9 @@ const CommunityPlatform = () => {
           </div>
 
           <div className="friends-section">
-            <h3>FRIENDS</h3>
+            <h3><PeopleYouMayKnow /></h3>
             <div className="scrollable-friends-list">
+              
               {users.map((user, index) => (
                 <div key={index} className="friend-item">
                   <div className="avatar">

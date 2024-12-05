@@ -13,8 +13,8 @@ import MyCalendar from "../JoelComponents/MyCalendar";
 import CardGiftcardIcon from "@mui/icons-material/CardGiftcard";
 import axios from "axios";
 import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
-import UserSearch from '../search/UserSearch';
-
+import UserSearch from '../Search/UserSearch';
+import PeopleYouMayKnow from '../Search/PeopleYouMayKnow.jsx';
 
 
 const RewardItem = ({ reward, totalPoints, claimReward }) => {
@@ -387,7 +387,7 @@ const Rewards = () => {
         </div>
 
         <div className="friends-section">
-          <h3>FRIENDS</h3>
+          <h3><PeopleYouMayKnow /></h3>
           <div className="scrollable-friends-list">
             {["Harry", "Keanu"].map((user, index) => (
               <div key={index} className="friend-item">

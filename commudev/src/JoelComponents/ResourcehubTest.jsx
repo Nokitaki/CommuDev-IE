@@ -15,8 +15,8 @@ import MyCalendar from "./MyCalendar.jsx";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-import UserSearch from '../search/UserSearch';
-
+import UserSearch from '../Search/UserSearch';
+import PeopleYouMayKnow from '../Search/PeopleYouMayKnow.jsx';
 const ResourceHub = () => {
   const [viewMode, setViewMode] = useState("grid");
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -369,7 +369,7 @@ const ResourceHub = () => {
             </div>
           </Link>
           <div className="search-bar">
-                <UserSearch />
+              <UserSearch />
           </div>
         </div>
 
@@ -405,7 +405,7 @@ const ResourceHub = () => {
         </div>
 
         <div className="friends-section">
-          <h3>FRIENDS</h3>
+          <h3><PeopleYouMayKnow /></h3>
           <div className="scrollable-friends-list">
             {users.map((user, index) => (
               <div key={index} className="friend-item">
