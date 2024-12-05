@@ -291,12 +291,7 @@ const AuthPage = () => {
                 mt: 'auto'
               }}
             />
-            <Box 
-              component="img" 
-              src="../assets/prof/logo.png?height=100&width=600" 
-              alt="Decorative landmarks"
-              sx={styles.decorativeImage}
-            />
+            
           </Box>
 
           {/* Right Section */}

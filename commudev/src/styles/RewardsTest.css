@@ -374,12 +374,35 @@
 
   .rewards-calendar {
     color: #000;
-    width: 100%; /* Full width of the container */
-    height: 56.1%; /* Half the height of the parent container */
+    width: 100%; 
+    height: 56.1%; 
     background-color: white;
-    padding: 5px; /* Inner padding for spacing */
-    overflow: hidden; /* Ensures no overflow issues */
+    padding: 5px; 
+    overflow: hidden; 
     display: flex;
-    flex-direction: column; /* Allows for stacking elements vertically */
+    flex-direction: column; 
     margin-bottom: 0%;
+  }
+
+  .community-platform-resource {
+    height: 100vh; 
+    overflow-y: auto; 
+    display: grid;
+    grid-template-columns: 250px 1fr 300px; 
+  }
+  
+  .main-content-resource {
+    overflow-y: auto; 
+    max-height: calc(100vh - 100px); 
+  }
+  
+  .resources-container {
+    max-height: 600px; 
+    overflow-y: auto; 
+  }
+  
+  
+  html, body {
+    scroll-behavior: smooth;
+    overflow-x: hidden;
   }
