@@ -19,13 +19,13 @@ import ReactMarkdown from 'react-markdown';
 
 import UserSearch from '../Search/UserSearch.jsx';
 import PeopleYouMayKnow from '../Search/PeopleYouMayKnow.jsx';
-
+import UserCarousel from '../Search/UserCarousel';
 const CommunityPlatform = () => {
   const navigate = useNavigate();
   const [userId, setUserId] = useState(localStorage.getItem("userId"));
-  //prof-pic
+  
   const [profilePicture, setProfilePicture] = useState(null);
-  //
+  
   const [userData, setUserData] = useState(null);
   const [userName, setUserName] = useState("");
   const [posts, setPosts] = useState([]);
@@ -117,7 +117,7 @@ const CommunityPlatform = () => {
         const data = response.data;
 
         setUserData(data);
-        // Set the profile picture URL
+        
         if (data.profilePicture) {
           setProfilePicture(`http://localhost:8080${data.profilePicture}`);
         }
@@ -434,40 +434,8 @@ const CommunityPlatform = () => {
               ))}
             </div>
           </div>
-          <div className="storiesAndfeed">
-            <div className="user-avatars-container">
-              <button
-                onClick={prevPage}
-                disabled={currentIndex === 0}
-                className="nav-button"
-              >
-                ❮
-              </button>
-              <div className="user-avatars">
-                {users
-                  .slice(currentIndex, currentIndex + avatarsPerPage)
-                  .map((user, index) => (
-                    <div key={index} className="user-avatar">
-                      <div className="avatar-wrapper">
-                        <img
-                          src={`src/assets/prof/${user.image}`}
-                          alt={user.name}
-                          className="avatar-image"
-                        />
-                      </div>
-                      <span className="avatar-name">{user.name}</span>
-                    </div>
-                  ))}
-              </div>
-              <button
-                onClick={nextPage}
-                disabled={currentIndex + avatarsPerPage >= users.length}
-                className="nav-button"
-              >
-                ❯
-              </button>
-            </div>
-
+                    <div className="storiesAndfeed">
+            <UserCarousel />
             <div className="feed-container">
               <div className="create-post-section">
                 <h2 className="feed-title">Community News Feed</h2>
